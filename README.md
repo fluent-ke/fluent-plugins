@@ -14,7 +14,7 @@ They are built on the open [Agent Skills](https://agentskills.io) standard, so t
 ## Install in Claude Code
 
 ```
-/plugin marketplace add fluent-ke/ai-skills
+/plugin marketplace add fluent-ke/fluent-plugins
 /plugin install ai-skills@fluent
 ```
 

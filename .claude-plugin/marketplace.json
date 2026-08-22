@@ -1,0 +1,15 @@
+{
+  "name": "fluent",
+  "owner": {
+    "name": "Fluent",
+    "url": "https://fluent.ke"
+  },
+  "plugins": [
+    {
+      "name": "ai-skills",
+      "source": "./",
+      "displayName": "Fluent AI Skills",
+      "description": "Craft skills for working with AI — finishing work, writing without slop, designing with intent, and about Fluent."
+    }
+  ]
+}

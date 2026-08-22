@@ -1,6 +1,6 @@
 ---
 name: doing-big-tasks
-description: Use for any task big enough that getting it wrong costs real time — a build, a migration, a research project, a launch, a report, a rewrite, anything multi-step or spanning several files or days. Covers understanding the task before acting, testing assumptions against evidence instead of guessing, producing one plan rather than a stream of questions, then executing it end to end without checking in at every step, and verifying the result with fresh eyes rather than grading your own work. Use it when work keeps stalling for approval, when an agent hands the thinking back, or when something was "finished" and turned out not to be.
+description: Use for any task big enough that getting it wrong costs real time — a build, a migration, a research project, a launch, a report, a rewrite, anything multi-step or spanning several files or days. Also when work keeps stalling for approval, when an agent hands the thinking back, or when something was "finished" and turned out not to be.
 license: MIT
 metadata:
   author: fluent

@@ -1,6 +1,6 @@
 ---
 name: reviewing-ai-writing
-description: Use when writing, editing or reviewing any text a person will read — an email, a post, an article, a landing page, a proposal, a report, a script, documentation — and especially when a draft reads like AI wrote it. Catches what survives an ordinary edit: negation reframes ("not X, it's Y"), invented scenarios, three-beat cadence, colon reveals, throat-clearing openers, mic-drop endings, weasel attribution, and leftover chat residue. Removes what gives writing away while protecting the writer's own voice. Use before sending or publishing.
+description: Use when writing, editing or reviewing any text a person will read — an email, a post, an article, a landing page, a proposal, a report, a script, documentation — and especially when a draft reads like AI wrote it: negation reframes ("not X, it's Y"), invented scenarios, three-beat cadence, colon reveals, throat-clearing openers, mic-drop endings, weasel attribution, leftover chat residue. Use before sending or publishing.
 license: MIT
 metadata:
   author: fluent

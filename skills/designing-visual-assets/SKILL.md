@@ -1,6 +1,6 @@
 ---
 name: designing-visual-assets
-description: Use when creating, reviewing or critiquing any visual asset — a poster, social post, carousel, thumbnail, slide, flyer, banner or ad — or when a design has the right colours and still reads flat, cluttered, generic, or like nobody decided what it was for. Covers deciding what the asset must communicate before anything is composed, grouping content into blocks a viewer can actually read, alignment and spacing that hold up, image and portrait-row rules, producing genuinely different variations rather than one design in different clothes, and verifying the result. Works with any brand, any editor, and with no editor at all.
+description: Use when creating, reviewing or critiquing any visual asset — a poster, social post, carousel, thumbnail, slide, flyer, banner or ad — or when a design has the right colours and still reads flat, cluttered, generic, or like nobody decided what it was for. Works with any brand, any editor, or none.
 license: MIT
 metadata:
   author: fluent

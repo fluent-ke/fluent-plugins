@@ -6,7 +6,7 @@
   },
   "plugins": [
     {
-      "name": "ai-skills",
+      "name": "fluent-ai-skills",
       "source": "./",
       "displayName": "Fluent AI Skills",
       "description": "Craft skills for working with AI — finishing work, writing without slop, designing with intent, and about Fluent."

@@ -1,8 +1,8 @@
 {
-  "name": "ai-skills",
+  "name": "fluent-ai-skills",
   "displayName": "Fluent AI Skills",
   "description": "Craft skills for working with AI: finish work end to end, write without AI slop, and design with intent. Tool-agnostic, on the open Agent Skills standard. From Fluent.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Fluent",
     "url": "https://fluent.ke"

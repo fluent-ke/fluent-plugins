@@ -171,7 +171,9 @@ It is also where you find out the evidence was wrong. Watch the arithmetic.
 
 ## 5. Hand it over
 
-Give them the steps for **the tool they already use**, not the one with the best file support. Literal steps, not the concept — for someone who has never opened a terminal, "open a terminal in the folder" is where they stop.
+Give them the steps for **the tool they already use**. Literal steps, not the concept — for someone who has never opened a terminal, "open a terminal in the folder" is where they stop. Never make installing something a precondition for having anything that works.
+
+**Then, if they are browser-only, tell them once what a desktop app would add.** A folder beats a project for the same agent: it writes the output itself instead of handing it back for them to save, it keeps its own history, the example and template sit beside it, and nothing gets pasted. One sentence with the gain, and leave the choice with them — `references/platform-homes.md` has what each tool allows and how a folder is attached. Say it once. If they are happy in the browser, that agent still works.
 
 Then give them the smoke test, because the first thing anyone wants to know is whether it read the file at all:
 

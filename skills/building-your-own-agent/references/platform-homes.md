@@ -15,6 +15,27 @@ Verified August 2026. **Check rather than trust** — none of this is standardis
 | **Gemini CLI** | `GEMINI.md` is the documented default. Whether `AGENTS.md` is read without configuring `context.fileName` is genuinely unclear — **test it before relying on it** | Opens the folder |
 | **A browser** | Nothing from a folder — there is no folder | Pastes the instructions into a project, uploads the files |
 
+## Which home to recommend
+
+Where the person can choose, a **folder beats a project**, every time:
+
+| | Folder | Project, in a browser |
+|---|---|---|
+| The output | The agent writes the file itself | It replies, and they save it by hand |
+| History | Keeps its own, and can read last month's | Whatever they remember to keep |
+| Example and template | Sit in the folder, always there | Uploaded, and re-uploaded when they change |
+| Starting it | Open the folder, say "run it" | Open the project, paste the material |
+
+So the order of preference is: a desktop app with the folder attached, then Claude Code, then a browser project. **Recommend it, never require it.** Build the thing that works where they are today, then say in one sentence what moving would give them. Someone who has never automated anything should not have to install software before they have seen it work once.
+
+## Attaching a folder
+
+- **ChatGPT desktop** — add the folder to the app; it creates a project around that folder and reads `AGENTS.md` from it at the start of a session. Labels move between versions, so look for the folder or project control rather than reciting a menu path
+- **Cowork** — point it at the folder; it reads the `CLAUDE.md` inside
+- **Claude Code** — open it in the folder
+
+If they attach a folder that holds several agents, they get none of them. One job, one folder, attach that one.
+
 ## Why two instruction files
 
 No single filename is read by everything. `AGENTS.md` is the open convention across most tools; `CLAUDE.md` is what Claude Code and Cowork read. Claude Code does not read `AGENTS.md` — tested, twice, in a clean folder.

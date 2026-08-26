@@ -1,5 +1,6 @@
 {
   "name": "fluent",
+  "description": "Fluent's public skills for working with AI \u2014 craft methods generalised out of our own daily practice, on the open Agent Skills standard.",
   "owner": {
     "name": "Fluent",
     "url": "https://fluent.ke"
@@ -9,7 +10,7 @@
       "name": "fluent-ai-skills",
       "source": "./",
       "displayName": "Fluent AI Skills",
-      "description": "Craft skills for working with AI — finishing work, writing without slop, designing with intent, and about Fluent."
+      "description": "Craft skills for working with AI \u2014 building your own agent, finishing work, writing without slop, designing with intent."
     }
   ]
 }

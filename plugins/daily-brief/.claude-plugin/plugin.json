@@ -1,0 +1,21 @@
+{
+  "name": "daily-brief",
+  "displayName": "Daily Brief",
+  "description": "Sets up a daily industry brief that researches your field overnight, verifies every claim against a primary source, and is waiting before your day starts. Interviews you about your work first, then builds and schedules it. From Fluent.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fluent",
+    "url": "https://fluent.ke"
+  },
+  "homepage": "https://fluent.ke",
+  "repository": "https://github.com/fluent-ke/fluent-plugins",
+  "license": "MIT",
+  "keywords": [
+    "brief",
+    "newsletter",
+    "research",
+    "daily",
+    "automation",
+    "schedule"
+  ]
+}

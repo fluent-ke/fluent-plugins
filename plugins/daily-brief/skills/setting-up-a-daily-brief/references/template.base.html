@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__BRIEF_NAME__ &mdash; __DATE_LONG__</title>
+<!--
+  Generic base template. Fill __BRIEF_NAME__, __ORG__ and __TAGLINE__ per instance and set the
+  three palette values below. __CONTENT__ is replaced by the runner with the model's fragment.
+
+  Deliberately typographic: no logo, no borrowed marks. Add a client's own logo only once they
+  have supplied it, and never reuse another organisation's mark here.
+-->
+<style>
+  :root{
+    --accent:#1F4D5C;      /* headings, rules, masthead ground */
+    --ground:#FBFAF8;      /* page */
+    --ink:#1A1A1A;         /* body text */
+    --paper:var(--ground); --text:var(--ink);
+    --rule:rgba(26,26,26,.14); --muted:rgba(26,26,26,.62); --card:rgba(26,26,26,.04);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --paper:#141414; --text:#FBFAF8; --rule:rgba(251,250,248,.16);
+           --muted:rgba(251,250,248,.62); --card:rgba(251,250,248,.05); }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+       font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+  .masthead{background:var(--accent);padding:34px 20px 28px;text-align:center;color:#fff}
+  .masthead .org{font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.8}
+  .masthead h1{margin:10px 0 6px;font-size:27px;font-weight:600;letter-spacing:-.01em}
+  .masthead .date{margin:0;font-size:13.5px;opacity:.88}
+  .masthead .rule{width:44px;height:2px;background:#fff;opacity:.5;margin:14px auto 0}
+
+  main{max-width:680px;margin:0 auto;padding:0 20px 8px}
+  .standfirst{margin:30px 0 4px;padding-bottom:26px;border-bottom:1px solid var(--rule);
+              font-size:18px;line-height:1.6;color:var(--muted)}
+  h2{margin:40px 0 2px;font-size:12px;font-weight:700;letter-spacing:.2em;
+     text-transform:uppercase;color:var(--accent)}
+  h2+.hr{height:2px;background:var(--accent);opacity:.3;margin:0 0 22px;border:0}
+  .item{margin:0 0 30px;padding-bottom:26px;border-bottom:1px solid var(--rule)}
+  .item:last-child{border-bottom:0}
+  .item h3{margin:0 0 8px;font-size:19px;line-height:1.35;font-weight:650}
+  .item p{margin:0 0 10px}
+  .meta{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .tag{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+       font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:3px;
+       padding:2px 7px;margin-right:8px;vertical-align:1px}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+  .src{font-size:13px;word-break:break-word}
+  .quiet{color:var(--muted);font-style:italic}
+  .tip{background:var(--card);border-left:3px solid var(--accent);padding:20px 22px;
+       border-radius:0 4px 4px 0;margin:0 0 20px}
+  pre{background:var(--card);padding:14px 16px;border-radius:4px;overflow-x:auto;font-size:13.5px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+  ul{padding-left:20px;margin:0 0 12px} li{margin-bottom:6px}
+
+  footer{background:var(--accent);color:#fff;margin-top:48px;padding:28px 20px;
+         text-align:center;font-size:13.5px;line-height:1.6}
+  footer .fine{display:block;margin-top:8px;font-size:12px;opacity:.82}
+
+  @media (max-width:600px){
+    body{font-size:16px} .masthead{padding:28px 16px 22px} .masthead h1{font-size:23px}
+    main{padding:0 16px 8px} .item h3{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div class="masthead">
+  <div class="org">__ORG__</div>
+  <h1>__BRIEF_NAME__</h1>
+  <p class="date">__DATE_LONG__</p>
+  <div class="rule"></div>
+</div>
+<main>
+__CONTENT__
+</main>
+<footer>
+  __TAGLINE__
+  <span class="fine">Every item was checked against its primary source before publication.</span>
+</footer>
+</body>
+</html>

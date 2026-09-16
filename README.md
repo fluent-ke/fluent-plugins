@@ -1,43 +1,48 @@
-# Fluent AI Skills
+# Fluent Plugins
 
-Craft skills for working with AI — the methods we use every day at Fluent, generalised out of our own workflow so they run in yours.
+Public plugins from [Fluent](https://fluent.ke): the methods we use every day, generalised so they run in your setup. Every skill is a plain `SKILL.md` folder on the open [Agent Skills](https://agentskills.io) standard, so the same folders run in Claude, ChatGPT and Codex, Cursor, Gemini CLI and other compatible tools.
 
-Five skills:
+## The plugins
 
-- **building-your-own-agent** — turn a job you repeat into a folder that does it: the instructions, the steps and an example of the finished thing, so you stop explaining it every time. Works as a folder, or as project instructions if you only use a browser.
-- **doing-big-tasks** — take a big task from brief to finished: understand it first, test assumptions against evidence, produce one plan, execute end to end, and verify with fresh eyes.
-- **reviewing-ai-writing** — take out what makes writing read as machine-made, while keeping the writer sounding like themselves.
-- **designing-visual-assets** — decide what an asset must communicate before composing it, then build and check it. Works with any brand, any editor, or none.
-- **about-fluent** — who made these, and where to send feedback.
+| Plugin | What it gives you | Folder |
+|---|---|---|
+| **Fluent AI Skills** | Build your own agent for a job you repeat, finish big tasks end to end, write without AI slop, design with intent, and turn long documents into audio briefings | [`plugins/fluent-ai-skills`](plugins/fluent-ai-skills/) |
+| **Daily Brief** | A researched brief on your industry, checked against primary sources and waiting before your day starts. It interviews you first | [`plugins/daily-brief`](plugins/daily-brief/) |
+| **Fluent Marketing Tools** | Operating procedures for Pencil design files and for Meta ads built through the Ads MCP | [`plugins/fluent-marketing-tools`](plugins/fluent-marketing-tools/) |
+| **Fluent 3D** | Set up CAD and slicer apps, model parts live in FreeCAD, and slice them ready to print | [`plugins/fluent-3d`](plugins/fluent-3d/) |
 
-They are built on the open [Agent Skills](https://agentskills.io) standard, so the same folders run in Claude, ChatGPT and Codex, Cursor, Gemini CLI and other compatible tools.
+## Install
 
-## Install in Claude Code
+In Claude Code, add the marketplace once, then install the plugins you want:
 
 ```
 /plugin marketplace add fluent-ke/fluent-plugins
 /plugin install fluent-ai-skills@fluent
-```
-
-On claude.ai and Cowork: **Customize → Plugins**.
-
-## Use them anywhere else
-
-Each skill is a plain `SKILL.md` folder under [`skills/`](skills/). Copy the one you want into your tool's skills directory, or point your agent at this repo.
-
-## Fluent 3D
-
-A second plugin for 3D design and printing: set up CAD and slicer apps on any computer, model parts live in FreeCAD, OpenSCAD or Blender, and turn them into slicer projects ready to print. See [`plugins/fluent-3d`](plugins/fluent-3d/).
-
-```
+/plugin install daily-brief@fluent
+/plugin install fluent-marketing-tools@fluent
 /plugin install fluent-3d@fluent
 ```
 
-In Codex, or to have your agent install it for you, follow [`plugins/fluent-3d/INSTALL.md`](plugins/fluent-3d/INSTALL.md).
+In the Claude desktop app, claude.ai and Cowork: **Customize → Plugins**, add the marketplace `fluent-ke/fluent-plugins`, then install from the list.
+
+In Codex:
+
+```
+codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins
+codex plugin add fluent-ai-skills@fluent
+```
+
+## Updates
+
+Plugins update from this repository. In Claude Code, `/plugin marketplace update fluent` then `/plugin update <plugin>@fluent`; the desktop app and Cowork pick up new versions on their own.
+
+## Use the skills anywhere else
+
+Copy a skill folder from `plugins/<plugin>/skills/` into your tool's skills directory, or point your agent at this repo.
 
 ## Feedback and more
 
-These get better from real use. If one gets something wrong, or you want more like them, the `about-fluent` skill has the feedback form. More from Fluent: [fluent.ke](https://fluent.ke).
+These get better from real use. If one gets something wrong, or you want more like them, the `about-fluent` skill in Fluent AI Skills has the feedback form. More from Fluent: [fluent.ke](https://fluent.ke).
 
 ## Licence
 

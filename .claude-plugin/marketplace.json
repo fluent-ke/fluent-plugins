@@ -1,6 +1,6 @@
 {
   "name": "fluent",
-  "description": "Fluent's public skills for working with AI \u2014 craft methods generalised out of our own daily practice, on the open Agent Skills standard.",
+  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools and 3D design, on the open Agent Skills standard.",
   "owner": {
     "name": "Fluent",
     "url": "https://fluent.ke"
@@ -8,9 +8,21 @@
   "plugins": [
     {
       "name": "fluent-ai-skills",
-      "source": "./",
+      "source": "./plugins/fluent-ai-skills",
       "displayName": "Fluent AI Skills",
-      "description": "Craft skills for working with AI \u2014 building your own agent, finishing work, writing without slop, designing with intent."
+      "description": "Craft skills for working with AI: building your own agent, finishing work, writing without slop, designing with intent, audio briefings."
+    },
+    {
+      "name": "daily-brief",
+      "source": "./plugins/daily-brief",
+      "displayName": "Daily Brief",
+      "description": "A daily industry brief, researched overnight and checked against primary sources, built from an interview about your work."
+    },
+    {
+      "name": "fluent-marketing-tools",
+      "source": "./plugins/fluent-marketing-tools",
+      "displayName": "Fluent Marketing Tools",
+      "description": "Operating procedures for Pencil design files and Meta ads built through the Ads MCP."
     },
     {
       "name": "fluent-3d",

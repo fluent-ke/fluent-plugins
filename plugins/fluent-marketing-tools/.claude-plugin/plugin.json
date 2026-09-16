@@ -1,0 +1,22 @@
+{
+  "name": "fluent-marketing-tools",
+  "displayName": "Fluent Marketing Tools",
+  "description": "Field-tested operating procedures for marketing production tools: design slide decks, posters and social creative in Pencil without wrong-file writes or silent data loss, and build Meta (Facebook and Instagram) ads through the Ads MCP without the traps that cannot be undone. From Fluent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fluent",
+    "url": "https://fluent.ke"
+  },
+  "homepage": "https://fluent.ke",
+  "repository": "https://github.com/fluent-ke/fluent-plugins",
+  "license": "MIT",
+  "keywords": [
+    "pencil",
+    "design",
+    "slides",
+    "meta-ads",
+    "facebook-ads",
+    "instagram-ads",
+    "marketing"
+  ]
+}

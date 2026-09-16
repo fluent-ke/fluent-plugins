@@ -33,7 +33,7 @@ A second plugin for 3D design and printing: set up CAD and slicer apps on any co
 /plugin install fluent-3d@fluent
 ```
 
-In Codex: `codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins`, then `codex plugin add fluent-3d@fluent`.
+In Codex, or to have your agent install it for you, follow [`plugins/fluent-3d/INSTALL.md`](plugins/fluent-3d/INSTALL.md).
 
 ## Feedback and more
 

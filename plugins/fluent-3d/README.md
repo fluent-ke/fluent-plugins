@@ -24,37 +24,25 @@ The skills run scripts and apps on your own computer, so they need an agent that
 
 ## Install
 
-Claude Code, in the terminal or the desktop app:
+Open Claude Code or Codex on the computer you print from, and paste:
 
-```
-/plugin marketplace add fluent-ke/fluent-plugins
-/plugin install fluent-3d@fluent
-```
+> Install the Fluent 3D plugin by following https://github.com/fluent-ke/fluent-plugins/blob/main/plugins/fluent-3d/INSTALL.md
 
-The desktop app can also do this from **+ → Plugins → Add marketplace**. Installing once covers the terminal, the desktop app and the IDE extensions.
+The agent installs the plugin and checks it worked. To run the commands yourself, or for other tools, see [INSTALL.md](INSTALL.md).
 
-Codex (covers the CLI, the desktop app and the IDE extension):
+## Use
 
-```
-codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins
-codex plugin add fluent-3d@fluent
-```
+Start a new session and say:
 
-Other tools that load `SKILL.md` folders: copy the folders in [`skills/`](skills/) into the tool's skills directory.
+> Set up this computer for 3D printing. My printer is a *make and model*.
 
-For an assistant that can run commands but doesn't load skills, paste this:
-
-> Download https://github.com/fluent-ke/fluent-plugins and follow `plugins/fluent-3d/skills/setting-up-3d-apps/SKILL.md` to set up this computer for 3D printing. My printer is a *make and model* and this computer runs *Windows / macOS / Linux*. Ask before installing anything. Then follow `printing-3d-models` to walk me through my first print.
-
-## Get started
-
-> Set up this computer for 3D printing. My printer is a *make and model*. Ask before installing anything.
-
-> Design a *thing* that is *size*, in *colours*, for my *printer*. Build it in FreeCAD so I can watch.
+[GUIDE.md](GUIDE.md) walks through a first project from setup to print, with more things to ask and fixes for common problems.
 
 ## What's inside
 
 ```
+INSTALL.md                            install steps an agent can follow, for Claude Code, Codex and others
+GUIDE.md                              first project, things to ask, fixes for common problems
 skills/setting-up-3d-apps/
   scripts/check_setup.py              read-only report of installed 3D tools and the FreeCAD bridge
   references/freecad-mcp.md           connect Claude Code, Codex or any MCP client to FreeCAD

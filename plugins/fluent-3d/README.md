@@ -12,18 +12,35 @@ Three skills:
 
 They work on macOS, Windows and Linux, and run in Claude, Codex and other tools that support the open [Agent Skills](https://agentskills.io) standard.
 
-## Install in Claude Code
+## Where they work
+
+The skills run scripts and apps on your own computer, so they need an agent that works there.
+
+| App | What works |
+|---|---|
+| Claude Code: terminal, desktop app, IDE extensions | Everything |
+| Codex: CLI, desktop app, IDE extension | Everything |
+| Claude Chat (web or desktop) and Cowork | Advice, model scripts and step-by-step guidance. Their code runs in a sandbox, not on your computer, so the setup check, live FreeCAD modelling and slicer script can't reach your apps. |
+
+## Install
+
+Claude Code, in the terminal or the desktop app:
 
 ```
 /plugin marketplace add fluent-ke/fluent-plugins
 /plugin install fluent-3d@fluent
 ```
 
-On claude.ai and Cowork: **Customize → Plugins**.
+The desktop app can also do this from **+ → Plugins → Add marketplace**. Installing once covers the terminal, the desktop app and the IDE extensions.
 
-## Use them anywhere else
+Codex (covers the CLI, the desktop app and the IDE extension):
 
-Copy the folders in [`skills/`](skills/) into your tool's skills directory (Codex: `~/.codex/skills`).
+```
+codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins
+codex plugin add fluent-3d@fluent
+```
+
+Other tools that load `SKILL.md` folders: copy the folders in [`skills/`](skills/) into the tool's skills directory.
 
 For an assistant that can run commands but doesn't load skills, paste this:
 

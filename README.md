@@ -33,6 +33,8 @@ A second plugin for 3D design and printing: set up CAD and slicer apps on any co
 /plugin install fluent-3d@fluent
 ```
 
+In Codex: `codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins`, then `codex plugin add fluent-3d@fluent`.
+
 ## Feedback and more
 
 These get better from real use. If one gets something wrong, or you want more like them, the `about-fluent` skill has the feedback form. More from Fluent: [fluent.ke](https://fluent.ke).

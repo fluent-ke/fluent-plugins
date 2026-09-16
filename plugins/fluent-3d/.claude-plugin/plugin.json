@@ -1,0 +1,13 @@
+{
+  "name": "fluent-3d",
+  "displayName": "Fluent 3D",
+  "description": "3D design and printing skills: set up CAD and slicer apps on any computer, model parts live in FreeCAD, OpenSCAD or Blender, and turn them into slicer projects ready to print, with pauses for NFC tags, magnets and colour swaps. From Fluent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fluent",
+    "url": "https://fluent.ke"
+  },
+  "homepage": "https://fluent.ke",
+  "repository": "https://github.com/fluent-ke/fluent-plugins",
+  "license": "MIT"
+}

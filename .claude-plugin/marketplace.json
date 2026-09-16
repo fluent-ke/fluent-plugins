@@ -11,6 +11,12 @@
       "source": "./",
       "displayName": "Fluent AI Skills",
       "description": "Craft skills for working with AI \u2014 building your own agent, finishing work, writing without slop, designing with intent."
+    },
+    {
+      "name": "fluent-3d",
+      "source": "./plugins/fluent-3d",
+      "displayName": "Fluent 3D",
+      "description": "3D design and printing skills \u2014 set up 3D apps, model parts live in CAD, and slice them ready to print."
     }
   ]
 }

@@ -25,6 +25,14 @@ On claude.ai and Cowork: **Customize → Plugins**.
 
 Each skill is a plain `SKILL.md` folder under [`skills/`](skills/). Copy the one you want into your tool's skills directory, or point your agent at this repo.
 
+## Fluent 3D
+
+A second plugin for 3D design and printing: set up CAD and slicer apps on any computer, model parts live in FreeCAD, OpenSCAD or Blender, and turn them into slicer projects ready to print. See [`plugins/fluent-3d`](plugins/fluent-3d/).
+
+```
+/plugin install fluent-3d@fluent
+```
+
 ## Feedback and more
 
 These get better from real use. If one gets something wrong, or you want more like them, the `about-fluent` skill has the feedback form. More from Fluent: [fluent.ke](https://fluent.ke).

@@ -1,6 +1,6 @@
 {
   "name": "fluent",
-  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools and 3D design, on the open Agent Skills standard.",
+  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools, 3D design and motion graphics, on the open Agent Skills standard.",
   "owner": {
     "name": "Fluent",
     "url": "https://fluent.ke"
@@ -28,7 +28,13 @@
       "name": "fluent-3d",
       "source": "./plugins/fluent-3d",
       "displayName": "Fluent 3D",
-      "description": "3D design and printing skills \u2014 set up 3D apps, model parts live in CAD, and slice them ready to print."
+      "description": "3D design and printing skills — set up 3D apps, model parts live in CAD, and slice them ready to print."
+    },
+    {
+      "name": "fluent-motion",
+      "source": "./plugins/fluent-motion",
+      "displayName": "Fluent Motion",
+      "description": "Motion-graphics films built in code, from your posters, logos, footage or a brief, with an original score."
     }
   ]
 }

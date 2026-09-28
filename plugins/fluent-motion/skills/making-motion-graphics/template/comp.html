@@ -30,13 +30,13 @@ window.ready=Promise.all([document.fonts.load('800 50px Brand'),document.fonts.l
 
 // ── Footage: frame sequences from scripts/prep_footage.sh (shots/NAME/0001.jpg, optional masks/NAME/0001.png).
 // `at` is the comp beat the shot starts; it plays in real time from there.
-const SHOTS={/* HERO:{at:4,n:90,mask:false} */};
+const SHOTS={/* HERO:{at:4,n:90,mask:false}   3D plate: PLATE:{at:0,n:300,ext:'png'} */};
 const FR={},cache=new Map();
 function load(u){if(!cache.has(u)){const im=new Image();im.src=u;cache.set(u,im.decode().then(()=>im,()=>null));if(cache.size>120)cache.delete(cache.keys().next().value)}return cache.get(u)}
 const pad4=i=>String(i).padStart(4,'0');
 const shotIdx=k=>clamp(Math.floor((t-toMusic(SHOTS[k].at)*B)*FPS),0,SHOTS[k].n-1)+1;
 async function preload(){for(const k in SHOTS){const s=SHOTS[k];if(b<s.at-.1||t>toMusic(s.at)*B+s.n/FPS+.1)continue;const i=shotIdx(k);
-  FR['f'+k]=await load(`shots/${k}/${pad4(i)}.jpg`);if(s.mask)FR['m'+k]=await load(`masks/${k}/${pad4(i)}.png`)}}
+  FR['f'+k]=await load(`shots/${k}/${pad4(i)}.${s.ext||'jpg'}`);if(s.mask)FR['m'+k]=await load(`masks/${k}/${pad4(i)}.png`)}}
 const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c},layer=mk(),lctx=layer.getContext('2d');
 function plate(k,s=1,ox=0,oy=0){const im=FR['f'+k];if(!im)return;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.scale(s,s);ctx.drawImage(im,-W/2,-H/2,W,H);ctx.restore()}
 // The subject cut out by its matte, same transform as plate(): draw plate, then text, then subject = text behind the person

@@ -17,4 +17,4 @@ npx --yes playwright install chromium >/dev/null 2>&1 || npx playwright install 
 if [ -f "$FONT" ]; then cp "$FONT" fonts/Brand.ttf; else curl -sfL -o fonts/Brand.ttf "$FONT" || echo "font download failed: put a .ttf at fonts/Brand.ttf"; fi
 echo "Film project ready at $(pwd)"
 echo "Next: edit comp.html (scenes), timeline.js (pacing), soundtrack.mjs (cues), then:"
-echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs && ./mix.sh film"
+echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs --draft && node render.mjs && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 30"

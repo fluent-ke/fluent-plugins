@@ -13,6 +13,10 @@
 | `wrap(str,w,s,maxW)` | lines for a paragraph; `rise` each with a small stagger |
 | `pill(txt,x,y,s,bg,fg,{sc,alpha,stroke,w8})` | rounded tag (`w8` = font weight); pop it in with `sc:IN(b0,.45,E.outBack)` |
 | `img(IMG.key,x,y,width,{alpha,sc,r,rot})` | an asset from `SRC`, at its own aspect ratio; `r` rounds the corners |
+| `words(parts,x,y,weight,size,beat,step,{align,alpha,shadow,track})` | a caption or headline line: words pop in on a spring one per `step` beats; a part whose colour is exactly the string `C.accent` is the key phrase and lands with an elastic pop and a warm glow |
+| `halo(y,alpha)` | a soft dark pool behind a text block over footage or a 3D plate (local, feathered; never a full-frame scrim) |
+| `shock(x,y,beat,{r,col})`, `sparks(x,y,beat,{n,seed,col})` | an impact: flash and two spreading rings; seeded sparks under gravity (`col` is a hex colour, default `C.accent`). Pair with the score's impact on the same beat |
+| `cta(label,x,y,beat,tapBeat,{bg,fg,size})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
 | `count(n,a,z)` | number counting up between two beats, formatted |
 | `bgGlow(col,x,y)`, `bgFlat(col)` | backgrounds; `grainPass()` adds film grain over everything |
 | `swipe()` + `CUTS` | band wipes across; the scene changes under it |
@@ -35,6 +39,12 @@
 **Product sticker.** `swift segment.swift cutout photo.jpg assets/cutout.png`, then draw it with a white outline (the silhouette drawn 24 times offset in a circle) and a soft shadow; bounce it in with `E.outBack`.
 
 **Camera moves.** Wrap a scene in `ctx.translate/scale` driven by `PB`: slow push-in (scale 1→1.06 over the scene), whip (big `x` offset with `E.inExpo` at the scene end, blur up to 12 px), shake on impacts (`Math.sin(k*200)*10` for 0.15 beat).
+
+**Key words in the accent.** In every caption line, one contiguous phrase carries the message: put it in the accent colour (`words([['You know ',C.ink],["there's more.",C.accent]],…)`). One phrase per line, never scattered single words. On a title, the accent can be just the full stop (`Hire` in ink, `.` in accent, popping in a beat later).
+
+**Call to action.** The last scene is the CTA, and it is a button, not a line of text: `cta('Start at brand.com',W/2,H*.62,a,a+1.5)` pops it in, taps it a beat and a half later and keeps the arrow nudging; put a small "Link in bio" under it with `words()`. Hold it at least 3 s after the tap. One CTA only.
+
+**Brand moment.** When the logo forms or lands: `shock()` + `sparks()` on the beat, a warm radial bloom behind the mark, a light sweep across the lockup (draw the lockup into the `layer` canvas, `source-atop` a moving white gradient band, draw the layer back), and on the end card a slowly drifting abstract field in the brand colours behind everything.
 
 ## Rules of the craft
 

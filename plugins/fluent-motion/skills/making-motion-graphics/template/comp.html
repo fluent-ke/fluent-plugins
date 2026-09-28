@@ -53,7 +53,7 @@ function word(str,x,y,w,s,fill,{stroke=null,lw=4,alpha=1,sc=1,rot=0,track=0,alig
   if(fill){ctx.fillStyle=fill;ctx.fillText(str,ax,0)}
   if(stroke){ctx.shadowBlur=0;ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.lineJoin='round';ctx.strokeText(str,ax,0)}ctx.restore()}
 // Largest size (≤ maxS) at which str fits maxW
-function fit(str,w,maxW,maxS,track=0){ctx.font=font(w,100);ctx.letterSpacing=track+'px';return Math.min(maxS,100*maxW/ctx.measureText(str).width)}
+function fit(str,w,maxW,maxS,track=0){ctx.font=font(w,100);ctx.letterSpacing='0px';const u=ctx.measureText(str).width/100,n=[...str].length;return Math.min(maxS,(maxW-track*n)/u)}   // track is in px at the final size
 // Slam: outline echoes collapse into the filled word as spread → 0
 function echo(str,x,y,w,s,fill,stroke,spread,alpha=1){
   for(let k=3;k>=1;k--)for(const d of[-1,1])word(str,x,y+d*k*spread,w,s,null,{stroke,lw:3,alpha:alpha*(1-k*.22)*clamp(spread/20)});

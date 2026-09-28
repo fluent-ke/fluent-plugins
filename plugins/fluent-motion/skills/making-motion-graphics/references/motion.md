@@ -1,6 +1,6 @@
 # Motion recipes
 
-`comp.html` draws every frame from scratch with `render(t)`. `b` is the comp beat, `m` the music beat, `t` seconds. A scene is an `if(b<end){…;return}` block; helpers take progress values in 0–1 that you derive with `PB(a,z)` (linear) or `IN(a,dur,ease)` (eased entrance).
+`comp.html` draws every frame from scratch with `render(t)`. `b` is the comp beat, `m` the music beat, `t` seconds. A scene is an `if(b<end){…;return}` block; helpers take progress values in 0–1 that you derive with `PB(a,z)` (linear), `IN(a,dur,ease)` (eased entrance) or `spring(a)` (physical settle).
 
 ## Helper library
 
@@ -18,6 +18,8 @@
 | `shock(x,y,beat,{r,col})`, `sparks(x,y,beat,{n,seed,col})` | an impact: flash and two spreading rings; seeded sparks under gravity (`col` is a hex colour, default `C.accent`). Pair with the score's impact on the same beat |
 | `cta(label,x,y,beat,tapBeat,{bg,fg,size})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
 | `count(n,a,z)` | number counting up between two beats, formatted |
+| `spring(a,{z,w})` | 0→1 from beat a on a closed-form damped spring: `z` .75–.9 overshoots a touch, `w` 12 settles in about half a beat. Pure in `b`, so it re-times and renders in parallel |
+| `springs([[beat,value],…],{z,w})` | a value that changes target several times: one spring per change, summed, so each new target bends the motion under way instead of restarting it |
 | `bgGlow(col,x,y)`, `bgFlat(col)` | backgrounds; `grainPass()` adds film grain over everything |
 | `swipe()` + `CUTS` | band wipes across; the scene changes under it |
 | `plate(SHOT)`, `subject(SHOT)` | footage frame; the matted person drawn on top of it |
@@ -40,6 +42,10 @@
 
 **Camera moves.** Wrap a scene in `ctx.translate/scale` driven by `PB`: slow push-in (scale 1→1.06 over the scene), whip (big `x` offset with `E.inExpo` at the scene end, blur up to 12 px), shake on impacts (`Math.sin(k*200)*10` for 0.15 beat).
 
+**Morph (one shape, never cut).** One rounded rectangle carries the whole scene: its x, y, width, height, radius and colour are each `springs()` over the states (button → field → card → full frame), and the content inside swaps. Content enters after its container starts moving and leaves before the next move, so text never squeezes; clip the content to the shape. Give each edge its own spring (left edge `w` 14, right edge `w` 10) and a sliding tab indicator stretches as it travels. Size each state so it fills most of the frame; a small state (a button) is the moment to push the camera in with `ctx.scale` about the shape's centre. Carry colour between states by moving an accent element, rather than fading a dark ground straight into the accent.
+
+**Loop.** For a clip that plays on repeat, make the last frame equal the first: end every value where it started and put the cut on a whole bar.
+
 **Key words in the accent.** In every caption line, one contiguous phrase carries the message: put it in the accent colour (`words([['You know ',C.ink],["there's more.",C.accent]],…)`). One phrase per line, never scattered single words. On a title, the accent can be just the full stop (`Hire` in ink, `.` in accent, popping in a beat later).
 
 **Call to action.** The last scene is the CTA, and it is a button, not a line of text: `cta('Start at brand.com',W/2,H*.62,a,a+1.5)` pops it in, taps it a beat and a half later and keeps the arrow nudging; put a small "Link in bio" under it with `words()`. Hold it at least 3 s after the tap. One CTA only.
@@ -49,6 +55,7 @@
 ## Rules of the craft
 
 - One motion idea per scene; everything else holds still so the eye knows where to go.
-- Entrances are fast (0.3–0.5 beat, ease-out); exits faster (0.25 beat, ease-in). Holds are long.
+- Entrances are fast (0.3–0.5 beat, ease-out or `spring`); exits faster (0.25 beat, ease-in). Holds are long. Anything that moves an object from place to place settles on a spring with a small overshoot; linear motion reads as a machine.
 - Every hit on screen has a sound, and every big sound has something on screen.
+- Fast moves get motion blur in the final render (`--blur 8`); a whip that still shows separate copies adds `blur` on the element for that half-beat.
 - Two typefaces at most, usually one family in two weights; colours from the brand palette plus one accent.

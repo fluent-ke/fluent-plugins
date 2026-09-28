@@ -10,10 +10,11 @@ One skill, **making-motion-graphics**. The film is built in code (an HTML canvas
 - Agrees the goal, format and length with you, then writes a beat sheet before any animation.
 - Crops your logos and partner marks from the artwork you gave it rather than redrawing them.
 - Composes an original score (afro-house, amapiano, Kenyan benga or ambient) to the film's timeline, or syncs to a track you have the rights to.
-- Adds 3D shots from Blender when a logo, product or swarm needs real light and depth: rendered headless as transparent plates the film can move and write over.
+- Starts from a look, a reference video or a written-out style, so films don't fall back on the stock AI look of centred text fading in over a gradient.
+- Adds 3D: Three.js drawn straight into the film for spinning marks and orbiting cards, Blender plates for real light and physics (domino chains, cloth, jelly), and generated clips from a video model for people and live scenes, with every word still drawn by the film.
 - Ends on a call to action that reads as one: a button that pops in, gets tapped and holds.
-- Renders across your CPU cores (about 2× faster), with a half-size draft for checking timing, and delivers a posting copy, a master and a WhatsApp copy under 16 MB, colour-tagged so hues hold after upload.
-- Checks its own work: stills of every scene read before the full render, audio measured for level, silence and clipping, and a QC pass on the finished file (size, colour tags, dead holds, loudness, true peak, contact sheet).
+- Renders across your CPU cores (about 2× faster), with a half-size draft for checking timing, motion blur on the final render, and delivers a posting copy, a master and a WhatsApp copy under 16 MB, colour-tagged so hues hold after upload.
+- Checks its own work: stills of every scene and one frame per beat read before the full render, a blind critic agent that scores each scene against the brief and the look, audio measured for level, silence and clipping, and a QC pass on the finished file (size, colour tags, dead holds, loudness, true peak, contact sheet).
 - Renders variants from one source, such as a "TOMORROW" cut and a "TODAY" cut.
 
 ## Where it works
@@ -24,7 +25,7 @@ One skill, **making-motion-graphics**. The film is built in code (an HTML canvas
 | Codex: CLI, desktop app, IDE extension | Everything |
 | Claude chat (web or desktop) and Cowork | Storyboards and the film's code; rendering needs a real computer |
 
-It needs Node 18+, ffmpeg and Python 3 with Pillow. Subject cut-outs (text behind a person, product stickers) use Apple Vision and work on macOS only. 3D shots need Blender 4.2 or later (tested on 5.2).
+It needs Node 18+, ffmpeg and Python 3 with Pillow (and `three` from npm for in-film 3D). Subject cut-outs (text behind a person, product stickers) use Apple Vision and work on macOS only. 3D shots need Blender 4.2 or later (tested on 5.2).
 
 ## Install
 
@@ -58,9 +59,9 @@ skills/making-motion-graphics/
     asset_tools.py             crop, key out backgrounds, brand palette, contact sheets
     audio_check.py             levels, loudness, silence and clipping, for an agent that cannot listen
     qc.sh                      checks the finished film: spec, colour tags, dead holds, loudness, true peak, contact sheet
-    blender_plate.py           a 3D shot rendered headless to a transparent plate
+    blender_plate.py           a 3D shot rendered headless to a transparent plate, with baked physics
     segment.swift              person mattes and subject cut-outs (macOS)
-  references/                  storyboard and pacing, motion recipes, score and sync, 3D plates, voiceover and captions
+  references/                  storyboard, look and pacing, motion recipes, score and sync, 3D and generated plates, the blind critic, voiceover and captions
 ```
 
 ## Licence

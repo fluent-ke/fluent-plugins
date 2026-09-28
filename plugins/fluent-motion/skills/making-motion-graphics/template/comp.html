@@ -22,6 +22,11 @@ const rng=s=>()=>((s=(s*16807)%2147483647)-1)/2147483646;   // seeded: use inste
 let b=0,m=0,t=0,ctx;
 const PB=(a,z)=>clamp((b-a)/(z-a));                         // progress between two comp beats
 const IN=(a,d=.5,e=E.outExpo)=>e(PB(a,a+d));                // eased entrance starting at beat a
+// Closed-form spring 0→1 from beat a: z = damping ratio (.75–.9 gives a tiny overshoot), w = stiffness in rad per beat (12 settles in about half a beat)
+const spring=(a,{z=.8,w=12}={})=>{const s=b-a;if(s<=0)return 0;const wd=w*Math.sqrt(1-z*z);return 1-Math.exp(-z*w*s)*(Math.cos(wd*s)+z*w/wd*Math.sin(wd*s))};
+// A value that changes target several times: keys = [[beat, value], …] in beat order. One spring per change, summed,
+// so a new target bends the motion already under way instead of restarting it.
+const springs=(keys,o)=>keys.reduce((v,[a,x],i)=>i?v+(x-keys[i-1][1])*spring(a,o):x,0);
 
 // ── Assets. Put images in assets/ and name them here; they are decoded once before the first frame.
 const IMG={};const SRC={/* logo:'assets/logo.png' */};
@@ -122,8 +127,9 @@ const bgFlat=col=>{ctx.fillStyle=col;ctx.fillRect(0,0,W,H)};
 // Scene cuts: a band wipes across (±0.4 music beat) and the scene changes underneath it.
 // Keep CUTS equal to the scene end beats in scene() below: every `if(b<end)` except the last.
 const CUTS=[4,8,12];
-function swipe(){for(const c of CUTS){const k=(m-(toMusic(c)-.4))/.8;if(k<=0||k>=1)continue;const x=lerp(-W-900,W*2+900,E.inOutCubic(k));
-  ctx.save();ctx.translate(x,H/2);ctx.rotate(-.35);ctx.fillStyle=C.accent;ctx.fillRect(-W*.4,-H,W*.8,H*2);ctx.restore()}}
+function swipe(){const X=k=>lerp(-W-900,W*2+900,E.inOutCubic(clamp(k)));for(const c of CUTS){const k=(m-(toMusic(c)-.4))/.8;if(k<=0||k>=1)continue;const x=X(k);
+  const smear=Math.min(90,Math.abs(X(k+.03)-x)*.2);    // edge softness follows the band's speed: reads as motion blur and hides --blur's subframe steps
+  ctx.save();ctx.translate(x,H/2);ctx.rotate(-.35);ctx.filter=`blur(${smear}px)`;ctx.fillStyle=C.accent;ctx.fillRect(-W*.4,-H,W*.8,H*2);ctx.restore()}}
 
 // ── Scenes (example: replace with the storyboard). Each `if(b<end)` block is one scene.
 function scene(){
@@ -156,6 +162,6 @@ function scene(){
 function grainPass(){ctx.save();ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.translate((b*97)%256,(b*61)%256);ctx.fillRect(-256,-256,W+512,H+512);ctx.restore()}
 async function render(time){await window.ready;t=time;m=t/B;b=toComp(m);ctx=cv.getContext('2d');await preload();
   scene();ctx.setTransform(1,0,0,1,0,0);swipe();grainPass();
-  const end=SEG.at(-1)[1];if(b>end-.6){ctx.fillStyle=C.bg;ctx.globalAlpha=PB(end-.6,end);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}}
+  if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
 window.render=render;
 </script></body></html>

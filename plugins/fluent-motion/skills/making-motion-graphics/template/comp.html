@@ -30,13 +30,13 @@ window.ready=Promise.all([document.fonts.load('800 50px Brand'),document.fonts.l
 
 // ── Footage: frame sequences from scripts/prep_footage.sh (shots/NAME/0001.jpg, optional masks/NAME/0001.png).
 // `at` is the comp beat the shot starts; it plays in real time from there.
-const SHOTS={/* HERO:{at:4,n:90,mask:false} */};
+const SHOTS={/* HERO:{at:4,n:90,mask:false}   3D plate: PLATE:{at:0,n:300,ext:'png'} */};
 const FR={},cache=new Map();
 function load(u){if(!cache.has(u)){const im=new Image();im.src=u;cache.set(u,im.decode().then(()=>im,()=>null));if(cache.size>120)cache.delete(cache.keys().next().value)}return cache.get(u)}
 const pad4=i=>String(i).padStart(4,'0');
 const shotIdx=k=>clamp(Math.floor((t-toMusic(SHOTS[k].at)*B)*FPS),0,SHOTS[k].n-1)+1;
 async function preload(){for(const k in SHOTS){const s=SHOTS[k];if(b<s.at-.1||t>toMusic(s.at)*B+s.n/FPS+.1)continue;const i=shotIdx(k);
-  FR['f'+k]=await load(`shots/${k}/${pad4(i)}.jpg`);if(s.mask)FR['m'+k]=await load(`masks/${k}/${pad4(i)}.png`)}}
+  FR['f'+k]=await load(`shots/${k}/${pad4(i)}.${s.ext||'jpg'}`);if(s.mask)FR['m'+k]=await load(`masks/${k}/${pad4(i)}.png`)}}
 const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c},layer=mk(),lctx=layer.getContext('2d');
 function plate(k,s=1,ox=0,oy=0){const im=FR['f'+k];if(!im)return;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.scale(s,s);ctx.drawImage(im,-W/2,-H/2,W,H);ctx.restore()}
 // The subject cut out by its matte, same transform as plate(): draw plate, then text, then subject = text behind the person
@@ -53,7 +53,7 @@ function word(str,x,y,w,s,fill,{stroke=null,lw=4,alpha=1,sc=1,rot=0,track=0,alig
   if(fill){ctx.fillStyle=fill;ctx.fillText(str,ax,0)}
   if(stroke){ctx.shadowBlur=0;ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.lineJoin='round';ctx.strokeText(str,ax,0)}ctx.restore()}
 // Largest size (≤ maxS) at which str fits maxW
-function fit(str,w,maxW,maxS,track=0){ctx.font=font(w,100);ctx.letterSpacing=track+'px';return Math.min(maxS,100*maxW/ctx.measureText(str).width)}
+function fit(str,w,maxW,maxS,track=0){ctx.font=font(w,100);ctx.letterSpacing='0px';const u=ctx.measureText(str).width/100,n=[...str].length;return Math.min(maxS,(maxW-track*n)/u)}   // track is in px at the final size
 // Slam: outline echoes collapse into the filled word as spread → 0
 function echo(str,x,y,w,s,fill,stroke,spread,alpha=1){
   for(let k=3;k>=1;k--)for(const d of[-1,1])word(str,x,y+d*k*spread,w,s,null,{stroke,lw:3,alpha:alpha*(1-k*.22)*clamp(spread/20)});
@@ -69,6 +69,46 @@ function pill(txt,x,y,s,bg,fg,{sc=1,alpha=1,stroke=null,w8=700}={}){if(sc<=0||al
   ctx.fillStyle=fg;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,0,s*.06);ctx.restore()}
 function img(im,x,y,w,{alpha=1,sc=1,r=0,rot=0}={}){if(!im||alpha<=0||sc<=0)return 0;const h=w*im.height/im.width;ctx.save();ctx.globalAlpha=alpha;
   ctx.translate(x,y);ctx.rotate(rot);ctx.scale(sc,sc);if(r){ctx.beginPath();ctx.roundRect(-w/2,-h/2,w,h,r);ctx.clip()}ctx.drawImage(im,-w/2,-h/2,w,h);ctx.restore();return h}
+// Caption / headline line: words pop in one after another on a spring. parts = [text, colour] pairs; words in C.accent are the
+// key phrase and land with a bigger elastic pop and a brief warm glow. align 'center' centres the line on x, 'left' starts at x.
+function words(parts,x,y,w,s,a,step,{track=-1,shadow=true,alpha=1,align='center'}={}){
+  ctx.font=font(w,s);ctx.letterSpacing=track+'px';const toks=[];
+  for(const[txt,col]of parts)for(const tk of txt.split(' ').filter(Boolean))toks.push([tk,col]);
+  const sp=ctx.measureText(' ').width,ws=toks.map(([tk])=>ctx.measureText(tk).width),tot=ws.reduce((p,q)=>p+q,0)+sp*(toks.length-1);
+  let cx=align==='center'?x-tot/2:x;toks.forEach(([tk,col],j)=>{const a0=a+j*step,k=PB(a0,a0+.5);if(k<=0){cx+=ws[j]+sp;return}
+    const key=col===C.accent,sc=key?lerp(.55,1,E.outElastic(k)):lerp(.8,1,E.outBack(k)),dy=(1-E.outExpo(k))*s*.45;
+    ctx.save();ctx.globalAlpha=alpha*clamp(k*3);ctx.translate(cx+ws[j]/2,y+dy);ctx.scale(sc,sc);
+    if(shadow){ctx.shadowColor='rgba(0,0,0,.85)';ctx.shadowBlur=38}
+    if(key){ctx.shadowColor=C.accent+'8C';ctx.shadowBlur=30*Math.exp(-(b-a0)*2)+(shadow?10:0)}
+    ctx.font=font(w,s);ctx.letterSpacing=track+'px';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=col;ctx.fillText(tk,0,0);ctx.restore();cx+=ws[j]+sp})}
+// Soft dark pool behind a text block over busy footage or a 3D plate: local and feathered, never a full-frame scrim
+function halo(y,alpha,col='0,0,0'){if(alpha<=0)return;ctx.save();ctx.translate(W/2,y);ctx.scale(1,.42);const g=ctx.createRadialGradient(0,0,0,0,0,W*.62);
+  g.addColorStop(0,`rgba(${col},${.8*alpha})`);g.addColorStop(.6,`rgba(${col},${.55*alpha})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.fillRect(-W,-W,W*2,W*2);ctx.restore()}
+// '#d97757' → '217,119,87' for rgba() strings
+const rgbOf=h=>{const n=parseInt(h.slice(1,7),16);return `${n>>16},${n>>8&255},${n&255}`};
+// Shockwave on an impact: a flash and two rings spreading from (x,y) from beat a, in colour col (hex)
+function shock(x,y,a,{r=900,col=C.accent}={}){const k=PB(a,a+1.4);if(k<=0||k>=1)return;const e=E.outExpo(k),rgb=rgbOf(col);
+  ctx.save();ctx.globalCompositeOperation='lighter';
+  const f=ctx.createRadialGradient(x,y,0,x,y,r*.9);f.addColorStop(0,`rgba(${rgb},${.45*(1-k)**2})`);f.addColorStop(1,`rgba(${rgb},0)`);ctx.fillStyle=f;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=`rgba(${rgb},${.9*(1-k)})`;ctx.lineWidth=18*(1-e)+2;ctx.beginPath();ctx.arc(x,y,r*e,0,TAU);ctx.stroke();
+  ctx.strokeStyle=`rgba(255,255,255,${.5*(1-k)})`;ctx.lineWidth=4*(1-e)+1;ctx.beginPath();ctx.arc(x,y,r*.7*E.outExpo(PB(a+.05,a+1.4)),0,TAU);ctx.stroke();ctx.restore()}
+// Seeded sparks thrown out from (x,y) at beat a, falling under gravity. Timed in real seconds, so stretched segments don't slow them.
+function sparks(x,y,a,{n=26,seed=11,col=C.accent}={}){const el=t-toMusic(a)*B;if(el<0||el>1.6)return;const r=rng(seed),rgb=rgbOf(col);ctx.save();ctx.globalCompositeOperation='lighter';
+  for(let i=0;i<n;i++){const ang=r()*TAU,v=500+r()*900,sz=3+r()*6,px=x+Math.cos(ang)*v*el,py=y+Math.sin(ang)*v*el+500*el*el;
+    ctx.fillStyle=`rgba(${r()<.7?rgb:'255,255,255'},${clamp(1-el/1.4)})`;ctx.beginPath();ctx.arc(px,py,sz*(1-el/1.8),0,TAU);ctx.fill()}ctx.restore()}
+// Call to action: a filled button that pops in at beat a, gets tapped at beat tap (a press circle, a ripple, the button dips),
+// and nudges its arrow. The arrow is drawn as a path, so it never depends on the font having a → glyph.
+function cta(label,x,y,a,tap,{bg=C.accent,fg=C.bg,size=62,w8=800,minW=0}={}){const u=IN(a,.6,E.outBack);if(u<=0)return;
+  ctx.font=font(w8,size);ctx.letterSpacing='-1px';const lw=ctx.measureText(label).width,aw=size*.8,gap=size*.45,bw=Math.max(minW,lw+aw+gap+size*1.6),bh=size*2.3;
+  const d=b>tap?Math.exp(-(b-tap)*5)*Math.sin((b-tap)*18):0,sc=u*(1-.06*Math.max(0,d)),nud=size*.28*Math.max(0,Math.sin((b-a)*Math.PI));
+  ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);ctx.shadowColor=bg+'8C';ctx.shadowBlur=60+20*Math.sin(b*3);ctx.fillStyle=bg;
+  ctx.beginPath();ctx.roundRect(-bw/2,-bh/2,bw,bh,size*.26);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=fg;ctx.textAlign='left';ctx.textBaseline='middle';
+  const x0=-(lw+gap+aw)/2;ctx.fillText(label,x0,size*.06);
+  const ax=x0+lw+gap+nud,st=size*.11;ctx.strokeStyle=fg;ctx.lineWidth=st;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
+  ctx.moveTo(ax,0);ctx.lineTo(ax+aw,0);ctx.moveTo(ax+aw*.58,-aw*.4);ctx.lineTo(ax+aw,0);ctx.lineTo(ax+aw*.58,aw*.4);ctx.stroke();ctx.restore();
+  const k=PB(tap-.2,tap+1);if(k>0&&k<1){const px=x+bw*.3,py=y+bh*.2,pr=E.outCubic(PB(tap-.2,tap));ctx.save();
+    ctx.fillStyle=`rgba(255,255,255,${.85*(1-PB(tap+.1,tap+.6))})`;ctx.beginPath();ctx.arc(px,py,size*.75*pr,0,TAU);ctx.fill();
+    ctx.strokeStyle=`rgba(255,255,255,${.8*(1-PB(tap,tap+1))})`;ctx.lineWidth=5;ctx.beginPath();ctx.arc(px,py,size*.75+size*3*E.outExpo(PB(tap,tap+1)),0,TAU);ctx.stroke();ctx.restore()}}
 // Number that counts up from 0 between beats a and z (prices, prizes, stats)
 const count=(n,a,z,fmt=v=>v.toLocaleString('en-US'))=>fmt(Math.round(n*E.outCubic(PB(a,z))));
 

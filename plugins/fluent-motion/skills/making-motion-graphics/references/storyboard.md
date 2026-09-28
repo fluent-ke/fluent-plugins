@@ -32,7 +32,7 @@ Author every scene at its natural kinetic speed (about 1 comp beat per action), 
 
 Once a piece of text has finished animating in, it stays still and on screen for at least **0.3 s per word + 1 s** (a 6-word card: about 3 s). A dense card or a number with a label needs more. Kinetic single words are exempt: they are felt, not read.
 
-`timeline.js` sets this per scene: a factor of 2 doubles the scene's length. Tune factors so each segment ends on a whole music beat (`MUSIC_BEATS` is the total; `node -e "import('./timeline.js').then(()=>console.log([12,23].map(toMusic)))"` checks boundaries).
+`timeline.js` sets this per scene: a factor of 2 doubles the scene's length. A factor slows **everything** in its segment, entrances included, so a word pop inside a 2.5× segment plays in slow motion. Put the entrances in a factor-1 segment and follow it with a separate hold segment that carries the stretch. Tune factors so each segment ends on a whole music beat (`MUSIC_BEATS` is the total; `node -e "import('./timeline.js').then(()=>console.log([12,23].map(toMusic)))"` checks boundaries).
 
 ## Copy on screen
 
@@ -45,6 +45,7 @@ Once a piece of text has finished animating in, it stays still and on screen for
 
 Read the stills sheet for each scene and fix before the full render:
 
+- Frame 0 carries content (a word already on screen, the plate, a shape): it is the thumbnail and the first thing a scrolling viewer sees. Start the first entrance at b0 with most of it already in, or put a still element under it.
 - Nothing touches or crosses the frame edge unless it is meant to bleed; keep 60 px of margin on text.
 - In 9:16, keep text inside the middle 1080×1420: the top 250 px and bottom 250 px sit under platform UI.
 - Content fills the frame: a scene with its content packed into one half gets re-centred or scaled.

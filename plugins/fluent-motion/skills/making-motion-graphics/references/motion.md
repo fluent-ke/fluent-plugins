@@ -34,7 +34,7 @@
 
 **Map or network.** Nodes at fixed points, quadratic arcs between them drawn progressively (`k` of the path), dots travelling along each arc with `((b-start)*.55+j/3)%1`, labels and pills popping in per node. Flags and logos cropped from the supplied artwork.
 
-**Text behind a person.** Footage frames via `prep_footage.sh`, mattes via `swift segment.swift person shots/NAME masks/NAME`, `mask:true` in `SHOTS`. Draw `plate`, then the text, then `subject` with the same transform.
+**Text behind a person.** Footage frames via `prep_footage.sh`, mattes via `swift segment.swift person shots/NAME masks/NAME`, `mask:true` in `SHOTS`. Draw `plate`, then the text, then `subject` with the same transform. The word must still read: measure the head top from the matte (at the end of any push-in) and set the word's baseline about 50 px below it, so only the bottom sliver of the letters tucks behind the hair. A head across the middle of a word hides whole letters. For a still photo, run the matte on a one-frame folder, keep only the largest connected shape (stray background people and objects get matted too), and draw the photo and its cut-out with the same transform.
 
 **Product sticker.** `swift segment.swift cutout photo.jpg assets/cutout.png`, then draw it with a white outline (the silhouette drawn 24 times offset in a circle) and a soft shadow; bounce it in with `E.outBack`.
 

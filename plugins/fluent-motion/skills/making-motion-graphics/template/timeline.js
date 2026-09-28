@@ -3,6 +3,7 @@
 // so reading scenes can hold longer while kinetic scenes stay on the grid.
 // [comp start, comp end, music beats per comp beat]. Keep every segment boundary landing on a whole music beat.
 globalThis.BPM=120;                 // the score's tempo; comp.html and soundtrack.mjs both read it
+// Film length (s) = MUSIC_BEATS × 60 / BPM (the template's default is 24 music beats = 12 s); score.wav adds a 1.2 s tail.
 globalThis.SEG=[[0,4,1],[4,8,2],[8,12,1.5],[12,16,1.5]];
 globalThis.toMusic=c=>{let m=0;for(const[a,z,f]of SEG){if(c<=a)break;m+=(Math.min(c,z)-a)*f}return m};
 globalThis.toComp=m=>{let acc=0;for(const[a,z,f]of SEG){const len=(z-a)*f;if(m<=acc+len)return a+(m-acc)/f;acc+=len}return SEG.at(-1)[1]};

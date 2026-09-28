@@ -18,4 +18,5 @@ if [ -f "$FONT" ]; then cp "$FONT" fonts/Brand.ttf; else curl -sfL -o fonts/Bran
 echo "Film project ready at $(pwd)"
 if [ -f ../score-log.tsv ]; then echo "Scores this brand's films already use (pick a different STYLE in soundtrack.mjs):"; tail -n +2 ../score-log.tsv | tail -5 | awk -F'\t' '{printf "  %-24s %-10s key %s  %s BPM\n",$1,$2,$3,$4}'; fi
 echo "Next: edit comp.html (scenes), timeline.js (pacing), soundtrack.mjs (cues), then:"
-echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs --draft && node render.mjs && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 30"
+echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs beats && node render.mjs --draft"
+echo "  then the blind critic, then: node render.mjs --blur 8 && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 30"

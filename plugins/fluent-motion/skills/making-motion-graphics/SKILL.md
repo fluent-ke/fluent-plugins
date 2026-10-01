@@ -4,7 +4,7 @@ description: Use when making a motion-graphics video - an animated promo, launch
 license: MIT
 metadata:
   author: fluent
-  version: "0.4"
+  version: "0.5"
 ---
 
 # Making motion graphics
@@ -25,12 +25,13 @@ Build the film in code: a canvas composition rendered frame by frame in headless
 | A 3D shot with real light or physics (logo that assembles, product turn, dominoes, cloth) | `blender -b -P $K/scripts/blender_plate.py -- still\|anim …` | [3d.md](references/3d.md) |
 | A person, character or live scene you have no footage of | a text-free clip from a video model, then `prep_footage.sh` | [3d.md](references/3d.md#generated-plates) |
 | Footage tricks from sports and event reels: hyperlapse merge, stadium, crowd or court reveal, masked frame build, logo match cut, colour flip, logo replace, warp portal | `masked`, `warp`, `quad`, `track` in comp.html; `asset_tools.py grid` to read points off a frame | [footage-effects.md](references/footage-effects.md) |
+| Someone talking to camera (interview, founder story, testimonial): the voice is the timeline | `cut_interview.py` (cut, frames, voice, words), `captions.py` + `caps()`, `asset_tools.py heads`, `mix-voice.sh` | [talking-head.md](references/talking-head.md) |
 | Text behind a person, product die-cut | `swift $K/scripts/segment.swift person\|cutout …` (macOS) | [motion.md](references/motion.md) |
 | Scenes and effects | comp.html helper library | [motion.md](references/motion.md) |
 | Story, pacing, copy | — | [storyboard.md](references/storyboard.md) |
 | Music, sync, a licensed track | `soundtrack.mjs`, `mix.sh` | [score.md](references/score.md) |
 | Checking the audio | `audio_check.py <file>` | levels, LUFS, silence, clipping, flat mix |
-| Checking the finished film | `$K/scripts/qc.sh out/<name>.mp4 1080x1920 30` | spec, BT.709 tags, dead holds, loudness and true peak, contact sheet |
+| Checking the finished film | `$K/scripts/qc.sh out/<name>.mp4 1080x1920 <FPS>` (the film's `CONFIG.FPS`) | spec, BT.709 tags, dead holds, loudness and true peak, contact sheet |
 | Voiceover, captions | vendor TTS or `media-use`; `words()` in comp.html | [voice-captions.md](references/voice-captions.md) |
 
 ## Steps
@@ -40,7 +41,7 @@ Build the film in code: a canvas composition rendered frame by frame in headless
 3. **Storyboard.** Write the beat sheet per [storyboard.md](references/storyboard.md): scenes, the words on screen, beats per scene, where the music hits. Show it to the user in a few lines. Done when every on-screen word traces to the fact list or the user's own copy.
 4. **Build.** `new_film.sh`, then write the scenes in `comp.html` (and set `CUTS` to their end beats), the pacing in `timeline.js`, and the cues in `soundtrack.mjs` (every cue as `M(comp beat)`). Pick a `STYLE` and `KEY` the brand's recent films have not used: `new_film.sh` prints them from `score-log.tsv`, and `soundtrack.mjs` warns on a repeat ([score.md](references/score.md#every-film-gets-its-own-music)). Brand marks go in as cropped image files, drawn at their own proportions. A film of more than about six scenes can go to worker agents, one scene brief each ([storyboard.md](references/storyboard.md#scene-briefs)).
 5. **Look.** `node soundtrack.mjs && node render.mjs stills b2 b5.5 …` (`bN` is comp beat N; plain numbers are seconds) at one moment per scene plus each text's settled state (each run replaces `stills/` and writes out/stills-sheet.png, tiled in the order given and labelled); read the sheet. `node render.mjs beats` draws one frame per music beat into out/beats-sheet.png: in a kinetic scene every tile differs from the one before it. `node render.mjs --draft` renders the whole film at half size with the score muxed in (out/draft.mp4) (about a minute; longer with Three.js) to check timing against the music. Fix, re-render stills, read again. Then hand both sheets to a blind critic per [critic.md](references/critic.md) and apply its fixes. Done when every scene passes the checks in [storyboard.md](references/storyboard.md#still-checks) and the critic scores no scene below 3.
-6. **Render and mix.** `node render.mjs --blur 8 && ./mix.sh <name>` (render splits the film across the performance cores; `--blur 8` averages 8 subframes per frame for motion blur at about 6× the time, so leave it off for drafts; `--workers N` to change, `--png` for lossless capture); variants with `--query` and `--out`. `mix.sh` writes the master, a posting copy and a WhatsApp copy under 16 MB. Run `$K/scripts/qc.sh out/<name>.mp4 1080x1920 30`, read its contact sheet, and grab frames around each cut. Done when QC passes and the cut frames look right.
+6. **Render and mix.** `node render.mjs --blur 8 && ./mix.sh <name>` (render splits the film across the performance cores; `--blur 8` averages 8 subframes per frame for motion blur at about 6× the time, so leave it off for drafts; `--workers N` to change, `--png` for lossless capture); variants with `--query` and `--out`. `mix.sh` writes the master, a posting copy and a WhatsApp copy under 16 MB; a film with a voice uses `./mix-voice.sh <name>` instead (ducks the score, reports voice over music). Run `$K/scripts/qc.sh out/<name>.mp4 1080x1920 <FPS>`, read its contact sheet, and grab frames around each cut. Done when QC passes and the cut frames look right.
 7. **Deliver.** Open the posting copy in the user's default player (`open` on macOS, `xdg-open` on Linux, `start` on Windows). Say where both files are, what each variant is for, and anything unverified (facts, font substitutions, the score you could not hear). Put the files in the user's project folder when they have one.
 
 ## Related skills (use them if installed)
@@ -66,6 +67,9 @@ Slower or faster: change the factor for that scene's segment in `timeline.js`; t
 | A CTA as a plain line of text | `cta(label,x,y,beat,tapBeat)`: a button with an arrow, a tap, and a hold of 3 s or more |
 | The same score style as the brand's last film | A different `STYLE`, `KEY` and feel per film; heed the ⚠ from `soundtrack.mjs` |
 | Captions all one colour | The key phrase of each line in the accent, via `words()` |
+| Captions or cues timed from whisper's word times | They drift by up to 0.6 s: anchor each page on a measured onset (`onsets.txt`) and verify the key lines with a second read ([talking-head.md](references/talking-head.md#2-transcribe-then-verify)) |
+| Cards, chips or labels near the top or right edge | The platform's bars and buttons cover them: everything inside x 60–960 and below y 250, not only captions |
+| A score you can't talk over | `mix-voice.sh`: voice 10 dB or more above the music in every window it reports |
 | The default look: centred text on a gradient, everything fading in, a logo at the end | Build from the agreed reference or named style; each scene moves by its own motion idea (slam, rise, morph, wipe, camera move) |
 | A kinetic scene with nothing moving on a beat | Read out/beats-sheet.png: give every beat a hit, or turn the scene into a reading hold |
 | A rigged character, walk cycle or acting in Blender | Characters come from a generated plate or stylised shapes; Blender does what physics or maths can drive |

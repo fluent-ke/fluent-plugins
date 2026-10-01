@@ -165,6 +165,21 @@ function cta(label,x,y,a,tap,{bg=C.accent,fg=C.bg,size=62,w8=800,minW=0}={}){con
 // Number that counts up from 0 between beats a and z (prices, prizes, stats)
 const count=(n,a,z,fmt=v=>v.toLocaleString('en-US'))=>fmt(Math.round(n*E.outCubic(PB(a,z))));
 
+// ── Voice-led films (references/talking-head.md): the voice is the timeline, so scenes are timed in seconds at measured onsets.
+const TP=(a,z)=>clamp((t-a)/(z-a)), TI=(a,d=.35,e=E.outExpo)=>e(TP(a,a+d)), bt=s=>s/B;   // progress between two times; eased entrance; seconds → comp beat (for shock, sparks, cta)
+// Captions from scripts/captions.py (load captions.js before this script; it sets CAPS). One page at a time: each word pops on its spoken
+// onset, a box grows behind the words said so far (it keeps them readable over a light shirt or sky), the key phrase in the accent.
+function caps(y=H*.73,{alpha=1,size=56,box=C.bg,ink=C.ink,cx=W*.48,maxW=W*.8}={}){if(typeof CAPS==='undefined'||alpha<=0)return;const p=CAPS.find(p=>t>=p.t&&t<p.end);if(!p)return;
+  const SA=Math.round(size*1.25),sp=size*.3,LH=size*1.65;ctx.save();ctx.letterSpacing='-1px';
+  const it=p.w.map(([w,ts,a])=>{ctx.font=font(700,a?SA:size);return{w,ts,a,wd:ctx.measureText(w).width}});
+  const lines=[[]];let lw=0;for(const i of it){if(lines.at(-1).length&&lw+sp+i.wd>maxW){lines.push([]);lw=0}lines.at(-1).push(i);lw+=(lw?sp:0)+i.wd}
+  lines.forEach((ln,li)=>{const tot=ln.reduce((s,i)=>s+i.wd,0)+sp*(ln.length-1),x0=cx-tot/2,yy=y-(lines.length-1)*LH/2+li*LH;let x=x0,right=null;
+    ln.forEach(i=>{i.x=x;x+=i.wd+sp;if(t>=i.ts)right=i.x+i.wd*clamp((t-i.ts)/.1)});if(right==null)return;
+    ctx.globalAlpha=.9*alpha;ctx.fillStyle=box;ctx.beginPath();ctx.roundRect(x0-size*.46,yy-LH/2+4,right-x0+size*.92,LH-8,size*.4);ctx.fill();
+    ln.forEach(i=>{const k=clamp((t-i.ts)/.2);if(k<=0)return;const sc=lerp(i.a?.55:.75,1,E.outBack(k));ctx.save();ctx.globalAlpha=alpha*clamp(k*3);
+      ctx.translate(i.x+i.wd/2,yy+(1-E.outExpo(k))*16);ctx.scale(sc,sc);ctx.font=font(700,i.a?SA:size);ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle=i.a?C.accent:ink;ctx.fillText(i.w,0,size*.07);ctx.restore()})});ctx.restore()}
+
 // ── Backgrounds and texture
 const grain=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d'),d=g.createImageData(256,256),r=rng(3);
   for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=r()*255;d.data[i+3]=16}g.putImageData(d,0,0);return c})();

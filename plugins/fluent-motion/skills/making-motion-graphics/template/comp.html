@@ -200,7 +200,7 @@ function scene(){
 
   // S1 b0–4: one word per beat, colours flip each hit
   if(b<4){const i=Math.floor(b),k=b-i,cards=[['ONE',C.accent,C.bg],['WORD',C.brand,C.ink],['PER',C.soft,C.brand],['BEAT.',C.bg,C.accent]],[w,bg,fg]=cards[i];
-    bgFlat(bg);const s=fit(w,800,W*.87,H*.2),sc=lerp(1.3,1,E.outExpo(clamp(k/.35)));
+    bgFlat(bg);const s=fit(w,800,W*.81,H*.2),sc=lerp(1.3,1,E.outExpo(clamp(k/.35)));
     ctx.save();ctx.translate(W/2,H/2);ctx.scale(sc,sc);ctx.translate(-W/2,-H/2);echo(w,W/2,H/2,800,s,fg,fg,lerp(s*.9,0,E.outQuint(clamp(k/.6))));ctx.restore();return}
 
   // S2 b4–8: headline + subline + pills (a reading scene: stretch it in timeline.js)
@@ -225,6 +225,9 @@ function scene(){
 function grainPass(){ctx.save();ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.translate((b*97)%256,(b*61)%256);ctx.fillRect(-256,-256,W+512,H+512);ctx.restore()}
 async function render(time){await window.ready;t=time;m=t/B;b=toComp(m);ctx=cv.getContext('2d');await preload();
   scene();ctx.setTransform(1,0,0,1,0,0);swipe();grainPass();
-  if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
+  if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
+  if(Q.get('safe')){const T=H*250/1920,Bm=H*350/1920,S=W*60/1080,L=W*100/1080;ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;   // safe-area guides (--query safe=1): red = under platform UI
+    ctx.fillStyle='rgba(255,40,40,.28)';ctx.fillRect(0,0,W,T);ctx.fillRect(0,H-Bm,W,Bm);ctx.fillRect(0,T,S,H-T-Bm);ctx.fillRect(W-S,T,S,H-T-Bm);
+    ctx.strokeStyle='rgba(255,40,40,.9)';ctx.lineWidth=2;ctx.setLineDash([14,10]);ctx.strokeRect(L,T,W-2*L,H-T-Bm);ctx.restore()}}
 window.render=render;
 </script></body></html>

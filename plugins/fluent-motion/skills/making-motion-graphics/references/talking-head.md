@@ -63,7 +63,7 @@ Write `pages.txt` by hand, 2–4 words a page, each page starting on a measured 
 
 ## 7. Cutaways on the big lines
 
-- **Safe area for everything, not only captions.** Cards, chips, labels and chat bubbles stay inside x 60–960 and below y 250; the top bar and right-hand buttons of TikTok and Reels cover the rest.
+- **Safe area for everything, not only captions** ([SKILL.md](../SKILL.md#safe-area)): cards, chips, labels, chat bubbles and big tucked words stay inside it; a word fitted to the full frame width breaks the side margin.
 - **UI cards** illustrate the problem lines (a build stuck at 99 %, a message delivered and unanswered, "build failed", a deadline "not set"): one card per line in the same slot above the head, popping in on a spring with a slight tilt. Four in a row starts to read as a template, so break the run with a cutaway.
 - **Landscape photos** in a 9:16 film: full bleed only when the upscale stays under about 1.6×. Otherwise use a split screen: the photo panel on top (1080 × ~780), the speaker below (`plate('TALK',1,0,560)` drops the frame so the face sits at about y 1350), and captions on the seam.
 - **Footage effects** ([footage-effects.md](footage-effects.md)) work on stills of the place: a masked frame build behind the speaker on a list, crowd masking on "somebody at the next table", a stadium reveal from an empty room to a full one, a logo match cut on the brand line, a hyperlapse merge on "faster", a warp portal into the end card on the call to action. Each must say the line, not argue with it: an empty room under "next to other founders" works against the pitch.

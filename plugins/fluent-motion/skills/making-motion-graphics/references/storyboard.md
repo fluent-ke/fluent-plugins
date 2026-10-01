@@ -45,7 +45,7 @@ A film of more than about six scenes can be built in parallel: one worker agent 
 <scene> S3 "Stakes", comp beats 12–16, 9:16. Look: <the four look lines>. Brand: C = {…}, font Brand 400/800.
 <words> The on-screen words, exactly, with the key phrase marked. </words>
 <rules> Pure render(t): seeded rng(), no Date, no state between frames. Helpers from comp.html only.
-  Text inside the middle 1080×1420. Frame 0 of the scene carries content. </rules>
+  Text and logos inside the safe area (SKILL.md): top 250 px, bottom 350 px, sides 60–100 px clear. Frame 0 of the scene carries content. </rules>
 <structure> Beat by beat: b12 number counts up · b13.5 lands (shock + sparks) · b14 label rises · b15–16 hold. </structure>
 <motion> The look's motion signature. Springs with a small overshoot; entrances 0.3–0.5 beat, exits faster. </motion>
 <export> Render stills at each beat of the scene with `node render.mjs stills --into S3 b12.5 b13.5 …`, read them, fix, and return
@@ -73,7 +73,7 @@ Read the stills sheet for each scene and fix before the full render:
 
 - Frame 0 carries content (a word already on screen, the plate, a shape): it is the thumbnail and the first thing a scrolling viewer sees. Start the first entrance at b0 with most of it already in, or put a still element under it.
 - Nothing touches or crosses the frame edge unless it is meant to bleed; keep 60 px of margin on text.
-- In 9:16, keep text inside the middle 1080×1420: the top 250 px and bottom 250 px sit under platform UI.
+- In 9:16, keep text and logos inside the safe area (SKILL.md): the top 250 px and bottom 350 px sit under platform UI, and sides need 60 px (100 px for logos and key words). Check with `--query safe=1` stills.
 - Content fills the frame: a scene with its content packed into one half gets re-centred or scaled.
 - Text over footage has a scrim, shadow or matte so it reads on every frame.
 - Brand marks are sharp, in proportion, and on a background the brand allows.

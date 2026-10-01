@@ -26,7 +26,7 @@ Avoid for client work, because the weights or outputs are non-commercial: XTTS-v
 
 1. **Word timings for a known script:** the vendor's timestamps (ElevenLabs `/with-timestamps`) shifted by each clip's offset; otherwise `stable-ts` (`model.align(audio, script)`, MIT); for Swahili the Montreal Forced Aligner Swahili model. When there is no script, transcribe first with `whisper` (MIT) or `whisper.cpp` using word timestamps.
 2. **Pages:** group words into pages of 2–4 words (a page closes after about 600 ms or at punctuation). One page on screen at a time.
-3. **Style:** each word pops in on its own start time (`words()` in comp.html takes the page's start beat and a per-word step), the active or key word in the accent colour, heavy weight, 80–110 px on a 1080-wide frame, a soft dark shadow or a local `halo()` behind it. Keep caption pages inside x 60–960 and y 250–1490 so the platform's buttons and caption bar do not cover them.
+3. **Style:** each word pops in on its own start time (`words()` in comp.html takes the page's start beat and a per-word step), the active or key word in the accent colour, heavy weight, 80–110 px on a 1080-wide frame, a soft dark shadow or a local `halo()` behind it. Keep caption pages inside the safe area ([SKILL.md](../SKILL.md#safe-area)): on 1080×1920, between y 250 and 1570 and at least 60 px from the sides.
 4. **Burn them in** through the comp, not a subtitle file: styling and timing then match the rest of the film.
 
 For a person speaking on camera, `captions.py` builds the pages from hand-written page times and whisper's word times, and `caps()` draws them: see [talking-head.md](talking-head.md#6-captions).

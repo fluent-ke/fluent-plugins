@@ -21,7 +21,7 @@ Judge only what is on the sheets against the brief and the look.
 
 For each scene, score 1-5 on:
 - hierarchy: one idea, and the eye knows where to go first
-- legibility: every text readable at phone size, inside the 1080x1420 safe area, held long enough to read
+- legibility: every text readable at phone size, inside the safe area (on 1080x1920: top 250 px, bottom 350 px and sides 60–100 px clear), held long enough to read
 - look: matches the reference or the four look lines; flag the default look (centred text on a gradient,
   everything fading in, a logo at the end) wherever it appears
 - motion: on the beats sheet, something changes on every beat of a kinetic scene; reading holds are still but alive

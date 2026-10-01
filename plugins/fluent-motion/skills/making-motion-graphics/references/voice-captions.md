@@ -29,6 +29,8 @@ Avoid for client work, because the weights or outputs are non-commercial: XTTS-v
 3. **Style:** each word pops in on its own start time (`words()` in comp.html takes the page's start beat and a per-word step), the active or key word in the accent colour, heavy weight, 80–110 px on a 1080-wide frame, a soft dark shadow or a local `halo()` behind it. Keep caption pages inside x 60–960 and y 250–1490 so the platform's buttons and caption bar do not cover them.
 4. **Burn them in** through the comp, not a subtitle file: styling and timing then match the rest of the film.
 
+For a person speaking on camera, `captions.py` builds the pages from hand-written page times and whisper's word times, and `caps()` draws them: see [talking-head.md](talking-head.md#6-captions).
+
 ## Mix
 
 `[music][vo]sidechaincompress=threshold=0.05:ratio=8:attack=20:release=300` ducks the score under the voice, then the two-pass loudnorm in `mix.sh`. Check it with `audio_check.py`: the voice sections should read louder than the score-only sections, never flat.

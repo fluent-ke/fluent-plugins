@@ -11,6 +11,7 @@ Start a subagent (the Agent or Task tool; in an app without one, a fresh chat) a
 - out/stills-sheet.png (one still per scene and each text's settled state)
 - out/beats-sheet.png (one frame per music beat; tell the critic that `m` labels are evenly spaced music beats and `b` labels are comp beats, whose spacing widens wherever a scene is stretched to hold, by design)
 - the fact list, so it can check the words on screen
+- for a film with a voice, the verbatim transcript, so it can check every caption against what was said
 
 Paste this as its prompt:
 

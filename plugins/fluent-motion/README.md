@@ -9,10 +9,11 @@ One skill, **making-motion-graphics**. The film is built in code (an HTML canvas
 - Reads everything you supply and checks each fact it will put on screen against its source, on the day.
 - Agrees the goal, format and length with you, then writes a beat sheet before any animation.
 - Crops your logos and partner marks from the artwork you gave it rather than redrawing them.
-- Composes an original score (afro-house, amapiano, Kenyan benga or ambient) to the film's timeline, or syncs to a track you have the rights to.
+- Composes an original score (afro-house, amapiano, Kenyan benga, Nairobi drill, lofi or ambient) to the film's timeline, or syncs to a track you have the rights to.
 - Starts from a look, a reference video or a written-out style, so films don't fall back on the stock AI look of centred text fading in over a gradient.
 - Adds 3D: Three.js drawn straight into the film for spinning marks and orbiting cards, Blender plates for real light and physics (domino chains, cloth, jelly), and generated clips from a video model for people and live scenes, with every word still drawn by the film.
 - Cuts footage like a sports hype reel when you supply it: hyperlapses merged into one rush, an empty stadium wiped to a full one, crowd sections and players lit up one by one, a logo match cut across many shots, frame-by-frame colour flips, a logo replaced in perspective on a moving shot, and a player pulled through a warping portal.
+- Edits talking-head footage into a social cut: pauses tightened into jump cuts with punch-ins, the hook moved to the first frame, captions that pop on each spoken word (checked against a second transcription), a key word tucked behind the speaker's head, cutaways and effects on the big lines, and a score ducked under the voice.
 - Ends on a call to action that reads as one: a button that pops in, gets tapped and holds.
 - Renders across your CPU cores (about 2× faster), with a half-size draft for checking timing, motion blur on the final render, and delivers a posting copy, a master and a WhatsApp copy under 16 MB, colour-tagged so hues hold after upload.
 - Checks its own work: stills of every scene and one frame per beat read before the full render, a blind critic agent that scores each scene against the brief and the look, audio measured for level, silence and clipping, and a QC pass on the finished file (size, colour tags, dead holds, loudness, true peak, contact sheet).
@@ -54,16 +55,19 @@ skills/making-motion-graphics/
     timeline.js                pacing: stretches reading scenes while the music keeps its tempo
     soundtrack.mjs             the synthesised score, cued to the scenes
     render.mjs, mix.sh         frames to MP4 in parallel (or a quick draft), then audio in, loudness-normalised in two passes
+    mix-voice.sh               for films with a voice: the score ducked under it, and how far the voice sits above the music
   scripts/
     new_film.sh                start a film project from the template
     study_reference.sh         cuts, shot length and a contact sheet of any video
     prep_footage.sh            footage into frame sequences, with slow motion
-    asset_tools.py             crop, key out backgrounds, brand palette, contact sheets, pixel grids for reading points
+    cut_interview.py           a talking-head take cut to a tight edit: pauses shortened, frames, voice, word timings, speech onsets
+    captions.py                caption pages timed to the spoken words, for the caps() helper
+    asset_tools.py             crop, key out backgrounds, brand palette, contact sheets, pixel grids, head tracking from mattes
     audio_check.py             levels, loudness, silence and clipping, for an agent that cannot listen
     qc.sh                      checks the finished film: spec, colour tags, dead holds, loudness, true peak, contact sheet
     blender_plate.py           a 3D shot rendered headless to a transparent plate, with baked physics
     segment.swift              person mattes and subject cut-outs (macOS)
-  references/                  storyboard, look and pacing, motion recipes, footage effects, score and sync, 3D and generated plates, the blind critic, voiceover and captions
+  references/                  storyboard, look and pacing, motion recipes, footage effects, talking-head films, score and sync, 3D and generated plates, the blind critic, voiceover and captions
 ```
 
 ## Licence

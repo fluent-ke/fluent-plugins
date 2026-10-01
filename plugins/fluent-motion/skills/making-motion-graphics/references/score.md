@@ -4,7 +4,7 @@
 
 `soundtrack.mjs` writes `score.wav`: an original track built from oscillators and noise, so there is nothing to license. It reads the tempo and scene timing from `timeline.js`.
 
-- `STYLE`: `afrohouse` (kick, clap, congas, offbeat sub bass, filtered pads; 118–124 BPM), `amapiano` (log drum lead, shakers; set `BPM` to 108–114), `benga` (Kenyan benga over a house kick: a muted 16th-note guitar arpeggio on the left, a chattering lead guitar on the right when `arp:true`, a walking eighth-note bass, D major; 118–128 BPM), `drill` (Nairobi drill: half-time drums, triplet hat rolls, sliding 808s, a buzzy nyatiti-like lyre riff, brass stabs; minor key, 118–144 BPM), `ambient` (no drums: pads, bass, marimba arp; for corporate or calm films; 80–100 BPM).
+- `STYLE`: `afrohouse` (kick, clap, congas, offbeat sub bass, filtered pads; 118–124 BPM), `amapiano` (log drum lead, shakers; set `BPM` to 108–114), `benga` (Kenyan benga over a house kick: a muted 16th-note guitar arpeggio on the left, a chattering lead guitar on the right when `arp:true`, a walking eighth-note bass, D major; 118–128 BPM), `drill` (Nairobi drill: half-time drums, triplet hat rolls, sliding 808s, a buzzy nyatiti-like lyre riff, brass stabs; minor key, 118–144 BPM), `ambient` (no drums: pads, bass, marimba arp; for corporate or calm films; 80–100 BPM), `lofi` (a swung boom-bap: soft kick on 1 and the "and" of 3, snare on 2 and 4, 8th hats, warm minor-9th pads, root-and-fifth bass; 80–95 BPM; made to sit under a voice, see [talking-head.md](talking-head.md#8-score-and-mix)).
 - A style the last few films used sounds generic to the client even when it is good. Rotate styles across a brand's films, and when one is asked for "not generic", reach for a local form (benga, or build one on `pluck()`: a kora-like harp line, a nyatiti-like lyre ostinato) before a global one.
 - `CH`: four chords, one per bar, as MIDI notes. The default is A minor (Am9, Fmaj9, Dm9, Em7). Transpose every number by the same amount to change key; swap in major chords for a brighter film.
 - `drill` voices: `e808(t,note,len,gain,fromNote)` (sliding 808), `dkick`, `dsnare`, `dhat`, `lyre(t,note,gain,pan,len)` (buzzy nyatiti-like pluck), `brass(t,notes,gain,len)` (stab for big hits). In `groove()`, `cg`/`arp` turn the lyre riff on for drill.
@@ -19,14 +19,14 @@ Arc that works: sparse intro hits on each word, groove in as the title lands, a 
 A score heard on the last film makes the new one feel like a rerun, even when the score is good. So each film gets a different track:
 
 1. **Before writing cues, read the log.** `new_film.sh` prints the last scores from `score-log.tsv` in the folder that holds the brand's films (keep each brand's films as sibling folders under one brand folder, so a brand's first film starts its log there); `soundtrack.mjs` updates it on every run and prints a ⚠ when this film's `STYLE` matches either of the brand's last two films.
-2. **Change the style first.** Rotate through `afrohouse`, `amapiano`, `benga`, `drill`, `ambient`, and prefer the one that fits the film's story (chaos into order suits drill's breakdown and drop; warm lifestyle suits amapiano or benga; a calm explainer suits ambient).
+2. **Change the style first.** Rotate through `afrohouse`, `amapiano`, `benga`, `drill`, `ambient`, `lofi`, and prefer the one that fits the film's story (chaos into order suits drill's breakdown and drop; warm lifestyle suits amapiano or benga; a calm explainer suits ambient).
 3. **Change the key and feel too.** `KEY` transposes everything (-5…+6); a different tempo range, a new chord progression in `CH`, or new riff notes make even a returning style a new track.
 4. **When all five are spent, make a new one** from the voices on hand (`pluck()`, `lyre()`, `e808()`, `logdrum()`, `brass()`, `pad()`): a kora-like harp line, an ohangla-style drum pattern, a taarab-flavoured string pad. Add it as a new `STYLE` so the next film can use it too.
 5. When delivering, name the track's style and key, and say it differs from the brand's last film.
 
 ## Sync
 
-Write every cue as `M(comp beat)`, never raw seconds, so re-timing a scene in `timeline.js` moves its sounds with it. Keep segment boundaries on whole music beats (`toMusic(c)` prints them); a hit that lands between beats sounds late.
+Write every cue as `M(comp beat)`, never raw seconds, so re-timing a scene in `timeline.js` moves its sounds with it. (A voice-led film is the exception: its timeline never stretches, so cues go in seconds at measured onsets; one-shots like `kick(t)` take seconds, `groove(from,to)` takes music beats, so pass `groove(a/B,z/B)`. See [talking-head.md](talking-head.md#8-score-and-mix).) Keep segment boundaries on whole music beats (`toMusic(c)` prints them); a hit that lands between beats sounds late.
 
 ## Checking what you cannot hear
 

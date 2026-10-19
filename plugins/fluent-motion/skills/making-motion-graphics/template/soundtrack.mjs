@@ -79,6 +79,11 @@ const down=(t,len=1,g=.22)=>{let lp=0;add(t,len,x=>{const k=x/len;lp+=(.4*(1-k)+
 const impact=(t,g=.7)=>{add(t,2,x=>Math.sin(TAU*(30*x+50*(1-Math.exp(-x*5))/5))*Math.exp(-x*2),g,0,.15);down(t,1.4,g*.45)};
 const crash=(t,g=.14)=>{const f=hp();add(t,2.2,x=>f(noise(),.5)*Math.exp(-x*2.2),g,.15,.5)};
 const revCrash=(t,len=1,g=.12)=>{const f=hp();add(t-len,len,x=>f(noise(),.5)*(x/len)**3,g,-.15,.3)};
+// Edit sounds (references/edits.md): each peaks at t, so pass the cut's time T(M(c)).
+const whoosh=(t,len=.45,g=.3,pan=0)=>{const f=hp();let lp=0;add(t-len*.7,len,x=>{const k=x/len,e=k<.7?(k/.7)**2:Math.exp(-(k-.7)*14);lp+=(.03+.5*e)*(noise()-lp);return f(lp,.35)*e*3},g,pan,.25)};
+const zap=(t,g=.2)=>{let ph=0;add(t,.16,x=>{ph+=TAU*(1500*Math.exp(-x*26)+70)/SR;return Math.sign(Math.sin(ph))*(1-x/.16)**2*.5},g,0,.05)};
+const shutter=(t,g=.32)=>{for(const d of[0,.05])add(t+d,.035,x=>noise()*Math.exp(-x*200),g,0,.04)};
+const TAPE=[];const tapeStop=(t,len=.6)=>TAPE.push([t,len]);   // the whole mix slows to a halt from t over len s (applied at the master)
 const tick=(t,g=.12)=>add(t,.04,x=>Math.sin(TAU*2600*x)*Math.exp(-x*150),g,.3,.4);
 
 // ── Groove between two music beats, on one global 16th grid so cuts never land off-beat. Options thin it for quiet scenes.
@@ -117,7 +122,7 @@ function groove(from,to,{k=true,cl=true,hh=true,sh=true,cg=true,bs=true,pd=true,
 [0,1,2].forEach(i=>{stab(T(M(i)),CH[0].c.map(n=>n+[0,3,5][i]));kick(T(M(i)),.7);tick(T(M(i))+.01)});
 riser(T(M(1.5)),T(M(3)-M(1.5)),.22);revCrash(T(M(3)),T(1));impact(T(M(3)),.8);stab(T(M(3)),CH[3].c,.1,.8);
 // S2 reading scene: groove with the filter half open, marimba arp under the text
-revCrash(T(M(4)),T(1));crash(T(M(4)),.12);groove(M(4),M(8),{arp:true,cut:1300});
+whoosh(T(M(4)));groove(M(4),M(8),{arp:true,cut:1300});
 [5.5,5.9].forEach((c,i)=>mar(T(M(c)),[81,84][i],.1));
 // S3 the number: drums drop out, riser into the landing, then full groove
 revCrash(T(M(8)),T(.8));groove(M(8),M(9.5),{k:false,cl:false,hh:false,bs:false,cg:false,cut:700});
@@ -137,6 +142,8 @@ const duck=new Float32Array(N).fill(1);
 for(const t of KICKS){const s0=Math.round(t*SR);for(let i=0;i<.3*SR;i++){const j=s0+i;if(j<N)duck[j]=Math.min(duck[j],1-.7*Math.exp(-i/SR*14))}}
 const OL=new Float32Array(N),OR=new Float32Array(N);let pk=0;
 for(let n=0;n<N;n++){OL[n]=Math.tanh((L[n]+PL[n]*duck[n]+wl[n]*.4)*1.1);OR[n]=Math.tanh((R[n]+PR[n]*duck[n]+wr[n]*.4)*1.1);pk=Math.max(pk,Math.abs(OL[n]),Math.abs(OR[n]))}
+for(const[ts,len]of TAPE){const s0=Math.round(ts*SR),n=Math.round(len*SR),cl=OL.slice(s0,s0+n),cr=OR.slice(s0,s0+n);let pos=0;
+  for(let i=0;i<n&&s0+i<N;i++){pos+=(1-i/n)**1.6;const j=Math.floor(pos),q=pos-j,g=1-(i/n)**3;OL[s0+i]=((cl[j]||0)*(1-q)+(cl[j+1]||0)*q)*g;OR[s0+i]=((cr[j]||0)*(1-q)+(cr[j+1]||0)*q)*g}}
 const buf=Buffer.alloc(44+N*4);buf.write('RIFF',0);buf.writeUInt32LE(36+N*4,4);buf.write('WAVEfmt ',8);buf.writeUInt32LE(16,16);buf.writeUInt16LE(1,20);buf.writeUInt16LE(2,22);
 buf.writeUInt32LE(SR,24);buf.writeUInt32LE(SR*4,28);buf.writeUInt16LE(4,32);buf.writeUInt16LE(16,34);buf.write('data',36);buf.writeUInt32LE(N*4,40);
 for(let n=0;n<N;n++){const f=Math.min(1,(DUR-n/SR)/1)*.9/pk;buf.writeInt16LE(Math.round(OL[n]*f*32767),44+n*4);buf.writeInt16LE(Math.round(OR[n]*f*32767),46+n*4)}

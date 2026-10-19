@@ -19,4 +19,4 @@ globalThis.MUSIC_BEATS=toMusic(SEG.at(-1)[1]);
 //   text     the text treatment: centred-slam | left-stack | giant-crop | caption | serif-editorial | mono
 //   ending   lockup-cta | loop | hold | cut-to-black | callback
 //   transitions every transition kind used, e.g. ['cut','flood','whip']
-globalThis.FILM={shape:'promo',opening:'hook-word',signature:'slam-echo',camera:'locked',text:'centred-slam',ending:'lockup-cta',transitions:['cut','swipe']};
+globalThis.FILM={shape:'promo',opening:'hook-word',signature:'slam-echo',camera:'locked',text:'centred-slam',ending:'lockup-cta',transitions:['cut','whip','flood','zoom']};

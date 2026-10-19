@@ -27,7 +27,9 @@ const srv=createServer(async(q,r)=>{const p=decodeURIComponent(q.url.split('?')[
   try{const b=await readFile(dir+p);r.writeHead(200,{'content-type':types[extname(p).toLowerCase()]||'application/octet-stream','cache-control':'max-age=3600'});r.end(b)}catch{r.writeHead(404);r.end()}}).listen(0);
 const url=`http://localhost:${srv.address().port}/comp.html${query?'?'+query:''}`;
 const browser=await chromium.launch();
+let heard=false;   // the first page relays the comp's ⚠ warnings (the edit kit's guardrails), once
 async function open(){const page=await browser.newPage();
+  if(!heard){heard=true;page.on('console',m=>{if(m.text().startsWith('⚠'))console.log(m.text())})}
   page.on('pageerror',e=>{console.error('comp.html error:',e.message);process.exitCode=1});
   await page.goto(url);if(!await page.evaluate(()=>window.ready)) throw new Error('assets failed to load');
   const cfg=await page.evaluate(()=>window.CONFIG);await page.setViewportSize({width:cfg.W,height:cfg.H});return [page,cfg]}

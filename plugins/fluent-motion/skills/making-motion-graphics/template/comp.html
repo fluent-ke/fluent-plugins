@@ -2,6 +2,7 @@
 <style>@font-face{font-family:Brand;src:url("fonts/Brand.ttf");font-weight:100 900}
 html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
 <script src="timeline.js"></script>
+<script src="edits.js"></script>
 <canvas id="c"></canvas>
 <script>
 // ── The film. render(t) must be PURE: the same t always draws the same frame (no Date, no Math.random, no state
@@ -34,14 +35,20 @@ window.ready=Promise.all([document.fonts.load('800 50px Brand'),document.fonts.l
   ...Object.entries(SRC).map(([k,u])=>{const im=new Image();im.src=u;return im.decode().then(()=>IMG[k]=im)})]).then(()=>true);
 
 // ── Footage: frame sequences from scripts/prep_footage.sh (shots/NAME/0001.jpg, optional masks/NAME/0001.png).
-// `at` is the comp beat the shot starts; it plays in real time from there.
+// `at` is the comp beat the shot starts; it plays in real time from there, unless it has a ramp or a freeze (references/edits.md).
 const SHOTS={/* HERO:{at:4,n:90,mask:false}   3D plate: PLATE:{at:0,n:300,ext:'png'} */};
 const FR={},cache=new Map();
 function load(u){if(!cache.has(u)){const im=new Image();im.src=u;cache.set(u,im.decode().then(()=>im,()=>null));if(cache.size>120)cache.delete(cache.keys().next().value)}return cache.get(u)}
 const pad4=i=>String(i).padStart(4,'0');
-const shotIdx=k=>clamp(Math.floor((t-toMusic(SHOTS[k].at)*B)*FPS),0,SHOTS[k].n-1)+1;
-async function preload(){for(const k in SHOTS){const s=SHOTS[k];if(b<s.at-.1||t>toMusic(s.at)*B+s.n/FPS+.1)continue;const i=shotIdx(k);
-  FR['f'+k]=await load(`shots/${k}/${pad4(i)}.${s.ext||'jpg'}`);if(s.mask)FR['m'+k]=await load(`masks/${k}/${pad4(i)}.png`)}}
+// Seconds into shot k's footage now. SHOTS.X.ramp=[[beat,speed],…] plays at that speed from each beat (1 = real time, eased over 0.2 s);
+// SHOTS.X.freeze=[[beat,beats]] holds the frame. Integrated in 1/120 s steps from the shot's start, so every render agrees.
+function shotT(k){const s=SHOTS[k],t0=toMusic(s.at)*B;if(t<=t0)return 0;if(!s.ramp&&!s.freeze)return t-t0;
+  const R=(s.ramp||[]).map(([c,v])=>[toMusic(c)*B,v]),Z=(s.freeze||[]).map(([c,l])=>[toMusic(c)*B,toMusic(c+l)*B]);
+  const sp=x=>{if(Z.some(([a,z])=>x>=a&&x<z))return 0;let v=1,pv=1,ta=-1;for(const[a,s2]of R)if(x>=a){pv=v;v=s2;ta=a}return ta<0?1:lerp(pv,v,clamp((x-ta)/.2))};
+  let p=0;for(let x=t0;x<t;x+=1/120)p+=sp(x)/120;return p}
+const shotIdx=k=>clamp(Math.floor(shotT(k)*FPS)+(SHOTS[k].from||0),0,SHOTS[k].n-1)+1;   // from: an in-point, in frames
+async function preload(){for(const k in SHOTS){const s=SHOTS[k];if(b<s.at-.1)continue;const i=shotIdx(k);   // past its end a shot holds its last frame (cached), so every render agrees
+  const d=s.dir||k;FR['f'+k]=await load(`shots/${d}/${pad4(i)}.${s.ext||'jpg'}`);if(s.mask)FR['m'+k]=await load(`masks/${d}/${pad4(i)}.png`)}}   // dir: another shot's frames
 const mk=()=>{const c=document.createElement('canvas');c.width=W;c.height=H;return c},layer=mk(),lctx=layer.getContext('2d');
 function plate(k,s=1,ox=0,oy=0){const im=FR['f'+k];if(!im)return;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.scale(s,s);ctx.drawImage(im,-W/2,-H/2,W,H);ctx.restore()}
 // The subject cut out by its matte, same transform as plate(): draw plate, then text, then subject = text behind the person
@@ -54,7 +61,7 @@ function subject(k,s=1,ox=0,oy=0){const im=FR['f'+k],mm=FR['m'+k];if(!im||!mm)re
 const fi=()=>Math.round(t*FPS), fAt=c=>Math.round(toMusic(c)*B*FPS);
 const about=(x,y,s,f)=>{ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.translate(-x,-y);f();ctx.restore()};   // f() scaled about (x,y)
 const fx=mk(),fctx=fx.getContext('2d'),mx=mk(),mctx=mx.getContext('2d'),snapC=mk(),sctx=snapC.getContext('2d');
-function snap(){sctx.clearRect(0,0,W,H);sctx.drawImage(cv,0,0);return snapC}       // the frame drawn so far
+function snap(){sctx.clearRect(0,0,W,H);sctx.drawImage(ctx.canvas,0,0);return snapC}       // the frame drawn so far (on whichever canvas is being drawn)
 const path=(c,P)=>{c.beginPath();P.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath()};
 // A convex shape's edges pushed d px outward (corners mitred): fills past a mark's edge, overlaps tiles so no seams show
 const grow=(P,d)=>{const n=P.length,o=Math.sign(P.reduce((s,[x,y],i)=>{const[u,v]=P[(i+1)%n];return s+x*v-u*y},0))||1,
@@ -189,7 +196,10 @@ const bgFlat=col=>{ctx.fillStyle=col;ctx.fillRect(0,0,W,H)};
 
 // Scene cuts: a band wipes across (±0.4 music beat) and the scene changes underneath it.
 // Keep CUTS equal to the scene end beats in scene() below: every `if(b<end)` except the last.
-const CUTS=[4,8,12];
+const CUTS=[];
+// Transitions from the edit kit (edits.js, references/edits.md): [cutBeat, kind, {opts}], kinds cut whip flood iris slice zoom flash glitch.
+// Use these instead of the band swipe: empty CUTS (or remove swipe() from render) when you list a cut here.
+const TRANS=[[4,'whip'],[8,'flood',{from:[W/2,H*.45]}],[12,'zoom']];
 function swipe(){const X=k=>lerp(-W-900,W*2+900,E.inOutCubic(clamp(k)));for(const c of CUTS){const k=(m-(toMusic(c)-.4))/.8;if(k<=0||k>=1)continue;const x=X(k);
   const smear=Math.min(90,Math.abs(X(k+.03)-x)*.2);    // edge softness follows the band's speed: reads as motion blur and hides --blur's subframe steps
   ctx.save();ctx.translate(x,H/2);ctx.rotate(-.35);ctx.filter=`blur(${smear}px)`;ctx.fillStyle=C.accent;ctx.fillRect(-W*.4,-H,W*.8,H*2);ctx.restore()}}
@@ -222,9 +232,11 @@ function scene(){
   cta('The call to action',W/2,H*.8,14,15.5);
 }
 
+// The film's grade, over every scene (scenes return early, so it lives here): e.g. grade('warm-film'), or by section with b.
+function look(){}
 function grainPass(){ctx.save();ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.translate((b*97)%256,(b*61)%256);ctx.fillRect(-256,-256,W+512,H+512);ctx.restore()}
 async function render(time){await window.ready;t=time;m=t/B;b=toComp(m);ctx=cv.getContext('2d');await preload();
-  scene();ctx.setTransform(1,0,0,1,0,0);swipe();grainPass();   // swipe(): a band wipe at every CUT; remove it when the look builds its transitions from the picture
+  scene();ctx.setTransform(1,0,0,1,0,0);look();await trans();swipe();grainPass();   // swipe(): a band wipe at every CUT; remove it when the look builds its transitions from the picture
   if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
   if(Q.get('safe')){const T=H*250/1920,Bm=H*350/1920,S=W*60/1080,L=W*100/1080;ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;   // safe-area guides (--query safe=1): red = under platform UI
     ctx.fillStyle='rgba(255,40,40,.28)';ctx.fillRect(0,0,W,T);ctx.fillRect(0,H-Bm,W,Bm);ctx.fillRect(0,T,S,H-T-Bm);ctx.fillRect(W-S,T,S,H-T-Bm);

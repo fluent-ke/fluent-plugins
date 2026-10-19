@@ -4,7 +4,7 @@ description: Use when making a motion-graphics video - an animated promo, launch
 license: MIT
 metadata:
   author: fluent
-  version: "0.3"
+  version: "0.4"
 ---
 
 # Making motion graphics
@@ -24,6 +24,7 @@ Build the film in code: a canvas composition rendered frame by frame in headless
 | A 3D accent (spinning mark, orbiting cards, a device rising) | Three.js drawn inside comp.html | [3d.md](references/3d.md#threejs-inside-the-comp) |
 | A 3D shot with real light or physics (logo that assembles, product turn, dominoes, cloth) | `blender -b -P $K/scripts/blender_plate.py -- still\|anim …` | [3d.md](references/3d.md) |
 | A person, character or live scene you have no footage of | a text-free clip from a video model, then `prep_footage.sh` | [3d.md](references/3d.md#generated-plates) |
+| Footage tricks from sports and event reels: hyperlapse merge, stadium, crowd or court reveal, masked frame build, logo match cut, colour flip, logo replace, warp portal | `masked`, `warp`, `quad`, `track` in comp.html; `asset_tools.py grid` to read points off a frame | [footage-effects.md](references/footage-effects.md) |
 | Text behind a person, product die-cut | `swift $K/scripts/segment.swift person\|cutout …` (macOS) | [motion.md](references/motion.md) |
 | Scenes and effects | comp.html helper library | [motion.md](references/motion.md) |
 | Story, pacing, copy | — | [storyboard.md](references/storyboard.md) |

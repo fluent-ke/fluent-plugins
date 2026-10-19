@@ -7,6 +7,7 @@
   asset_tools.py palette <image> [n]                     the n dominant colours as hex (a flat logo or brand sheet; on a photo poster it only finds the photo)
   asset_tools.py sample  <image> <x0> <y0> <x1> <y1>     average colour of a region: point it at a headline, button or logo to read a brand colour
   asset_tools.py sheet   <out.png> <image>... [--cols 4] [--w 360]   tile stills into one contact sheet to review at a glance
+  asset_tools.py grid    <image> <out.png> [x0 y0 x1 y1] [step]   pixel grid labelled in source pixels, cropped to the region: read corners and points off a frame
 """
 import sys
 from PIL import Image
@@ -48,6 +49,16 @@ def sheet(out, paths, cols=4, w=360):
     for i, im in enumerate(ims): s.paste(im.resize((w, h)), ((i % cols) * w, (i // cols) * h))
     s.save(out); print(out)
 
+def grid(p, out, *r):
+    from PIL import ImageDraw
+    im = Image.open(p).convert('RGB'); x0, y0, x1, y1 = map(int, r[:4]) if len(r) >= 4 else (0, 0, im.width, im.height)
+    step = int(r[4]) if len(r) == 5 else 25; d = ImageDraw.Draw(im)
+    for x in range(0, im.width, step): d.line([(x, 0), (x, im.height)], fill=(0, 255, 0) if x % 100 == 0 else (0, 80, 0))
+    for y in range(0, im.height, step): d.line([(0, y), (im.width, y)], fill=(0, 255, 0) if y % 100 == 0 else (0, 80, 0))
+    for x in range(0, im.width, 100):
+        for y in range(0, im.height, 100): d.text((x + 3, y + 2), f"{x},{y}", fill=(255, 255, 0))
+    im.crop((x0, y0, x1, y1)).save(out); print(out)
+
 if __name__ == '__main__':
     a = sys.argv[1:]
     if not a: sys.exit(__doc__)
@@ -62,4 +73,4 @@ if __name__ == '__main__':
             files.append(x)
         sheet(rest[0], files, cols, w)
     else:
-        {'info': lambda r: info(r), 'crop': lambda r: crop(*r), 'key': lambda r: key(*r), 'palette': lambda r: palette(*r), 'sample': lambda r: sample(*r)}[cmd](rest)
+        {'info': lambda r: info(r), 'crop': lambda r: crop(*r), 'key': lambda r: key(*r), 'palette': lambda r: palette(*r), 'sample': lambda r: sample(*r), 'grid': lambda r: grid(*r)}[cmd](rest)

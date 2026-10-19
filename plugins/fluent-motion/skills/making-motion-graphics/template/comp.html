@@ -49,6 +49,54 @@ function subject(k,s=1,ox=0,oy=0){const im=FR['f'+k],mm=FR['m'+k];if(!im||!mm)re
   lctx.drawImage(im,0,0,W,H);lctx.globalCompositeOperation='destination-in';lctx.drawImage(mm,0,0,W,H);lctx.globalCompositeOperation='source-over';
   ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.scale(s,s);ctx.drawImage(layer,-W/2,-H/2);ctx.restore()}
 
+// ── Footage effects (recipes in references/footage-effects.md). fi() is the film frame and fAt(beat) the frame a comp beat
+// starts on, for effects that change every frame rather than every beat. Points are [x,y] in frame pixels.
+const fi=()=>Math.round(t*FPS), fAt=c=>Math.round(toMusic(c)*B*FPS);
+const about=(x,y,s,f)=>{ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.translate(-x,-y);f();ctx.restore()};   // f() scaled about (x,y)
+const fx=mk(),fctx=fx.getContext('2d'),mx=mk(),mctx=mx.getContext('2d'),snapC=mk(),sctx=snapC.getContext('2d');
+function snap(){sctx.clearRect(0,0,W,H);sctx.drawImage(cv,0,0);return snapC}       // the frame drawn so far
+const path=(c,P)=>{c.beginPath();P.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath()};
+// A convex shape's edges pushed d px outward (corners mitred): fills past a mark's edge, overlaps tiles so no seams show
+const grow=(P,d)=>{const n=P.length,o=Math.sign(P.reduce((s,[x,y],i)=>{const[u,v]=P[(i+1)%n];return s+x*v-u*y},0))||1,
+  N=(dx,dy)=>{const l=Math.hypot(dx,dy)||1;return[dy/l*o,-dx/l*o]};
+  return P.map(([x,y],i)=>{const[a,b]=P[(i+n-1)%n],[c,e]=P[(i+1)%n],[p,q]=N(x-a,y-b),[r,t2]=N(c-x,e-y),k=d/Math.max(.25,1+p*r+q*t2);return[x+(p+r)*k,y+(q+t2)*k]})};
+// draw() (any helpers: plate, subject, word…) shown only inside shape: a point list, or c=>{…path on c…}. feather softens the edge in px
+function masked(draw,shape,{feather=0,alpha=1}={}){const keep=ctx;ctx=fctx;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,W,H);ctx.globalAlpha=1;ctx.filter='none';draw();ctx=keep;
+  mctx.setTransform(1,0,0,1,0,0);mctx.clearRect(0,0,W,H);mctx.filter=feather?`blur(${feather}px)`:'none';mctx.fillStyle='#fff';
+  if(typeof shape==='function')shape(mctx);else path(mctx,shape);mctx.fill();mctx.filter='none';
+  fctx.globalCompositeOperation='destination-in';fctx.drawImage(mx,0,0);fctx.globalCompositeOperation='source-over';
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=alpha;ctx.drawImage(fx,0,0);ctx.restore()}
+// Radial zoom blur of the frame so far about (cx,cy): amt .1 subtle, .4 a hyperspace punch
+function zoomBlur(cx,cy,amt,n=12){if(amt<=0)return;const s=snap();ctx.save();ctx.setTransform(1,0,0,1,0,0);
+  for(let i=1;i<=n;i++){ctx.globalAlpha=1/(i+1);about(cx,cy,1+amt*i/n,()=>ctx.drawImage(s,0,0))}ctx.restore()}
+// Lens warp of the frame so far inside radius R about (cx,cy): amt .5 bulges 2× at the centre, negative pinches (WebGL, per pixel)
+let GL=null;const glc=mk();
+function warp(cx,cy,R,amt){if(!amt)return;if(!GL){const g=glc.getContext('webgl',{preserveDrawingBuffer:true}),p=g.createProgram(),
+    sh=(ty,src)=>{const s=g.createShader(ty);g.shaderSource(s,src);g.compileShader(s);g.attachShader(p,s)};
+    sh(g.VERTEX_SHADER,'attribute vec2 q;varying vec2 v;void main(){v=q*.5+.5;gl_Position=vec4(q,0,1);}');
+    sh(g.FRAGMENT_SHADER,'precision highp float;varying vec2 v;uniform sampler2D T;uniform vec2 c,S;uniform float R,k;void main(){float f=1.-min(length((v-c)*S)/R,1.);f=f*(2.-f);gl_FragColor=texture2D(T,c+(v-c)*(1.-k*f*f));}');
+    g.linkProgram(p);g.useProgram(p);g.bindBuffer(g.ARRAY_BUFFER,g.createBuffer());g.bufferData(g.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),g.STATIC_DRAW);
+    const l=g.getAttribLocation(p,'q');g.enableVertexAttribArray(l);g.vertexAttribPointer(l,2,g.FLOAT,false,0,0);
+    g.bindTexture(g.TEXTURE_2D,g.createTexture());g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL,true);
+    for(const[a,v]of[[g.TEXTURE_MIN_FILTER,g.LINEAR],[g.TEXTURE_WRAP_S,g.CLAMP_TO_EDGE],[g.TEXTURE_WRAP_T,g.CLAMP_TO_EDGE]])g.texParameteri(g.TEXTURE_2D,a,v);
+    GL={g,u:n=>g.getUniformLocation(p,n)}}
+  const{g,u}=GL;g.texImage2D(g.TEXTURE_2D,0,g.RGBA,g.RGBA,g.UNSIGNED_BYTE,snap());g.viewport(0,0,W,H);
+  g.uniform2f(u('c'),cx/W,1-cy/H);g.uniform2f(u('S'),W,H);g.uniform1f(u('R'),R);g.uniform1f(u('k'),amt);g.drawArrays(g.TRIANGLE_STRIP,0,4);
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(glc,0,0);ctx.restore()}
+// An image pinned to four corners [TL,TR,BR,BL] in perspective: a new logo on a shirt, a sign, a screen
+function quad(im,P,n=8){const[[x0,y0],[x1,y1],[x2,y2],[x3,y3]]=P,sx=x0-x1+x2-x3,sy=y0-y1+y2-y3,dx1=x1-x2,dx2=x3-x2,dy1=y1-y2,dy2=y3-y2,dn=dx1*dy2-dx2*dy1,
+    g=(sx*dy2-dx2*sy)/dn,h=(dx1*sy-sx*dy1)/dn,at=(u,v)=>{const w=g*u+h*v+1;return[((x1-x0+g*x1)*u+(x3-x0+h*x3)*v+x0)/w,((y1-y0+g*y1)*u+(y3-y0+h*y3)*v+y0)/w]},
+    iw=im.width,ih=im.height;
+  const tri=(S,D)=>{const[[a0,b0],[a1,b1],[a2,b2]]=S,[[u0,v0],[u1,v1],[u2,v2]]=D,dt=(a1-a0)*(b2-b0)-(a2-a0)*(b1-b0);
+    ctx.save();path(ctx,grow(D,.8));ctx.clip();   // clip grown .8 px: no seams
+    const A=((u1-u0)*(b2-b0)-(u2-u0)*(b1-b0))/dt,Bt=((v1-v0)*(b2-b0)-(v2-v0)*(b1-b0))/dt,Ct=((u2-u0)*(a1-a0)-(u1-u0)*(a2-a0))/dt,Dt=((v2-v0)*(a1-a0)-(v1-v0)*(a2-a0))/dt;
+    ctx.transform(A,Bt,Ct,Dt,u0-A*a0-Ct*b0,v0-Bt*a0-Dt*b0);ctx.drawImage(im,0,0);ctx.restore()};
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){const s=[[i,j],[i+1,j],[i+1,j+1],[i,j+1]].map(([a,c])=>[a/n,c/n]),S=s.map(([u,v])=>[u*iw,v*ih]),D=s.map(([u,v])=>at(u,v));
+    tri([S[0],S[1],S[2]],[D[0],D[1],D[2]]);tri([S[0],S[2],S[3]],[D[0],D[2],D[3]])}}
+// Corners keyed on a few source frames of a moving shot, [[shotFrame,[TL,TR,BR,BL]],…], interpolated in between
+function track(k,keys){const f=shotIdx(k),i=keys.findIndex(([n])=>n>f);if(i<=0)return keys[i<0?keys.length-1:0][1];
+  const[[fa,A],[fz,Z]]=[keys[i-1],keys[i]],q=(f-fa)/(fz-fa);return A.map(([x,y],j)=>[lerp(x,Z[j][0],q),lerp(y,Z[j][1],q)])}
+
 // ── Type
 const font=(w,s)=>`${w} ${s}px Brand`;
 function word(str,x,y,w,s,fill,{stroke=null,lw=4,alpha=1,sc=1,rot=0,track=0,align='center',blur=0,glow=null}={}){

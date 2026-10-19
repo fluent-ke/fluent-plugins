@@ -1,8 +1,12 @@
 // node render.mjs                         → out/video-only.mp4 (then ./mix.sh adds the audio)
-// node render.mjs stills 0.5 3 b8.5      → stills/0.5s.png, stills/3s.png, stills/b8.5.png (seconds, or bN = comp beat N)
+// node render.mjs stills 0.5 3 b8.5      → stills/0.5s.png, stills/3s.png, stills/b8.5.png (seconds, or bN = comp beat N),
+//                                            plus out/stills-sheet.png: the same frames tiled in the order given, labelled
+//   --into S3 writes to stills-S3/ instead, so scene workers running at once keep their own stills
 // node render.mjs --query "day=TODAY" --out video-only-today.mp4   → a variant; comp.html reads it from Q
 // node render.mjs --draft                 → half size with score.wav muxed in, to check timing against the music (out/draft.mp4)
+// node render.mjs beats                   → out/beats-sheet.png: one frame per music beat (mid-beat), numbered; a dead beat shows as two identical tiles
 // Options: --workers N (default: performance cores, max 6)   --png (lossless frame capture, slower)
+//          --blur N (motion blur: average N subframes across a half-frame shutter; N× render time, so final renders only)
 // render(t) is pure, so the film is split into N ranges rendered by N browser pages at once, each encoded to its own chunk,
 // then the chunks are joined without re-encoding. Frames are captured as JPEG q0.95 (4–5× cheaper than PNG deflate).
 import {chromium} from 'playwright';
@@ -14,8 +18,8 @@ import os from 'node:os';
 const dir=new URL('.', import.meta.url).pathname, args=process.argv.slice(2);
 const opt=k=>{const i=args.indexOf(k);return i<0?null:args.splice(i,2)[1]};
 const flag=k=>{const i=args.indexOf(k);return i<0?false:(args.splice(i,1),true)};
-const draft=flag('--draft'), png=flag('--png');
-const query=opt('--query'), out=opt('--out')||(draft?'draft.mp4':'video-only.mp4');
+const draft=flag('--draft'), png=flag('--png'), BLUR=Math.max(1,+(opt('--blur')||1));
+const into=opt('--into'),query=opt('--query'), out=opt('--out')||(draft?'draft.mp4':'video-only.mp4');
 let perf=4;try{perf=+execFileSync('sysctl',['-n','hw.perflevel0.physicalcpu']).toString()||4}catch{perf=Math.max(2,os.cpus().length>>1)}
 const WORKERS=Math.max(1,+(opt('--workers')||Math.min(6,perf)));
 const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.ttf':'font/ttf','.otf':'font/otf','.woff2':'font/woff2','.woff':'font/woff'};
@@ -27,10 +31,13 @@ async function open(){const page=await browser.newPage();
   page.on('pageerror',e=>{console.error('comp.html error:',e.message);process.exitCode=1});
   await page.goto(url);if(!await page.evaluate(()=>window.ready)) throw new Error('assets failed to load');
   const cfg=await page.evaluate(()=>window.CONFIG);await page.setViewportSize({width:cfg.W,height:cfg.H});return [page,cfg]}
-const grab=(page,t,fmt)=>page.evaluate(async([t,fmt,draft])=>{await render(t);const c=document.getElementById('c');
+const grab=(page,t,fmt)=>page.evaluate(async([t,fmt,draft,N])=>{const c=document.getElementById('c');
+  if(N>1){const acc=window.__acc||(window.__acc=Object.assign(document.createElement('canvas'),{width:c.width,height:c.height})),a=acc.getContext('2d');
+    for(let i=0;i<N;i++){await render(Math.max(0,t+((i+.5)/N-.5)*.5/CONFIG.FPS));a.globalAlpha=1/(i+1);a.drawImage(c,0,0)}   // running mean of the subframes
+    c.getContext('2d').drawImage(acc,0,0)}else await render(t);
   let src=c;if(draft){src=window.__half||(window.__half=Object.assign(document.createElement('canvas'),{width:c.width>>1,height:c.height>>1}));
     src.getContext('2d').drawImage(c,0,0,src.width,src.height)}
-  return src.toDataURL(fmt==='png'?'image/png':'image/jpeg',.95).split(',')[1]},[t,fmt,draft]);
+  return src.toDataURL(fmt==='png'?'image/png':'image/jpeg',.95).split(',')[1]},[t,fmt,draft,draft?1:BLUR]);
 // Encode settings shared by every chunk (identical flags are what lets the concat skip re-encoding).
 // Colour: convert to BT.709 limited range explicitly and tag it, so Instagram/TikTok don't shift the hues.
 const encode=(file,fps)=>['-y','-loglevel','error','-f','image2pipe','-framerate',String(fps),'-c:v',png?'png':'mjpeg','-i','-',
@@ -38,13 +45,25 @@ const encode=(file,fps)=>['-y','-loglevel','error','-f','image2pipe','-framerate
   '-profile:v','high','-colorspace','bt709','-color_primaries','bt709','-color_trc','bt709','-color_range','tv','-movflags','+faststart',file];
 
 const [page0,{W,H,FPS,DUR}]=await open();
-if(args[0]==='stills'){
-  await rm(dir+'stills',{recursive:true,force:true});await mkdir(dir+'stills',{recursive:true});
+// Tile frames at the given times into one labelled contact sheet, drawn in the page so it needs nothing beyond the browser
+const sheet=(times,labels,file)=>page0.evaluate(async([times,labels])=>{const n=times.length,cols=Math.min(8,n),tw=240,th=Math.round(tw*CONFIG.H/CONFIG.W),rows=Math.ceil(n/cols);
+    const s=Object.assign(document.createElement('canvas'),{width:cols*tw,height:rows*(th+28)}),g=s.getContext('2d');g.fillStyle='#222';g.fillRect(0,0,s.width,s.height);
+    for(let i=0;i<n;i++){await render(times[i]);const x=(i%cols)*tw,y=Math.floor(i/cols)*(th+28);g.drawImage(document.getElementById('c'),x,y+28,tw,th);
+      g.fillStyle='#fff';g.font='600 18px sans-serif';g.fillText(labels[i],x+6,y+20)}
+    return s.toDataURL('image/png').split(',')[1]},[times,labels]).then(async b64=>{await mkdir(dir+'out',{recursive:true});await writeFile(dir+'out/'+file,Buffer.from(b64,'base64'))});
+if(args[0]==='beats'){        // one frame per music beat, mid-beat. m = music beat (evenly spaced); b = comp beat (spacing changes where timeline.js stretches a scene)
+  const n=Math.floor(DUR*await page0.evaluate(()=>BPM)/60),times=[],labels=[];
+  for(let i=0;i<n;i++){times.push(await page0.evaluate(i=>(i+.5)*60/BPM,i));labels.push(`m${i}  b${(await page0.evaluate(i=>toComp(i+.5),i)).toFixed(1)}`)}
+  await sheet(times,labels,'beats-sheet.png');
+  console.log(`beats → out/beats-sheet.png (m = music beat, b = comp beat)`);
+}else if(args[0]==='stills'){
+  const sd=into?'stills-'+into:'stills',secs=[];await rm(dir+sd,{recursive:true,force:true});await mkdir(dir+sd,{recursive:true});
   for(const a of args.slice(1)){
     const sec=a.startsWith('b')?await page0.evaluate(c=>toMusic(c)*60/BPM,+a.slice(1)):+a;
     if(!Number.isFinite(sec)||sec<0||sec>DUR) throw new Error(`still "${a}" is outside the film (0–${DUR.toFixed(2)} s). Pass seconds, or bN for comp beat N, one per argument.`);
-    await writeFile(`${dir}stills/${a.startsWith('b')?a:a+'s'}.png`,Buffer.from(await grab(page0,sec,'png'),'base64'));}
-  console.log(`stills → ${dir}stills/ (film is ${DUR.toFixed(2)} s)`);
+    await writeFile(`${dir}${sd}/${a.startsWith('b')?a:a+'s'}.png`,Buffer.from(await grab(page0,sec,'png'),'base64'));secs.push(sec)}
+  const sf=into?`stills-${into}-sheet.png`:'stills-sheet.png';await sheet(secs,args.slice(1).map((a,i)=>`${a.startsWith('b')?a:a+'s'}  ${secs[i].toFixed(2)}s`),sf);
+  console.log(`stills → ${dir}${sd}/ and out/${sf} (film is ${DUR.toFixed(2)} s)`);
 }else{
   const t0=Date.now(),N=Math.round(DUR*FPS),K=Math.min(WORKERS,Math.ceil(N/30)),per=Math.ceil(N/K),tmp=dir+'out/.chunks/';
   await rm(tmp,{recursive:true,force:true});await mkdir(tmp,{recursive:true});

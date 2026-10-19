@@ -15,6 +15,15 @@ A 15–40 s social film is a handful of scenes, each carrying one idea. The shap
 
 That table runs 18–25 s before reading time. For 15 s or less keep four scenes: hook, name, stakes, and an end card that carries when and where. Cut scenes the material does not support; add a proof item only when it has a fact behind it.
 
+## The look
+
+Without a look to follow, a model falls back on the same film every time: centred text on a gradient, every element fading in, a logo at the end. Agree the look in step 2 and write it down before the beat sheet:
+
+- **A reference.** A video the user likes: run `study_reference.sh`, read its sheet, and name what to take from it (cut rhythm, type treatment, colour moves, transitions). Stills from the user's inspiration folder work too.
+- **A named style.** When there is no reference, pick one and write it out in four lines, from the brand: *palette* (ground, ink, one accent, and where the accent goes), *type* (family, weights, case, tracking), *motion signature* (the one move that recurs: slams with echoes, lines rising out of slots, one shape morphing between states, hard cuts on the beat), *texture* (grain, glow, flat, paper).
+
+Every scene then answers to the look. Name it in the beat sheet's first line so the critic can judge against it.
+
 ## Beat sheet
 
 Write it before any code. One line per scene: comp beats, on-screen words, motion, music cue.
@@ -27,6 +36,23 @@ b12–23  5 PROBLEMS. then one card per problem    card slides in, text rises li
 ```
 
 Author every scene at its natural kinetic speed (about 1 comp beat per action), then give reading scenes their time in `timeline.js`.
+
+## Scene briefs
+
+A film of more than about six scenes can be built in parallel: one worker agent per scene, each writing a function `S_name()` in `scenes/name.js`, loaded with a `<script src="scenes/name.js">` after the main script in comp.html (the helpers are globals, so a scene file uses them directly), and called from `scene()` inside its `if(b<end)` block. Write that skeleton (every call, `CUTS`, `timeline.js`) and a stub file per scene before dispatching, so each worker can render its scene from the start. Each worker gets this brief and nothing else, so everything it needs is in it:
+
+```
+<scene> S3 "Stakes", comp beats 12–16, 9:16. Look: <the four look lines>. Brand: C = {…}, font Brand 400/800.
+<words> The on-screen words, exactly, with the key phrase marked. </words>
+<rules> Pure render(t): seeded rng(), no Date, no state between frames. Helpers from comp.html only.
+  Text inside the middle 1080×1420. Frame 0 of the scene carries content. </rules>
+<structure> Beat by beat: b12 number counts up · b13.5 lands (shock + sparks) · b14 label rises · b15–16 hold. </structure>
+<motion> The look's motion signature. Springs with a small overshoot; entrances 0.3–0.5 beat, exits faster. </motion>
+<export> Render stills at each beat of the scene with `node render.mjs stills --into S3 b12.5 b13.5 …`, read them, fix, and return
+  the function plus the stills paths. </export>
+```
+
+The main agent owns comp.html, `CUTS`, `timeline.js` and the score, merges the scene files, and runs the beat sheet and critic on the whole film.
 
 ## Reading time
 
@@ -52,3 +78,5 @@ Read the stills sheet for each scene and fix before the full render:
 - Text over footage has a scrim, shadow or matte so it reads on every frame.
 - Brand marks are sharp, in proportion, and on a background the brand allows.
 - The settled state of each text is on screen long enough (stills at the start and end of the hold).
+- On out/beats-sheet.png, every tile in a kinetic scene differs from the one before it. Identical neighbours belong only to reading holds, and a hold still has something alive in it (a slow push-in, a drifting field, the CTA arrow).
+- The look is the agreed one: set a tile beside the reference sheet, or check it against the four look lines.

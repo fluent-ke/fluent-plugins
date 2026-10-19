@@ -3,6 +3,8 @@
 # text over it. Copy this file into the film's blender/ folder and replace build() and animate().
 #   blender -b -P blender_plate.py -- still <frame> [pct]            → renders/still_<frame>.png (look at one moment)
 #   blender -b -P blender_plate.py -- anim [pct] [first] [last]      → renders/<SHOT>/0001.png …, then link shots/<SHOT> to it
+# Physics shots (dominoes, a logo knocked over, cloth, a jelly wobble): put the simulated objects in SIM, not OBJS. They are
+# baked once before rendering, so every frame, and every parallel anim run, reads the same cache. Keyframe only the camera.
 # Timing: at 120 BPM and 30 fps one music beat is 15 frames, so a hit on music beat 20 is frame 300. Put the shot's
 # big moment on a whole beat and cue the score to the same beat with M(comp beat).
 # Tested on Blender 5.2 (EEVEE, AgX). About 3 s a frame at 1080×1920 on an M1 with the settings below.
@@ -68,8 +70,17 @@ cam.rotation_euler = (math.radians(90), 0, 0)                # looks along +Y; t
 def ease_io(k): k = min(1, max(0, k)); return 4 * k ** 3 if k < .5 else 1 - (-2 * k + 2) ** 3 / 2
 def ease_out(k): k = min(1, max(0, k)); return 1 - (1 - k) ** 3
 
+# ── Physics. rigid() makes an object simulated; SIM objects are baked, never keyframed.
+SUBSTEPS = 20        # rigid-body substeps per frame: 20–40 for small, fast pieces (thin dominoes tunnel through each other below ~20)
+def rigid(o, kind='ACTIVE', mass=0.2, friction=0.7, bounce=0.0, shape='BOX'):
+    if not sc.rigidbody_world: bpy.context.view_layer.objects.active = o; bpy.ops.rigidbody.world_add()
+    bpy.context.view_layer.objects.active = o; o.select_set(True); bpy.ops.rigidbody.object_add(type=kind)
+    r = o.rigid_body; r.mass = mass; r.friction = friction; r.restitution = bounce; r.collision_shape = shape
+    if kind == 'ACTIVE': SIM.append(o)
+    return o
+
 # ── Replace these two with the shot. build() makes objects; animate(f) places everything at frame f as a pure function of f.
-OBJS = []
+OBJS, SIM = [], []
 def build():
     bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=32, radius=1)
     o = bpy.context.object; bpy.ops.object.shade_smooth(); o.data.materials.append(mat('accent', ACCENT, 0.32, coat=0.6))
@@ -88,6 +99,10 @@ for f in range(1, END + 1):                   # keyframe every frame from the pu
     for o in OBJS:
         o.keyframe_insert('location', frame=f); o.keyframe_insert('scale', frame=f); o.keyframe_insert('rotation_euler', frame=f)
 cam_d.dof.focus_distance = 14.0
+if sc.rigidbody_world:                        # bake the simulation once; renders read the cache
+    w_ = sc.rigidbody_world; w_.substeps_per_frame = SUBSTEPS; w_.solver_iterations = 20
+    w_.point_cache.frame_start, w_.point_cache.frame_end = 1, END
+    bpy.ops.ptcache.bake_all(bake=True)
 
 # ── Render: EEVEE, transparent film, motion blur, PNG RGBA with light compression (faster writes)
 sc.render.engine = 'BLENDER_EEVEE'

@@ -18,7 +18,7 @@ Arc that works: sparse intro hits on each word, groove in as the title lands, a 
 
 A score heard on the last film makes the new one feel like a rerun, even when the score is good. So each film gets a different track:
 
-1. **Before writing cues, read the log.** `new_film.sh` prints the last scores from `score-log.tsv` in the folder that holds the brand's films; `soundtrack.mjs` updates it on every run and prints a ⚠ when this film's `STYLE` matches either of the brand's last two films.
+1. **Before writing cues, read the log.** `new_film.sh` prints the last scores from `score-log.tsv` in the folder that holds the brand's films (keep each brand's films as sibling folders under one brand folder, so a brand's first film starts its log there); `soundtrack.mjs` updates it on every run and prints a ⚠ when this film's `STYLE` matches either of the brand's last two films.
 2. **Change the style first.** Rotate through `afrohouse`, `amapiano`, `benga`, `drill`, `ambient`, and prefer the one that fits the film's story (chaos into order suits drill's breakdown and drop; warm lifestyle suits amapiano or benga; a calm explainer suits ambient).
 3. **Change the key and feel too.** `KEY` transposes everything (-5…+6); a different tempo range, a new chord progression in `CH`, or new riff notes make even a returning style a new track.
 4. **When all five are spent, make a new one** from the voices on hand (`pluck()`, `lyre()`, `e808()`, `logdrum()`, `brass()`, `pad()`): a kora-like harp line, an ohangla-style drum pattern, a taarab-flavoured string pad. Add it as a new `STYLE` so the next film can use it too.

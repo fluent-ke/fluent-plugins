@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# qc.sh <film.mp4> [WxH] [fps]
+# qc.sh <film.mp4> [WxH] [fps] [--no-rhythm]
 # Automatic checks on a finished film, so "done" rests on evidence rather than a render log:
 #   spec (size, fps, codec, BT.709 tags) · dead holds (nothing changes for >5 s) · cut rhythm
+#   · the rhythm gate (rhythm.py: varied gaps between changes, a rest, a burst; --no-rhythm for one continuous move)
 #   black frames · loudness (-14 LUFS ±1.5, true peak ≤ -1 dBTP) · a contact sheet (2 frames a second) to read with your own eyes
 set -uo pipefail
 F=${1:?usage: qc.sh <film.mp4> [WxH] [fps]}; RES=${2:-}; FPS=${3:-}
@@ -19,6 +20,7 @@ B=$(grep -o 'black_start:[0-9.]*' <<<"$LOG" | grep -v 'black_start:0$' | head -3
 CUTS=$(grep -c 'lavfi.scd.time' <<<"$LOG" || true)
 EVERY=$(awk -v d="$D" -v c="$CUTS" 'BEGIN{printf "%.1f", d/(c+1)}' </dev/null)
 echo "  · $CUTS scene changes, about one every $EVERY s"
+if [[ " $* " == *" --no-rhythm "* ]]; then echo "  · rhythm gate skipped (--no-rhythm)"; else python3 "$(dirname "$0")/rhythm.py" "$F" || fail=1; fi
 I=$(grep -A1 'Integrated loudness' <<<"$LOG" | grep -o '\-\?[0-9.]* LUFS' | head -1 | awk '{print $1}' || true)
 P=$(grep -A1 'True peak' <<<"$LOG" | grep -o '\-\?[0-9.]* dBFS' | head -1 | awk '{print $1}' || true)
 [ -n "$I" ] && { awk -v i="$I" 'BEGIN{exit !(i>-15.5&&i<-12.5)}' && ok "loudness $I LUFS" || bad "loudness $I LUFS (aim for -14)"; }

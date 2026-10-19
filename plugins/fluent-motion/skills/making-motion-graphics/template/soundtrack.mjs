@@ -149,3 +149,15 @@ console.log(`score.wav ${DUR.toFixed(2)} s, ${STYLE}, key ${KEY>=0?'+':''}${KEY}
   if(recent.some(r=>r[1]===STYLE))console.log(`⚠ ${STYLE} was used by ${recent.filter(r=>r[1]===STYLE).map(r=>r[0]).join(', ')}: this brand's recent films need different music. Pick another STYLE (or at least a new KEY and tempo).`);
   const line=[film,STYLE,KEY,BPM,new Date().toISOString().slice(0,10)];
   writeFileSync(log,['film\tstyle\tkey\tbpm\tdate',...others.map(r=>r.join('\t')),line.join('\t')].join('\n')+'\n')}
+// Film log: the picture rotates too (one row per film, updated each run). ⚠ when this film matches either of the brand's last two films
+// on more than 2 of the 6 card fields, or more than half of this film's transitions (plain cuts aside) were in the last film. Set FILM in timeline.js.
+{const F=globalThis.FILM;if(F){const log=new URL('../film-log.tsv',import.meta.url),film=new URL('.',import.meta.url).pathname.split('/').filter(Boolean).pop();
+  const K=['shape','opening','signature','camera','text','ending'],tr=(F.transitions||[]).filter(x=>x!=='cut');
+  const rows=(existsSync(log)?readFileSync(log,'utf8').trim().split('\n'):[]).filter(r=>r&&!r.startsWith('film\t')).map(r=>r.split('\t'));
+  const others=rows.filter(r=>r[0]!==film);
+  for(const r of others.slice(-2)){const same=K.filter((k,i)=>r[i+1]===F[k]);
+    if(same.length>2)console.log(`⚠ the picture repeats ${r[0]} on ${same.join(', ')}: change at least ${same.length-2} of them (references/concepts.md).`)}
+  const last=others.at(-1);if(last&&tr.length){const prev=(last[7]||'').split(','),shared=tr.filter(x=>prev.includes(x));
+    if(shared.length>tr.length/2)console.log(`⚠ transitions ${shared.join(', ')} were in ${last[0]} too: build new ones (references/concepts.md#transitions-built-from-the-picture).`)}
+  const line=[film,...K.map(k=>F[k]),(F.transitions||[]).join(','),new Date().toISOString().slice(0,10)];
+  writeFileSync(log,['film\t'+K.join('\t')+'\ttransitions\tdate',...others.map(r=>r.join('\t')),line.join('\t')].join('\n')+'\n')}}

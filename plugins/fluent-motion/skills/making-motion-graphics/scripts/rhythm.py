@@ -49,7 +49,7 @@ fail = False
 def check(ok, good, bad):
     global fail
     print(('  ✓ ' + good) if ok else ('  ✗ ' + bad)); fail |= not ok
-print(f'  · rhythm ({shape}): {len(shots)} shots between {len(cuts)} changes, mean {statistics.mean(shots):.2f} s, CV {cv:.2f} (target 0.4–0.7), '
+print(f'  · rhythm ({shape}): {len(shots)} shots between {len(cuts)} changes, mean {statistics.mean(shots):.2f} s, CV {cv:.2f} (0.30 passes; 0.4–0.7 is the sweet spot), '
       f'longest rest {rest:.1f} s, fastest burst {burst} shots of ≤ {quick:.2f} s')
 if shape != 'continuous' and len(shots) >= 4:
     check(cv >= 0.30, f'shot lengths vary (CV {cv:.2f})', f'shots too even (CV {cv:.2f} < 0.30): mix long holds with bursts')

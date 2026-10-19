@@ -8,7 +8,7 @@ DIR=${1:?usage: new_film.sh <project-dir> [font-url]}
 FONT=${2:-https://github.com/google/fonts/raw/main/ofl/plusjakartasans/PlusJakartaSans%5Bwght%5D.ttf}
 if [ -e "$DIR/comp.html" ]; then echo "$DIR already has a comp.html; not overwriting"; exit 1; fi
 mkdir -p "$DIR"/{assets,fonts,stills,out,src,shots,masks}
-cp "$K"/template/{comp.html,edits.js,timeline.js,render.mjs,soundtrack.mjs,mix.sh,mix-voice.sh} "$DIR"/
+cp "$K"/template/{comp.html,edits.js,studio.js,timeline.js,render.mjs,soundtrack.mjs,mix.sh,mix-voice.sh} "$DIR"/
 chmod +x "$DIR/mix.sh" "$DIR/mix-voice.sh"
 cd "$DIR"
 [ -f package.json ] || printf '{\n  "name": "film",\n  "private": true,\n  "type": "module",\n  "dependencies": {}\n}\n' > package.json

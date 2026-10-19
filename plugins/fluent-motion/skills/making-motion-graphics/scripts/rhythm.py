@@ -4,7 +4,7 @@ Measures, from the picture itself (so it works on any film, and catches wipes an
 change events (peaks of ffmpeg's scdet score on a blurred thumbnail), the variation of the gaps between them (CV = sd/mean),
 the longest rest (a stretch whose downscaled, blurred frame difference stays tiny: grain does not count as motion),
 and the fastest burst (consecutive gaps of one beat or less: the BPM comes from ../timeline.js, else 120). Prints one line per check, ✓ or ✗; exits 1 on any ✗.
-The film's shape comes from --shape, else from FILM in ../timeline.js next to an out/ folder; talking-head skips the burst rule,
+The film's shape comes from --shape, else from FILM in ../timeline.js next to an out/ folder; talking-head skips the rest and burst rules,
 continuous skips variation and burst."""
 import os, re, statistics, subprocess, sys
 
@@ -53,7 +53,8 @@ print(f'  · rhythm ({shape}): {len(shots)} shots between {len(cuts)} changes, m
       f'longest rest {rest:.1f} s, fastest burst {burst} shots of ≤ {quick:.2f} s')
 if shape != 'continuous' and len(shots) >= 4:
     check(cv >= 0.30, f'shot lengths vary (CV {cv:.2f})', f'shots too even (CV {cv:.2f} < 0.30): mix long holds with bursts')
-check(rest >= 1.0, f'a rest of {rest:.1f} s', 'no rest: hold something still for 1 s or more, usually before the biggest moment')
+if shape != 'talking-head':                  # a voice-led film rests in its pauses; a moving speaker never reads as still
+    check(rest >= 1.0, f'a rest of {rest:.1f} s', 'no rest: hold something still for 1 s or more, usually before the biggest moment')
 if shape not in ('talking-head', 'continuous') and dur >= 12:
     check(burst >= 3, f'a burst of {burst} quick shots', 'no burst: give the film one run of 3 or more one-beat shots')
 sys.exit(1 if fail else 0)

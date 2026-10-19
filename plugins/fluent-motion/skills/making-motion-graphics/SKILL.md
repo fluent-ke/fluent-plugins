@@ -4,7 +4,7 @@ description: Use when making a motion-graphics film in code - an animated promo,
 license: MIT
 metadata:
   author: fluent
-  version: "0.8"
+  version: "0.9"
 ---
 
 # Making motion graphics
@@ -25,6 +25,7 @@ Build the film in code: a canvas composition rendered frame by frame in headless
 | A 3D shot with real light or physics (logo that assembles, product turn, dominoes, cloth) | `blender -b -P $K/scripts/blender_plate.py -- still\|anim …` | [3d.md](references/3d.md) |
 | A person, character or live scene you have no footage of | a text-free clip from a video model, then `prep_footage.sh` | [3d.md](references/3d.md#generated-plates) |
 | Footage tricks from sports and event reels: hyperlapse merge, stadium, crowd or court reveal, masked frame build, logo match cut, colour flip, logo replace, warp portal | `masked`, `warp`, `quad`, `track` in comp.html; `asset_tools.py grid` to read points off a frame | [footage-effects.md](references/footage-effects.md) |
+| Effects on a talking head: cards orbiting the speaker, a wall of headlines or a chart behind them, an app screen or phone, frame break, magazine cover, green screen, paper cut, chalk doodles, digital zoom, zoom-through cut, vertigo, glass type | `studio.js`, `shot_check.py` (measure the shot first) | [studio.md](references/studio.md) |
 | Someone talking to camera (interview, founder story, testimonial): the voice is the timeline | `cut_interview.py` (cut, frames, voice, words), `captions.py` + `caps()`, `asset_tools.py heads`, `mix-voice.sh` | [talking-head.md](references/talking-head.md) |
 | Text behind a person, product die-cut | `swift $K/scripts/segment.swift person\|cutout …` (macOS) | [motion.md](references/motion.md) |
 | Scenes and effects | comp.html helper library | [motion.md](references/motion.md) |

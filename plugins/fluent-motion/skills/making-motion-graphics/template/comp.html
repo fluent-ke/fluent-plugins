@@ -3,6 +3,8 @@
 html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
 <script src="timeline.js"></script>
 <script src="edits.js"></script>
+<script src="studio.js"></script>
+<!-- talking-head studio: after scripts/shot_check.py, load each shot's measurements here, e.g. <script src="shots/TALK.info.js"></script> -->
 <canvas id="c"></canvas>
 <script>
 // ── The film. render(t) must be PURE: the same t always draws the same frame (no Date, no Math.random, no state
@@ -236,6 +238,7 @@ function scene(){
 function look(){}
 function grainPass(){ctx.save();ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.translate((b*97)%256,(b*61)%256);ctx.fillRect(-256,-256,W+512,H+512);ctx.restore()}
 async function render(time){await window.ready;t=time;m=t/B;b=toComp(m);ctx=cv.getContext('2d');await preload();
+  ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.filter='none';ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);   // a clean frame: nothing of the last one shows through
   scene();ctx.setTransform(1,0,0,1,0,0);look();await trans();swipe();grainPass();   // swipe(): a band wipe at every CUT; remove it when the look builds its transitions from the picture
   if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
   if(Q.get('safe')){const T=H*250/1920,Bm=H*350/1920,S=W*60/1080,L=W*100/1080;ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;   // safe-area guides (--query safe=1): red = under platform UI

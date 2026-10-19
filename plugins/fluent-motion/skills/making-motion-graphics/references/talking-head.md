@@ -63,6 +63,7 @@ Write `pages.txt` by hand, 2–4 words a page, each page starting on a measured 
 
 ## 7. Cutaways on the big lines
 
+- **Studio effects** ([studio.md](studio.md)): seventeen ready-made moves for the big lines (cards orbiting the speaker, a headline wall or chart behind them, the speaker in front of an app screen, frame break, magazine cover, paper cut, chalk doodles, a dive through the speaker into the next shot). Run `shot_check.py` on the take first; two or three a film, each on a line that earns it.
 - **Safe area for everything, not only captions** ([SKILL.md](../SKILL.md#safe-area)): cards, chips, labels, chat bubbles and big tucked words stay inside it; a word fitted to the full frame width breaks the side margin.
 - **UI cards** illustrate the problem lines (a build stuck at 99 %, a message delivered and unanswered, "build failed", a deadline "not set"): one card per line in the same slot above the head, popping in on a spring with a slight tilt. Four in a row starts to read as a template, so break the run with a cutaway.
 - **Landscape photos** in a 9:16 film: full bleed only when the upscale stays under about 1.6×. Otherwise use a split screen: the photo panel on top (1080 × ~780), the speaker below (`plate('TALK',1,0,560)` drops the frame so the face sits at about y 1350), and captions on the seam.

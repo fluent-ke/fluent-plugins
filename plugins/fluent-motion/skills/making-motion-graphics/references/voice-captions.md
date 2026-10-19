@@ -20,17 +20,17 @@ Avoid for client work, because the weights or outputs are non-commercial: XTTS-v
 - Generate **phrase by phrase**, three takes each, keep the best take of every line. Join with 150–300 ms gaps of room tone, never digital silence.
 - Give each line a one-line delivery note (warm, amused, certain) and turn it into the vendor's control: tags, a style prompt, instructions.
 - Slightly faster than natural (`atempo=1.04`) reads as confident in a 30 s ad; slower reads as a lecture.
-- Place each phrase on the beat grid: start lines on a music beat (`M(c)` in seconds) so words and hits land together.
+- Place each phrase on the beat grid: start lines on a music beat (comp beat `c` is `T(M(c))` seconds in soundtrack.mjs) so words and hits land together.
 
 ## Captions
 
 1. **Word timings for a known script:** the vendor's timestamps (ElevenLabs `/with-timestamps`) shifted by each clip's offset; otherwise `stable-ts` (`model.align(audio, script)`, MIT); for Swahili the Montreal Forced Aligner Swahili model. When there is no script, transcribe first with `whisper` (MIT) or `whisper.cpp` using word timestamps.
 2. **Pages:** group words into pages of 2–4 words (a page closes after about 600 ms or at punctuation). One page on screen at a time.
-3. **Style:** each word pops in on its own start time (`words()` in comp.html takes the page's start beat and a per-word step), the active or key word in the accent colour, heavy weight, 80–110 px on a 1080-wide frame, a soft dark shadow or a local `halo()` behind it. Keep caption pages inside the safe area ([SKILL.md](../SKILL.md#safe-area)): on 1080×1920, between y 250 and 1570 and at least 60 px from the sides.
+3. **Style:** words pop in one after another (`words()` in comp.html takes the page's start beat and one per-word step, so set the step from the page's length; for word-exact timing use `captions.py` and `caps()`), the active or key word in the accent colour, heavy weight, 80–110 px on a 1080-wide frame, a soft dark shadow or a local `halo()` behind it. Keep caption pages inside the safe area ([SKILL.md](../SKILL.md#safe-area)): on 1080×1920, between y 250 and 1570 and at least 60 px from the sides.
 4. **Burn them in** through the comp, not a subtitle file: styling and timing then match the rest of the film.
 
 For a person speaking on camera, `captions.py` builds the pages from hand-written page times and whisper's word times, and `caps()` draws them: see [talking-head.md](talking-head.md#6-captions).
 
 ## Mix
 
-`[music][vo]sidechaincompress=threshold=0.05:ratio=8:attack=20:release=300` ducks the score under the voice, then the two-pass loudnorm in `mix.sh`. Check it with `audio_check.py`: the voice sections should read louder than the score-only sections, never flat.
+`[music][vo]sidechaincompress=threshold=0.05:ratio=8:attack=20:release=300` is the idea; `mix-voice.sh` does it for you (threshold 0.02, release 450 ms, then the two-pass loudnorm), so use it instead of `mix.sh` whenever there is a voice. Check it with `audio_check.py`: the voice sections should read louder than the score-only sections, never flat.

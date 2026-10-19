@@ -4,7 +4,7 @@ A person speaks to camera (an interview, a founder story, a testimonial) and the
 
 ## 1. Probe the take
 
-`ffprobe -show_entries stream=r_frame_rate:stream_side_data=rotation …`. Phones and many cameras store portrait footage as landscape with a rotation flag; ffmpeg rotates it on decode, so a "1920×1080" file can be a 1080×1920 shot. Pick the film's `FPS` so it divides the source rate (100 or 50 → 25, 120 or 60 → 30, 24 → 24): frames then decimate evenly. 100 → 30 gives a 3-3-4 cadence that judders. Use the same number in three places: `cut_interview.py --fps`, `CONFIG.FPS` in comp.html (the template says 30; a mismatch plays the picture fast or slow against the voice), and `qc.sh … <FPS>`.
+`ffprobe -show_entries stream=r_frame_rate:stream_side_data=rotation …`. Phones and many cameras store portrait footage as landscape with a rotation flag; ffmpeg rotates it on decode, so a "1920×1080" file can be a 1080×1920 shot. Pick the film's `FPS` so it divides the source rate (100 or 50 → 25, 120 or 60 → 30, 24 → 24): frames then decimate evenly. 100 → 30 gives a 3-3-4 cadence that judders. Use the same number in four places: `cut_interview.py --fps`, `prep_footage.sh`'s `fps` for any cutaway, `CONFIG.FPS` in comp.html (the template says 30; a mismatch plays the picture fast or slow against the voice), and `qc.sh … <FPS>`.
 
 ## 2. Transcribe, then verify
 
@@ -72,7 +72,7 @@ Write `pages.txt` by hand, 2–4 words a page, each page starting on a measured 
 
 A score under a voice stays low and simple: pads and a soft pulse under the problem, the beat and a lift (minor to relative major) on the turn line, a breath before the call to action. `lofi` is built for this ([score.md](score.md)). Write cues in seconds at onsets: one-shots (`kick(t)`, `impact(t)`, `riser(t,len)`) take seconds; `groove(from,to)` takes music beats, so call `groove(a/B,z/B)`.
 
-`./mix-voice.sh <name>`: the voice is cleaned and compressed, the score ducked under it, the whole mix normalised to -14 LUFS / -1 dBTP. It prints how far the voice sits above the music per 4 s window. Keep every window at 10 dB or more (`MUSIC=0.15 ./mix-voice.sh …` lowers the bed from its 0.22 default). Phone speakers lose speech below that.
+`./mix-voice.sh <name>`: the voice is cleaned and compressed, the score ducked under it, the whole mix normalised to -14 LUFS / -1 dBTP. It prints how far the voice sits above the music per 4 s window. Keep every window at 10 dB or more (`MUSIC=0.15 ./mix-voice.sh …` lowers the bed from its 0.22 default; go lower again if a window still reads under 10 dB). Phone speakers lose speech below that.
 
 ## 9. Review
 

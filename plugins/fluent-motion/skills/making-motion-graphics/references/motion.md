@@ -7,7 +7,7 @@
 | Helper | Does |
 |---|---|
 | `word(str,x,y,weight,size,fill,{stroke,lw,alpha,sc,rot,track,align,blur,glow})` | one line of text; `sc` and `rot` pivot on (x,y), so a left-aligned word scales from its left edge |
-| `fit(str,weight,maxW,maxSize)` | largest size that fits a width |
+| `fit(str,weight,maxW,maxSize)` | largest size that fits a width (the template preloads weights 400 and 800 of the one brand font; add others to the `document.fonts.load` list in comp.html before using them) |
 | `echo(str,x,y,w,s,fill,stroke,spread,alpha=1)` | slam: outline copies collapse into the word as `spread`→0 |
 | `rise(str,x,y,w,s,fill,k)` | line slides up out of a masked slot |
 | `wrap(str,w,s,maxW)` | lines for a paragraph; `rise` each with a small stagger |
@@ -16,8 +16,9 @@
 | `words(parts,x,y,weight,size,beat,step,{align,alpha,shadow,track})` | a caption or headline line: words pop in on a spring one per `step` beats; a part whose colour is exactly the string `C.accent` is the key phrase and lands with an elastic pop and a warm glow |
 | `halo(y,alpha)` | a soft dark pool behind a text block over footage or a 3D plate (local, feathered; never a full-frame scrim) |
 | `shock(x,y,beat,{r,col})`, `sparks(x,y,beat,{n,seed,col})` | an impact: flash and two spreading rings; seeded sparks under gravity (`col` is a hex colour, default `C.accent`). Pair with the score's impact on the same beat |
-| `cta(label,x,y,beat,tapBeat,{bg,fg,size})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
+| `cta(label,x,y,beat,tapBeat,{bg,fg,size,w8,minW})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
 | `count(n,a,z)` | number counting up between two beats, formatted |
+| `TP(a,z)`, `TI(a,dur,ease)`, `bt(s)` | the same as `PB` and `IN` but in seconds, for a film timed by a voice; `bt` turns seconds into a comp beat for `shock`, `sparks` and `cta` |
 | `spring(a,{z,w})` | 0→1 from beat a on a closed-form damped spring: `z` .75–.9 overshoots a touch, `w` 12 settles in about half a beat. Pure in `b`, so it re-times and renders in parallel |
 | `springs([[beat,value],…],{z,w})` | a value that changes target several times: one spring per change, summed, so each new target bends the motion under way instead of restarting it |
 | `bgGlow(col,x,y)`, `bgFlat(col)` | backgrounds; `grainPass()` adds film grain over everything |
@@ -30,7 +31,7 @@
 
 **Title slam.** `echo(title,…,lerp(s*.9,0,E.outQuint(PB(a,a+.6))))`, then the second word one beat later in the accent colour. Pair with an impact in the score.
 
-**Reading card.** Header label small and tracked, big number or icon, then the text `rise`s line by line with a 0.08-beat stagger, then a pill. Exit by sliding left with `E.inExpo` in the last quarter-beat.
+**Reading card.** A big number or icon (a small tracked label above it only when the card needs naming; on every card it reads as a template), then the text `rise`s line by line with a 0.08-beat stagger, then a pill. Exit by sliding left with `E.inExpo` in the last quarter-beat.
 
 **Counter.** A centred number whose width changes wobbles as it counts: measure the final string once, then draw left-aligned from `x - finalWidth/2`, and wrap any scale in your own translate about the centre. `word('$'+count(1000,a,z),…,{sc:1+.12*Math.exp(-(b-z)*6),glow:b>z?C.accent:null})` and a burst of seeded particles on landing: positions from `rng(seed)`, moved by elapsed time with gravity, faded out.
 
@@ -39,6 +40,8 @@
 **Text behind a person.** Footage frames via `prep_footage.sh`, mattes via `swift segment.swift person shots/NAME masks/NAME`, `mask:true` in `SHOTS`. Draw `plate`, then the text, then `subject` with the same transform. The word must still read: measure the head top from the matte (at the end of any push-in) and set the word's baseline about 50 px below it, so only the bottom sliver of the letters tucks behind the hair. A head across the middle of a word hides whole letters. For a still photo, run the matte on a one-frame folder, keep only the largest connected shape (stray background people and objects get matted too), and draw the photo and its cut-out with the same transform.
 
 **Product sticker.** `swift segment.swift cutout photo.jpg assets/cutout.png`, then draw it with a white outline (the silhouette drawn 24 times offset in a circle) and a soft shadow; bounce it in with `E.outBack`.
+
+**Cursor.** For a product film. Draw an arrow pointer as a path (white fill, dark 3 px outline, small shadow) at a position from `springs()` over the targets (`[[b,x],…]` and the same for y), so it travels in curves and settles rather than gliding linearly. A click: scale the pointer to 0.85 for 0.1 beat, a ripple ring from the tip (`shock(x,y,beat,{r:60})`), and the UI responding on the same beat (a button dips, a card opens). Pair with a soft tick in the score. Push the camera in on where the cursor is going one beat before it arrives.
 
 **Camera moves.** Wrap a scene in `ctx.translate/scale` driven by `PB`: slow push-in (scale 1→1.06 over the scene), whip (big `x` offset with `E.inExpo` at the scene end, blur up to 12 px), shake on impacts (`Math.sin(k*200)*10` for 0.15 beat).
 

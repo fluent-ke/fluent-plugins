@@ -12,11 +12,15 @@ cp "$K"/template/{comp.html,timeline.js,render.mjs,soundtrack.mjs,mix.sh,mix-voi
 chmod +x "$DIR/mix.sh" "$DIR/mix-voice.sh"
 cd "$DIR"
 [ -f package.json ] || printf '{\n  "name": "film",\n  "private": true,\n  "type": "module",\n  "dependencies": {}\n}\n' > package.json
-npm install --silent playwright >/dev/null
-npx --yes playwright install chromium >/dev/null 2>&1 || npx playwright install chromium
+if [ -z "${NO_INSTALL:-}" ]; then   # NO_INSTALL=1 skips this when node_modules is already linked in
+  npm install --silent playwright >/dev/null
+  npx --yes playwright install chromium >/dev/null 2>&1 || npx playwright install chromium
+fi
 if [ -f "$FONT" ]; then cp "$FONT" fonts/Brand.ttf; else curl -sfL -o fonts/Brand.ttf "$FONT" || echo "font download failed: put a .ttf at fonts/Brand.ttf"; fi
 echo "Film project ready at $(pwd)"
 if [ -f ../score-log.tsv ]; then echo "Scores this brand's films already use (pick a different STYLE in soundtrack.mjs):"; tail -n +2 ../score-log.tsv | tail -5 | awk -F'\t' '{printf "  %-24s %-10s key %s  %s BPM\n",$1,$2,$3,$4}'; fi
+if [ -f ../film-log.tsv ]; then echo "Pictures this brand's films already use (this one must differ from each of the last two on at least 4 of shape, opening, signature, camera, text, ending; set FILM in timeline.js):"; tail -n +2 ../film-log.tsv | tail -5 | awk -F'\t' '{printf "  %-18s %-12s %-11s %-12s %-12s %-14s %-12s %s\n",$1,$2,$3,$4,$5,$6,$7,$8}'; fi
+if [ -f ../taste.md ]; then echo "What was said about this brand's earlier films (../taste.md; read it all before the concepts):"; tail -8 ../taste.md | sed 's/^/  /'; fi
 echo "Next: edit comp.html (scenes), timeline.js (pacing), soundtrack.mjs (cues), then:"
 echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs beats && node render.mjs --draft"
 echo "  then the blind critic, then: node render.mjs --blur 8 && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 <FPS>"

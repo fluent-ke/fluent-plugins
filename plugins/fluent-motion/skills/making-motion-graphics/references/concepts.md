@@ -13,8 +13,10 @@ The pipeline renders whatever it is given. This file is the step before it: turn
 | Format | 9:16 unless a destination is named; 16:9 for a site, a screen, LinkedIn or a showreel |
 | Facts | Read them off what was named: the URL, the site, the repo's README, the app's screens. Nothing invented: no metrics, users or features the source does not state |
 | Assets | The real logo, real screenshots, the real product. A redrawn logo or a mocked-up UI reads as fake. When a website is all you have: colours from its CSS custom properties, fonts from its `@font-face` files, the mark from the header's SVG or the favicon. A vector mark may be drawn and animated from the SVG's own geometry (its circles, paths and viewBox), and a wordmark set in live text in the brand's own font |
-| Look | A named style from [the catalogue](#named-styles) that fits the subject, not the one used last |
+| Look | A named style from [the catalogue](#named-styles) that fits the subject, not the one used last. With no brand kit at all, take the palette and a font from the style and flag both as stand-ins when delivering |
 | Music | A `STYLE` and `KEY` the brand has not used lately ([score.md](score.md#every-film-gets-its-own-music)) |
+
+Read the brand's `../film-log.tsv` and `../taste.md` first (`new_film.sh` prints both): the new film must differ from each of the brand's last two on at least 4 of the six `FILM` fields (shape, opening, signature, camera, text treatment, ending) and share at most half its transitions with the last one. Never repeat what the client disliked; what they loved can come back as a starting point, changed (a new colour, scale or place in the film), never copied.
 
 Then write **three concepts**, one line each, as different as you can make them:
 
@@ -23,6 +25,8 @@ A  "One shape": the logo's dot becomes the button, the card, the whole screen. H
 B  "Countdown": the problem as a number falling to zero, one beat per digit. Hero: 0 slams and cracks. Swiss slam, drill.
 C  "Desk to street": the app on a laptop, then on phones in a matatu, then on a billboard. Hero: the match cut from laptop to billboard. Documentary, benga.
 ```
+
+The three must differ in their **central idea**, not be three stories told with the same cards. Kinds of idea to reach for: one continuous transformation, a camera move through scale (from a pore to a city), a chain reaction, a split screen, one held shot, a typographic essay, before and after, a cold open that shows the payoff first. The most over-used film is hook word → numbered cards → big number → logo end card: pick it only when the brief really is a list.
 
 Each has a **logline** (the idea in a phrase), a **signature move** (the one motion that recurs) and a **hero moment** (the frame someone would screenshot). Pick the one that best serves what the viewer must do, is furthest from [the default look](#ai-giveaways), and can be built with the helpers in [motion.md](motion.md). Tell the user the pick in a line, name the other two in a few words, and go on to the storyboard unless they object. The stills sheet in step 5 is where they judge it.
 
@@ -59,7 +63,7 @@ A style is four lines (palette, type, motion signature, texture) plus a score th
 | Product glass | dark ground lit from one side, the real UI as the hero | the product's own font | one shape morphing between UI states, a cursor leading the zooms | soft bloom, motion blur | afrohouse, ambient |
 | Matatu loud | three saturated brand colours at full strength | heavy rounded, outlined | stickers bouncing in, colour-flip grounds, type on a curve | halftone grain | benga, amapiano |
 | Blueprint | navy ground, one line colour, white labels | mono for numbers, sans for words | lines drawing on, counters landing, charts growing from their axis | fine grid only where it carries data | ambient |
-| Brutal type | one colour pair, swapped on every beat | the heaviest weight, cropped by the frame | giant words bleeding off the edges, hard cuts | flat | drill |
+| Brutal type | one colour pair, swapped on every beat | the heaviest weight, cropped by the frame | giant words bleeding off the edges (the word still reads inside the safe area; only letter edges bleed), hard cuts | flat | drill |
 | Documentary | the footage's own colour | white sans on a `halo()` | slow pushes, match cuts on shape or motion | film grain | lofi, ambient |
 | Celebration | the brand colours with gold | rounded 800 | spring pops with overshoot, sparks, a counter slam | light grain | amapiano |
 | Mono luxe | black, white, one metallic | thin serif, wide tracking | slow reveals through masks, long holds | fine grain | ambient |
@@ -94,11 +98,13 @@ The best cuts grow the next scene out of the last one, so the film reads as one 
 
 - Frame 0 carries content: it is the thumbnail.
 - Something worth stopping for in the first second; the product or subject on screen by about 2 s.
-- Each shot carries one thing and lasts roughly 1.5 to 2 seconds, so a 15 s film has seven to ten shots. Two or three strong ideas carried across them beat ten unrelated ones.
-- In kinetic scenes something hits on every beat. Reading scenes hold by the rule in [storyboard.md](storyboard.md#reading-time).
+- Vary the shot lengths more than anything else: mostly short, a few long, never a steady 1–2 s metronome. Every film has at least one rest (something held still for a second or more, a bar is better, usually the breath before the biggest moment) and one burst (3 or more one-beat shots in a row). `qc.sh` checks both and the spread of lengths (CV 0.3 or more; 0.4–0.7 is the sweet spot).
+- A small change every 2–4 s (a punch-in, a caption, a sound); a big change every 8–12 s (a new kind of scene, layout or sound texture).
+- Cut on the strong accents most of the time and across the beat now and then: a film that cuts on every downbeat goes mechanical. Two or three strong ideas carried across the shots beat ten unrelated ones.
+- Reading scenes hold by the rule in [storyboard.md](storyboard.md#reading-time).
 - Shots enter already moving and leave accelerating; nothing starts from a dead stop.
 - The last frame holds: 3 s or more under a CTA; in a loop the last frame equals the first.
-- Every visual impact gets an audible accent, and the score leaves gaps between them; `mix.sh` sets −14 LUFS.
+- Fewer sound events than beats: hits only on the edits that matter, at least two near-silences, and at least twice a sound that arrives before its cut or runs over it; `mix.sh` sets −14 LUFS.
 
 ## Revisions in the user's words
 

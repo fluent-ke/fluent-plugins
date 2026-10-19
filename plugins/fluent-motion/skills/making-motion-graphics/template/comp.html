@@ -10,7 +10,7 @@ const CONFIG={W:1080,H:1920,FPS:30,BPM:globalThis.BPM};               // 9:16. 1
 const {W,H,FPS,BPM}=CONFIG,B=60/BPM,TAU=Math.PI*2;
 const DUR=MUSIC_BEATS*B;window.CONFIG={...CONFIG,DUR};
 const Q=new URLSearchParams(location.search);               // variants: render.mjs --query "day=TODAY"
-const C={bg:'#101014',ink:'#FFFFFF',accent:'#46FF5E',brand:'#5B2A86',soft:'#D9C2FA'};   // take these from the brand assets
+const C={bg:'#121212',ink:'#F4F1EA',accent:'#FF5A36',brand:'#2B2B2B',soft:'#BDB8AE'};   // neutral stand-ins: take these from the brand assets
 const cv=document.getElementById('c');cv.width=W;cv.height=H;
 
 // ── Maths
@@ -151,10 +151,10 @@ function sparks(x,y,a,{n=26,seed=11,col=C.accent}={}){const el=t-toMusic(a)*B;if
     ctx.fillStyle=`rgba(${r()<.7?rgb:'255,255,255'},${clamp(1-el/1.4)})`;ctx.beginPath();ctx.arc(px,py,sz*(1-el/1.8),0,TAU);ctx.fill()}ctx.restore()}
 // Call to action: a filled button that pops in at beat a, gets tapped at beat tap (a press circle, a ripple, the button dips),
 // and nudges its arrow. The arrow is drawn as a path, so it never depends on the font having a → glyph.
-function cta(label,x,y,a,tap,{bg=C.accent,fg=C.bg,size=62,w8=800,minW=0}={}){const u=IN(a,.6,E.outBack);if(u<=0)return;
+function cta(label,x,y,a,tap,{bg=C.accent,fg=C.bg,size=62,w8=800,minW=0,glow=false}={}){const u=IN(a,.6,E.outBack);if(u<=0)return;
   ctx.font=font(w8,size);ctx.letterSpacing='-1px';const lw=ctx.measureText(label).width,aw=size*.8,gap=size*.45,bw=Math.max(minW,lw+aw+gap+size*1.6),bh=size*2.3;
   const d=b>tap?Math.exp(-(b-tap)*5)*Math.sin((b-tap)*18):0,sc=u*(1-.06*Math.max(0,d)),nud=size*.28*Math.max(0,Math.sin((b-a)*Math.PI));
-  ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);ctx.shadowColor=bg+'8C';ctx.shadowBlur=60+20*Math.sin(b*3);ctx.fillStyle=bg;
+  ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);ctx.shadowColor=bg+'8C';ctx.shadowBlur=glow?60+20*Math.sin(b*3):0;ctx.fillStyle=bg;
   ctx.beginPath();ctx.roundRect(-bw/2,-bh/2,bw,bh,size*.26);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=fg;ctx.textAlign='left';ctx.textBaseline='middle';
   const x0=-(lw+gap+aw)/2;ctx.fillText(label,x0,size*.06);
   const ax=x0+lw+gap+nud,st=size*.11;ctx.strokeStyle=fg;ctx.lineWidth=st;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();

@@ -6,7 +6,7 @@ A short film is a handful of scenes, each carrying one idea. Pick the shape from
 
 ### Promo
 
-For an event, an offer or a launch with a date. The shape that has worked:
+For an event, an offer or a launch with a date. One shape among many, and the most over-used:
 
 | Scene | Job | Typical length |
 |---|---|---|
@@ -66,14 +66,16 @@ Every scene then answers to the look. Name it in the beat sheet's first line so 
 
 ## Beat sheet
 
-Write it before any code. One line per scene: comp beats, on-screen words, motion, music cue.
+Write it before any code, in `BEATSHEET.md` in the film folder. One line per scene: comp beats, on-screen words, motion, **edit** (how the scene enters and leaves), **energy** (1–5), music cue, and what **carries** across into the next scene (an element, a colour, a direction of motion, a sound).
 
 ```
-b0–4    MONEY / STILL / STOPS AT / THE BORDER.   one word per beat, slam into a line   stab + kick per word, impact on 3
-b4–12   corridor map, then BORDERLESS KENYA.     arcs draw one per beat, title slams    groove in, impacts on title words
-b12–23  5 PROBLEMS. then one card per problem    card slides in, text rises line by line   breath on header, arp under cards
+b0–4    MONEY / STILL / STOPS AT / THE BORDER.  slam one per beat      in: cold, out: flood (accent)   e4  stab per word        carry: accent colour
+b4–12   corridor map, BORDERLESS KENYA.         arcs draw, title slam  in: flood recedes, out: whip →  e3  groove in            carry: rightward motion
+b12–14  (hold) the map breathes                 slow push              —                               e1  drums out, riser     carry: silence
 …
 ```
+
+`in: cold` means the scene opens the film with no transition in. Read the energy column as a curve before building: it needs a dip (e1–2) before the biggest moment, and the biggest moment (e5) is an edit or a camera move, not a text card. Fill `FILM` in timeline.js from it: the signature is the move the edit column repeats most, transitions every kind it names.
 
 Author every scene at its natural kinetic speed (about 1 comp beat per action), then give reading scenes their time in `timeline.js`.
 
@@ -118,5 +120,5 @@ Read the stills sheet for each scene and fix before the full render:
 - Text over footage has a scrim, shadow or matte so it reads on every frame.
 - Brand marks are sharp, in proportion, and on a background the brand allows.
 - The settled state of each text is on screen long enough (stills at the start and end of the hold).
-- On out/beats-sheet.png, every tile in a kinetic scene differs from the one before it. Identical neighbours belong only to reading holds, and a hold still has something alive in it (a slow push-in, a drifting field, the CTA arrow).
+- On out/beats-sheet.png, kinetic scenes move on the beats that carry a hit, and the film also has its rests. A run of near-identical tiles is right only where the beat sheet says hold, and even a hold has something alive in it, kept slow (a push of a few per cent over the hold) so it still reads as a rest (a slow push-in, a drifting field, the CTA arrow).
 - The look is the agreed one: set a tile beside the reference sheet, or check it against the four look lines.

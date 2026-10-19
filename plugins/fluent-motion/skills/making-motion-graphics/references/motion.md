@@ -16,7 +16,7 @@
 | `words(parts,x,y,weight,size,beat,step,{align,alpha,shadow,track})` | a caption or headline line: words pop in on a spring one per `step` beats; a part whose colour is exactly the string `C.accent` is the key phrase and lands with an elastic pop and a warm glow |
 | `halo(y,alpha)` | a soft dark pool behind a text block over footage or a 3D plate (local, feathered; never a full-frame scrim) |
 | `shock(x,y,beat,{r,col})`, `sparks(x,y,beat,{n,seed,col})` | an impact: flash and two spreading rings; seeded sparks under gravity (`col` is a hex colour, default `C.accent`). Pair with the score's impact on the same beat |
-| `cta(label,x,y,beat,tapBeat,{bg,fg,size,w8,minW})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
+| `cta(label,x,y,beat,tapBeat,{bg,fg,size,w8,minW,glow})` | the call-to-action button: pops in, arrow drawn as a path and nudging, tapped at `tapBeat` (press circle, ripple, dip) |
 | `count(n,a,z)` | number counting up between two beats, formatted |
 | `TP(a,z)`, `TI(a,dur,ease)`, `bt(s)` | the same as `PB` and `IN` but in seconds, for a film timed by a voice; `bt` turns seconds into a comp beat for `shock`, `sparks` and `cta` |
 | `spring(a,{z,w})` | 0→1 from beat a on a closed-form damped spring: `z` .75–.9 overshoots a touch, `w` 12 settles in about half a beat. Pure in `b`, so it re-times and renders in parallel |

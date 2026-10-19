@@ -10,9 +10,9 @@
 - `drill` voices: `e808(t,note,len,gain,fromNote)` (sliding 808), `dkick`, `dsnare`, `dhat`, `lyre(t,note,gain,pan,len)` (buzzy nyatiti-like pluck), `brass(t,notes,gain,len)` (stab for big hits). In `groove()`, `cg`/`arp` turn the lyre riff on for drill.
 - `pluck(t,note,gain,pan,{bright,mute,len})`: a plucked string (Karplus-Strong). Muted and dark for rhythm parts, bright and longer for leads.
 - `groove(from,to,opts)`: the beat between two music beats. Thin it for quiet scenes (`k:false` drops the kick, `bs:false` the bass), open the filter with `cut` (700 muffled, 1300 warm, 3000 bright), `arp:true` for the marimba line under reading scenes.
-- FX: `revCrash(T(M(c)))` + `impact` or `crash` on every cut, `riser` into every reveal, `stab`, `mar`, `tick` for small hits, `kick` alone for punctuation.
+- FX: `revCrash(T(M(c)))`, `impact`, `crash`, `riser`, `stab`, `mar`, `tick`, `kick` alone for punctuation. Fewer sound events than beats: an impact only on the cuts that matter, a riser only into the one or two reveals that earn it, at least two near-silences, and at least twice a sound that starts before its cut (a reversed crash, a riser) or runs over it.
 
-Arc that works: sparse intro hits on each word, groove in as the title lands, a breath (drums out) before the big number with a riser into it, full groove to the end card, one final hit and a tail.
+Arc that works: sparse intro hits on each word, groove in as the title lands, a breath (drums out) before the big number with a riser into it, full groove to the end card, one final hit and a tail. Vary the arc between films too: start full, start silent, or drop out completely for the payoff.
 
 ## Every film gets its own music
 
@@ -34,7 +34,7 @@ Run `audio_check.py` on `score.wav` and on the final mp4 (1-second windows by de
 
 - Sections meant to be quiet read quieter. A **FLAT** warning means something dominates: usually the kick (lower its gain or shorten its decay) or a voice with a runaway length.
 - No **SILENT** windows except the fade-out; no **CLIPPING**.
-- The final file is near -14 LUFS. `score.wav` is written hotter (around -10) on purpose; `mix.sh` normalises it.
+- The final file is near -14 LUFS. `score.wav` comes out between about -10 and -15 LUFS depending on the style; `mix.sh` normalises it.
 
 A spectrogram shows what the numbers cannot: `ffmpeg -i score.wav -lavfi showspectrumpic=s=1400x500:legend=0:fscale=log:stop=6000 spec.png`, then read the image. Pitched parts show as horizontal harmonic lines; a solid block across the low end means the bass is too loud or too long.
 

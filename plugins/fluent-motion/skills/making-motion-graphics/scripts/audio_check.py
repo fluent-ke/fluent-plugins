@@ -9,7 +9,11 @@ import array, math, subprocess, sys, wave, tempfile, os
 
 src = sys.argv[1]; win = float(sys.argv[2]) if len(sys.argv) > 2 else 1
 tmp = None
-if not src.lower().endswith('.wav'):
+def pcm16(p):                                   # wave reads 16-bit PCM only: 24-bit, float and WAVE_FORMAT_EXTENSIBLE files are converted first
+    try:
+        with wave.open(p) as w: return w.getsampwidth() == 2
+    except wave.Error: return False
+if not src.lower().endswith('.wav') or not pcm16(src):
     tmp = tempfile.mktemp(suffix='.wav')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-ac', '2', '-ar', '44100', tmp], check=True); src = tmp
 w = wave.open(src); sr = w.getframerate(); ch = w.getnchannels()

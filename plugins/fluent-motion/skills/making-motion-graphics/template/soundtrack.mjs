@@ -2,7 +2,8 @@
 // Cues are placed in MUSIC beats; M(c) converts a comp beat from comp.html so every hit lands on its cut.
 // STYLE picks the groove: 'afrohouse' (warm, 118–124 BPM), 'amapiano' (log drum, 108–114 BPM), 'benga' (Kenyan: plucked guitars in
 // interlocking 16ths, a walking bass, house kick; 118–128 BPM, major key), 'drill' (Nairobi drill: half-time drums, triplet hat rolls,
-// sliding 808s, a buzzy nyatiti-like lyre riff, brass stabs; minor key, 118–144 BPM), 'ambient' (no drums, corporate/calm; 80–100 BPM).
+// sliding 808s, a buzzy nyatiti-like lyre riff, brass stabs; minor key, 118–144 BPM), 'ambient' (no drums, corporate/calm; 80–100 BPM),
+// 'lofi' (swung boom-bap: soft kick, snare on 2 and 4, 8th hats, warm minor-9th pads; 80–95 BPM; sits under a voice).
 // Every film gets its own music: this script logs STYLE/KEY/BPM to ../score-log.tsv and warns when the brand's recent films used the same style.
 // KEY transposes the whole score in semitones (-5…+6), so even a style used before sounds new.
 import {writeFileSync,readFileSync,existsSync} from 'node:fs';
@@ -10,7 +11,7 @@ import './timeline.js';
 const {toMusic,MUSIC_BEATS,BPM}=globalThis;
 const STYLE='afrohouse';
 const KEY=0;
-const SR=44100,B=60/BPM,DUR=MUSIC_BEATS*B+1.2,N=Math.ceil(SR*DUR),TAU=Math.PI*2,S16=B/4,SW=STYLE==='drill'?0:.12;   // SW: 16th swing (drill stays straight)
+const SR=44100,B=60/BPM,DUR=MUSIC_BEATS*B+1.2,N=Math.ceil(SR*DUR),TAU=Math.PI*2,S16=B/4,SW=STYLE==='drill'?0:STYLE==='lofi'?.2:.12;   // SW: 16th swing (drill stays straight)
 const L=new Float32Array(N),R=new Float32Array(N),PL=new Float32Array(N),PR=new Float32Array(N),WET=new Float32Array(N);
 let seed=5;const noise=()=>((seed=(seed*16807)%2147483647)/2147483647)*2-1;
 const hz=n=>440*2**((n+KEY-69)/12), T=b=>b*B, M=c=>toMusic(c);   // KEY transposes every pitched voice
@@ -32,6 +33,8 @@ const logdrum=(t,n,g=.5,len=.45)=>add(t,len,x=>{const f=hz(n),ph=TAU*(f*x+f*1.2*
 // ── Harmony: one chord per bar of 4 music beats. Default A minor: Am9 | Fmaj9 | Dm9 | Em7(add11). r = bass root (MIDI).
 const CH=STYLE==='drill'
   ? [{r:28,c:[52,55,59,62,67]},{r:24,c:[52,55,59,60,64]},{r:21,c:[52,57,60,64,69]},{r:23,c:[51,54,57,59,63]}]   // Em | Cmaj7 | Am | B7: dark, with a pull
+  : STYLE==='lofi'
+  ? [{r:38,c:[62,65,69,72,76]},{r:34,c:[58,62,65,69,72]},{r:43,c:[58,62,65,67,70]},{r:45,c:[57,62,64,67,69]}]   // Dm9 | Bbmaj9 | Gm9 | A7sus4: warm, unresolved
   : STYLE==='benga'
   ? [{r:38,c:[62,66,69,73,76]},{r:35,c:[59,62,66,69,74]},{r:31,c:[59,62,67,71,74]},{r:33,c:[57,61,64,67,71]}]   // D | Bm | G | A: benga is bright and major
   : [{r:45,c:[57,60,64,67,71]},{r:41,c:[57,60,64,65,67]},{r:38,c:[57,60,62,65,69]},{r:40,c:[55,59,62,64,69]}];
@@ -80,7 +83,7 @@ const tick=(t,g=.12)=>add(t,.04,x=>Math.sin(TAU*2600*x)*Math.exp(-x*150),g,.3,.4
 
 // ── Groove between two music beats, on one global 16th grid so cuts never land off-beat. Options thin it for quiet scenes.
 function groove(from,to,{k=true,cl=true,hh=true,sh=true,cg=true,bs=true,pd=true,arp=false,cut=1400}={}){
-  const drums=STYLE!=='ambient'&&STYLE!=='drill';
+  const drums=STYLE!=='ambient'&&STYLE!=='drill'&&STYLE!=='lofi';
   for(let gi=Math.ceil(from*4-1e-6);gi<Math.round(to*4);gi++){const s=gi%16,ch=chordAt(gi/4),t=T(gi/4)+(gi%2?S16*SW:0);
     if(drums&&k&&s%4===0)kick(t);
     if(drums&&cl&&s%8===4)clap(t);
@@ -101,6 +104,9 @@ function groove(from,to,{k=true,cl=true,hh=true,sh=true,cg=true,bs=true,pd=true,
       if(hh){if(bar%2&&s>=12)for(let r=0;r<3;r++)dhat(t+r*S16/3,.045+.01*r,.25);else if(s%2===0)dhat(t,s%4===0?.065:.05)}
       if(bs){const h=BASS808.find(([st])=>st===s);if(h){const p=BASS808[(BASS808.indexOf(h)+3)%4];e808(t,ch.r+24+h[1],S16*(s===0?6:s===14?2.2:4),.5,h[2]?ch.r+24+p[1]:null)}}
       if((cg||arp)&&RIFF.has(gi%32))lyre(t,EMP[RIFF.get(gi%32)],arp?.13:.1,.4,.8)}
+    if(STYLE==='lofi'){const bar=Math.floor(gi/16);                     // kick on 1 and the "and" of 3 (and a ghost on odd bars), snare 2 and 4
+      if(k&&(s===0||s===10||(s===7&&bar%2)))kick(t,s?.38:.5);if(cl&&(s===4||s===12))snare(t,.12);if(hh&&s%2===0)chh(t,s%4?.03:.045,.25);
+      if(cg&&s===14&&bar%2)rim(t,.06);if(bs&&s===0)bass(t,ch.r,B*1.4,.24);if(bs&&s===10)bass(t,ch.r+7,B*.9,.18)}
     if(((arp&&STYLE!=='benga'&&STYLE!=='drill')||STYLE==='ambient')&&s%2===0)mar(t,ch.c[[0,2,4,1,3,2,4,3][(s/2)%8]]+12,.08,(s/2)%2?.3:-.3);}
   if(pd)for(let bb=Math.floor(from/4)*4;bb<to;bb+=4){const a=Math.max(bb,from),z=Math.min(bb+4,to);if(z-a>.05)pad(T(a),chordAt(bb).c,(z-a)*B+.05,()=>cut,.048)}
 }

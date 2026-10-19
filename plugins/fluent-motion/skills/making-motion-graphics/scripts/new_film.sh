@@ -8,8 +8,8 @@ DIR=${1:?usage: new_film.sh <project-dir> [font-url]}
 FONT=${2:-https://github.com/google/fonts/raw/main/ofl/plusjakartasans/PlusJakartaSans%5Bwght%5D.ttf}
 if [ -e "$DIR/comp.html" ]; then echo "$DIR already has a comp.html; not overwriting"; exit 1; fi
 mkdir -p "$DIR"/{assets,fonts,stills,out,src,shots,masks}
-cp "$K"/template/{comp.html,timeline.js,render.mjs,soundtrack.mjs,mix.sh} "$DIR"/
-chmod +x "$DIR/mix.sh"
+cp "$K"/template/{comp.html,timeline.js,render.mjs,soundtrack.mjs,mix.sh,mix-voice.sh} "$DIR"/
+chmod +x "$DIR/mix.sh" "$DIR/mix-voice.sh"
 cd "$DIR"
 [ -f package.json ] || printf '{\n  "name": "film",\n  "private": true,\n  "type": "module",\n  "dependencies": {}\n}\n' > package.json
 npm install --silent playwright >/dev/null
@@ -19,4 +19,5 @@ echo "Film project ready at $(pwd)"
 if [ -f ../score-log.tsv ]; then echo "Scores this brand's films already use (pick a different STYLE in soundtrack.mjs):"; tail -n +2 ../score-log.tsv | tail -5 | awk -F'\t' '{printf "  %-24s %-10s key %s  %s BPM\n",$1,$2,$3,$4}'; fi
 echo "Next: edit comp.html (scenes), timeline.js (pacing), soundtrack.mjs (cues), then:"
 echo "  node soundtrack.mjs && node render.mjs stills 1 3 6 && node render.mjs beats && node render.mjs --draft"
-echo "  then the blind critic, then: node render.mjs --blur 8 && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 30"
+echo "  then the blind critic, then: node render.mjs --blur 8 && ./mix.sh film && $K/scripts/qc.sh out/film.mp4 1080x1920 <FPS>"
+echo "  (a film with a voice: ./mix-voice.sh film instead of ./mix.sh; see references/talking-head.md)"

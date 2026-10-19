@@ -36,6 +36,8 @@ zoomBlur(...vp,.45*Math.exp(-(((b-c)/.18)**2)));
 ```
 Sound: a riser into a sub hit on the cut.
 
+**From stills** (no hyperlapse footage): a full-bleed photo dives into its vanishing point (scale 1 → 2.4, `E.inCubic`); the next starts at full frame (1 → 1.9) and opens through a dark iris from the same point. Keep the zoom blur near zero between merges (base ≤ .08, peaks of about .4 at each merge): a constant blur smears every face. Framed photos floating on a flat ground read as the default look, not a rush.
+
 ## Stadium reveal
 
 An empty venue wiped to the same view full. **Needs** two shots with the same camera move (direction and speed) from about the same position, such as rehearsal and match night; match their speeds with `prep_footage.sh`'s `slow` and their framing with `plate` offsets until a still at 50 % opacity shows the stands lining up. Draw the full shot, then the empty one masked to the side of a moving feathered edge:
@@ -44,7 +46,7 @@ An empty venue wiped to the same view full. **Needs** two shots with the same ca
 plate('FULL');const x=lerp(-500,W+500,E.inOutCubic(PB(a,a+1)));
 masked(()=>plate('EMPTY'),[[x,0],[W+600,0],[W+600,H],[x-500,H]],{feather:40});
 ```
-The edge sells it when it follows something in the shot (a pillar, a stairway, a floodlight beam); key the edge's points to that feature. Sound: a crowd roar swelling under the wipe.
+The wipe finishes by the word that names the full side ("next to other *founders*"), so the empty side never plays under it. The edge sells it when it follows something in the shot (a pillar, a stairway, a floodlight beam); key the edge's points to that feature. Sound: a crowd roar swelling under the wipe.
 
 ## Masked frame build
 
@@ -88,7 +90,7 @@ const L=[['A',540,1150,260],['B',300,620,200],['C',540,1000,300]],   // [shot, l
   [k,lx,ly,lw]=L[Math.floor((fi()-fAt(a))/2)%L.length],s=300/lw;
 bgFlat(C.bg);ctx.save();ctx.translate(W/2,H/2);ctx.scale(s,s);ctx.translate(-lx,-ly);ctx.drawImage(FR['f'+k],0,0,W,H);ctx.restore();
 ```
-Accelerate it: 3 frames per shot, then 2, then 1, landing on the clean brand mark on a hit. Sound: a tick per cut over a riser.
+Accelerate it: 3 frames per shot, then 2, then 1, landing on the clean brand mark on a hit. **When no footage shows the logo**, hold the clean mark at the centre at one size over full-bleed photos of the place (darkened to about .5) and brand-colour fills, switching the mark's colours so it reads on each; land it over a darkened photo of the place rather than a bare gradient. Sound: a tick per cut over a riser.
 
 ## Colour flip
 
@@ -123,7 +125,7 @@ if(r>1)masked(()=>plate('NEXT'),c=>{c.beginPath();c.arc(...p,r,0,TAU)});
 if(b<a+.9)about(...p,1-E.inExpo(PB(a+.2,a+.9)),()=>subject('PLAYER'));
 ctx.setTransform(1,0,0,1,0,0);warp(...p,700,.6*Math.sin(Math.PI*PB(a,a+1.2)));
 ```
-Sound: a whoosh reversed into an impact as the portal fills the frame.
+Timing: the portal's radius has to pass the subject's whole body before their cut-out shrinks (radius `1650*E.inCubic(PB(a+.1,…))`, shrink from `a+.3`), or two copies of them show at once. Check a still midway. Sound: a whoosh reversed into an impact as the portal fills the frame.
 
 ## Rights
 

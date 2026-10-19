@@ -8,8 +8,9 @@
   asset_tools.py sample  <image> <x0> <y0> <x1> <y1>     average colour of a region: point it at a headline, button or logo to read a brand colour
   asset_tools.py sheet   <out.png> <image>... [--cols 4] [--w 360]   tile stills into one contact sheet to review at a glance
   asset_tools.py grid    <image> <out.png> [x0 y0 x1 y1] [step]   pixel grid labelled in source pixels, cropped to the region: read corners and points off a frame
+  asset_tools.py heads   <masks/NAME> <head.js> [x0 x1]   head top and centre per frame from person mattes (HEAD in comp.html), for text behind a head
 """
-import sys
+import os, sys
 from PIL import Image
 
 def info(paths):
@@ -59,6 +60,22 @@ def grid(p, out, *r):
         for y in range(0, im.height, 100): d.text((x + 3, y + 2), f"{x},{y}", fill=(255, 255, 0))
     im.crop((x0, y0, x1, y1)).save(out); print(out)
 
+def heads(folder, out, x0=None, x1=None):
+    """Top of the head and its centre x in every matte of a folder, lightly smoothed, written as globalThis.HEAD=[[top,cx],…]
+    (index 0 = frame 1). Only columns x0–x1 count (default: the middle half), so a chair or a raised hand is not the head."""
+    import glob, json
+    fs = sorted(glob.glob(os.path.join(folder, '*.png'))); hs = []
+    for f in fs:
+        m = Image.open(f).convert('L'); W0, H0 = m.size; m = m.reduce(4); w, h = m.size; px = m.load()
+        a = int(x0) // 4 if x0 is not None else w // 4; z = int(x1) // 4 if x1 is not None else 3 * w // 4
+        top = next((y for y in range(h) if sum(px[x, y] > 128 for x in range(a, z)) > 3), None)
+        if top is None: hs.append(hs[-1] if hs else [H0 // 3, W0 // 2]); continue
+        xs = [x for y in range(top, min(h, top + 10)) for x in range(a, z) if px[x, y] > 128]
+        hs.append([top * 4, int(sum(xs) / len(xs)) * 4])
+    k = 5; sm = [[int(sum(q[j] for q in hs[max(0, i - k):i + k + 1]) / len(hs[max(0, i - k):i + k + 1])) for j in (0, 1)] for i in range(len(hs))]
+    open(out, 'w').write('globalThis.HEAD=' + json.dumps(sm) + ';\n')
+    tops = [q[0] for q in sm]; print(f'{out}: {len(sm)} frames, head top y {min(tops)}–{max(tops)}')
+
 if __name__ == '__main__':
     a = sys.argv[1:]
     if not a: sys.exit(__doc__)
@@ -73,4 +90,4 @@ if __name__ == '__main__':
             files.append(x)
         sheet(rest[0], files, cols, w)
     else:
-        {'info': lambda r: info(r), 'crop': lambda r: crop(*r), 'key': lambda r: key(*r), 'palette': lambda r: palette(*r), 'sample': lambda r: sample(*r), 'grid': lambda r: grid(*r)}[cmd](rest)
+        {'info': lambda r: info(r), 'crop': lambda r: crop(*r), 'key': lambda r: key(*r), 'palette': lambda r: palette(*r), 'sample': lambda r: sample(*r), 'grid': lambda r: grid(*r), 'heads': lambda r: heads(*r)}[cmd](rest)

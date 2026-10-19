@@ -6,7 +6,7 @@
 
 - `STYLE`: `afrohouse` (kick, clap, congas, offbeat sub bass, filtered pads; 118–124 BPM), `amapiano` (log drum lead, shakers; set `BPM` to 108–114), `benga` (Kenyan benga over a house kick: a muted 16th-note guitar arpeggio on the left, a chattering lead guitar on the right when `arp:true`, a walking eighth-note bass, D major; 118–128 BPM), `drill` (Nairobi drill: half-time drums, triplet hat rolls, sliding 808s, a buzzy nyatiti-like lyre riff, brass stabs; minor key, 118–144 BPM), `ambient` (no drums: pads, bass, marimba arp; for corporate or calm films; 80–100 BPM), `lofi` (a swung boom-bap: soft kick on 1 and the "and" of 3, snare on 2 and 4, 8th hats, warm minor-9th pads, root-and-fifth bass; 80–95 BPM; made to sit under a voice, see [talking-head.md](talking-head.md#8-score-and-mix)).
 - A style the last few films used sounds generic to the client even when it is good. Rotate styles across a brand's films, and when one is asked for "not generic", reach for a local form (benga, or build one on `pluck()`: a kora-like harp line, a nyatiti-like lyre ostinato) before a global one.
-- `CH`: four chords, one per bar, as MIDI notes. The default is A minor (Am9, Fmaj9, Dm9, Em7). Transpose every number by the same amount to change key; swap in major chords for a brighter film.
+- `CH`: four chords, one per bar, as MIDI notes. The default is A minor (Am9, Fmaj9, Dm9, Em7). Change key with `KEY`, not by editing these numbers; swap in major chords for a brighter film.
 - `drill` voices: `e808(t,note,len,gain,fromNote)` (sliding 808), `dkick`, `dsnare`, `dhat`, `lyre(t,note,gain,pan,len)` (buzzy nyatiti-like pluck), `brass(t,notes,gain,len)` (stab for big hits). In `groove()`, `cg`/`arp` turn the lyre riff on for drill.
 - `pluck(t,note,gain,pan,{bright,mute,len})`: a plucked string (Karplus-Strong). Muted and dark for rhythm parts, bright and longer for leads.
 - `groove(from,to,opts)`: the beat between two music beats. Thin it for quiet scenes (`k:false` drops the kick, `bs:false` the bass), open the filter with `cut` (700 muffled, 1300 warm, 3000 bright), `arp:true` for the marimba line under reading scenes.
@@ -21,7 +21,7 @@ A score heard on the last film makes the new one feel like a rerun, even when th
 1. **Before writing cues, read the log.** `new_film.sh` prints the last scores from `score-log.tsv` in the folder that holds the brand's films (keep each brand's films as sibling folders under one brand folder, so a brand's first film starts its log there); `soundtrack.mjs` updates it on every run and prints a ⚠ when this film's `STYLE` matches either of the brand's last two films.
 2. **Change the style first.** Rotate through `afrohouse`, `amapiano`, `benga`, `drill`, `ambient`, `lofi`, and prefer the one that fits the film's story (chaos into order suits drill's breakdown and drop; warm lifestyle suits amapiano or benga; a calm explainer suits ambient).
 3. **Change the key and feel too.** `KEY` transposes everything (-5…+6); a different tempo range, a new chord progression in `CH`, or new riff notes make even a returning style a new track.
-4. **When all five are spent, make a new one** from the voices on hand (`pluck()`, `lyre()`, `e808()`, `logdrum()`, `brass()`, `pad()`): a kora-like harp line, an ohangla-style drum pattern, a taarab-flavoured string pad. Add it as a new `STYLE` so the next film can use it too.
+4. **When all six are spent, make a new one** from the voices on hand (`pluck()`, `lyre()`, `e808()`, `logdrum()`, `brass()`, `pad()`): a kora-like harp line, an ohangla-style drum pattern, a taarab-flavoured string pad. Add it as a new `STYLE` so the next film can use it too.
 5. When delivering, name the track's style and key, and say it differs from the brand's last film.
 
 ## Sync
@@ -30,7 +30,7 @@ Write every cue as `M(comp beat)`, never raw seconds, so re-timing a scene in `t
 
 ## Checking what you cannot hear
 
-Run `audio_check.py` on `score.wav` and on the final mp4 (1-second windows by default; a one-beat breath needs them):
+Run `audio_check.py` on `score.wav` and on the final mp4 (1-second windows by default; for a breath of one beat or less pass a window of half a beat, `audio_check.py score.wav 0.25` at 120 BPM, or the 1 s average hides it):
 
 - Sections meant to be quiet read quieter. A **FLAT** warning means something dominates: usually the kick (lower its gain or shorten its decay) or a voice with a runaway length.
 - No **SILENT** windows except the fade-out; no **CLIPPING**.

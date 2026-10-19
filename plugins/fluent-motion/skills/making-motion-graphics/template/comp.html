@@ -218,13 +218,13 @@ function scene(){
   // S4 b12–16: end card (logo, name, call to action)
   bgGlow(C.brand,W/2,H*.4);
   echo('BRAND.',W/2,H*.38,800,fit('BRAND.',800,W*.8,200),C.ink,C.ink,lerp(90,0,E.outQuint(PB(12,12.6))));
-  if(IMG.logo)img(IMG.logo,W/2,H*.62,W*.5,{alpha:IN(13,.6)});
-  pill('The call to action',W/2,H*.8,40,C.accent,C.bg,{sc:IN(14,.5,E.outBack)});
+  if(IMG.logo)img(IMG.logo,W/2,H*.62,W*.5,{alpha:IN(13,.6)});   // a placeholder: bring the mark in from frame 0 where the concept allows
+  cta('The call to action',W/2,H*.8,14,15.5);
 }
 
 function grainPass(){ctx.save();ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.translate((b*97)%256,(b*61)%256);ctx.fillRect(-256,-256,W+512,H+512);ctx.restore()}
 async function render(time){await window.ready;t=time;m=t/B;b=toComp(m);ctx=cv.getContext('2d');await preload();
-  scene();ctx.setTransform(1,0,0,1,0,0);swipe();grainPass();
+  scene();ctx.setTransform(1,0,0,1,0,0);swipe();grainPass();   // swipe(): a band wipe at every CUT; remove it when the look builds its transitions from the picture
   if(t>DUR-.3){ctx.fillStyle=C.bg;ctx.globalAlpha=clamp((t-DUR+.3)/.3);ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}   // 0.3 s dip to the ground, in seconds so a stretched end card keeps its CTA at full strength
   if(Q.get('safe')){const T=H*250/1920,Bm=H*350/1920,S=W*60/1080,L=W*100/1080;ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;   // safe-area guides (--query safe=1): red = under platform UI
     ctx.fillStyle='rgba(255,40,40,.28)';ctx.fillRect(0,0,W,T);ctx.fillRect(0,H-Bm,W,Bm);ctx.fillRect(0,T,S,H-T-Bm);ctx.fillRect(W-S,T,S,H-T-Bm);

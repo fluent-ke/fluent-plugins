@@ -19,6 +19,7 @@ Options:  --from S --to S   the part of the take to use (start on the hook, not 
           --fps 25          pick one that divides the source rate (100/50 → 25, 120/60 → 30), so frames decimate evenly
           --size 1080x1920  cover-cropped from the centre (ffmpeg auto-rotates phone/camera footage first)
           --shot TALK       frame folder name          --whisper small|medium   transcribe (needs the whisper CLI)
+          --language en     whisper's language code (sw for Swahili); Sheng and code-switching need a careful second read
 """
 import json, os, re, shutil, subprocess, sys
 
@@ -28,13 +29,13 @@ SRC = a[0]
 opt = lambda k, d: a[a.index(k) + 1] if k in a else d
 FROM, TO = float(opt('--from', 0)), opt('--to', None)
 GAP, KEEP, FPS, SHOT = float(opt('--gap', .55)), float(opt('--keep', .3)), int(opt('--fps', 25)), opt('--shot', 'TALK')
-W, H = map(int, opt('--size', '1080x1920').split('x')); MODEL = opt('--whisper', None)
+W, H = map(int, opt('--size', '1080x1920').split('x')); MODEL = opt('--whisper', None); LANG = opt('--language', 'en')
 dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', SRC], capture_output=True, text=True).stdout)
 TO = float(TO) if TO else dur
 os.makedirs('src', exist_ok=True)
 if MODEL and not os.path.exists('src/voice16k.json'):          # transcribe the whole take once, cached for re-runs
     subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', SRC, '-vn', '-ac', '1', '-ar', '16000', 'src/voice16k.wav'], check=True)
-    subprocess.run(['whisper', 'src/voice16k.wav', '--model', MODEL, '--language', 'en', '--word_timestamps', 'True',
+    subprocess.run(['whisper', 'src/voice16k.wav', '--model', MODEL, '--language', LANG, '--word_timestamps', 'True',
                     '--output_format', 'json', '--output_dir', 'src'], check=True, capture_output=True)
 if MODEL:
     SW = [[w['word'].strip(), round(w['start'], 2), round(w['end'], 2)] for seg in json.load(open('src/voice16k.json'))['segments'] for w in seg['words']]

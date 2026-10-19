@@ -1,8 +1,12 @@
 # Storyboard and pacing
 
-## Shape of a short film
+## Story shapes
 
-A 15–40 s social film is a handful of scenes, each carrying one idea. The shape that has worked:
+A short film is a handful of scenes, each carrying one idea. Pick the shape from the film type ([concepts.md](concepts.md#film-types)).
+
+### Promo
+
+For an event, an offer or a launch with a date. The shape that has worked:
 
 | Scene | Job | Typical length |
 |---|---|---|
@@ -14,6 +18,42 @@ A 15–40 s social film is a handful of scenes, each carrying one idea. The shap
 | End card | Name, partner logos as supplied, one call to action | 4–5 s |
 
 That table runs 18–25 s before reading time. For 15 s or less keep four scenes: hook, name, stakes, and an end card that carries when and where. Cut scenes the material does not support; add a proof item only when it has a fact behind it.
+
+### Brand film
+
+No offer, no date: the viewer should remember the brand and visit. The mark carries the film: on screen from frame 0 (whole, or in parts that assemble), the tagline or the brand's one line set as the kinetic words, and the lock-up with the URL as the last 2–3 s. Two or three ideas in 8–15 s.
+
+### Product film
+
+The product's own screens are the hero. Real screenshots, cut into layers (`asset_tools.py crop` the nav, each card, each button into its own file) so each part can move on its own; a cursor leads the eye ([motion.md](motion.md#recipes), Cursor).
+
+| Scene | Job | Typical length |
+|---|---|---|
+| Hook | The pain or the promise, 3–5 words, or the UI already moving at frame 0 | 1–2 s |
+| UI rises | The app's main screen lands, then the camera pushes into the part that matters | 2–3 s |
+| Moments | Two or three things it does, each one cursor action: click, drag, type, and the result appearing | 2–3 s each |
+| Payoff | The outcome as a number, a before/after or a finished screen | 2–3 s |
+| End card | Name, URL or store badge, one CTA | 3–4 s |
+
+### Explainer
+
+Open on the problem, walk through the answer in three steps, show proof, then name the product. One diagram that builds through the film beats a new picture per scene. Voiceover and captions per [voice-captions.md](voice-captions.md). Hold each step to the reading rule; an explainer is read, not felt.
+
+### Montage
+
+A showreel or sizzle: no facts, no CTA. Six to ten moments of 1–2 s, each a different technique, all in one look so it reads as one film. Order them by energy: a strong open, a quieter third, the biggest moment last before the logo.
+
+### Sting
+
+A logo or milestone in 4–8 s: build-up (2–3 s, the parts arriving), the lock-up on the music's hit, a hold of 1.5 s or more. One idea, done perfectly.
+
+### Data story
+
+A change over time: the axis or map first, the data drawing on in order, the one number that matters slammed at the end with its source on screen in small type. Every figure carries its source in the fact list.
+
+### Loop
+
+6–10 s that repeat seamlessly: the last frame equals the first, every motion completes a whole cycle in the loop's length (`Math.sin(TAU*t/LEN)`), and the score's length is a whole number of bars.
 
 ## The look
 
@@ -62,9 +102,9 @@ Once a piece of text has finished animating in, it stays still and on screen for
 
 ## Copy on screen
 
-- Every fact on screen traces to a source in the fact list. A date word that expires (TOMORROW, TONIGHT, LAST DAY) becomes a variant: render one cut per day with `--query` and read it with `Q.get()` in comp.html.
+- Every fact on screen traces to a source in the fact list (a montage, loop or abstract film may have none). A date word that expires (TOMORROW, TONIGHT, LAST DAY) becomes a variant: render one cut per day with `--query` and read it with `Q.get()` in comp.html.
 - Short lines: 2–6 words for slams, up to about 9 per line for reading scenes. Sentence case for reading, capitals for slams.
-- One call to action, and only one the viewer can act on today. When sign-ups have closed, the end card says what happens next instead.
+- One call to action when the film has one, and only one the viewer can act on today. When sign-ups have closed, the end card says what happens next instead.
 - The user's own words (tagline, poster lines) beat invented ones. A line you wrote is a suggestion; say so when delivering.
 
 ## Still checks

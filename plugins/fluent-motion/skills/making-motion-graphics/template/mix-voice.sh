@@ -32,7 +32,7 @@ for i in range(0,min(len(v),len(m))-win//2,win):
   if 20*math.log10(rv/32768)<-40:continue            # no voice in this window
   d=20*math.log10(rv/rm);low+=[(i/sr,d)] if d<10 else []
   print(f"  {i/sr:5.1f}s voice above music {d:5.1f} dB")
-print('voice/music: OK' if not low else f"voice/music: under 10 dB at {', '.join(f'{t:.0f}s' for t,_ in low)}: re-run with MUSIC=0.2 or thin the score there")
+print('voice/music: OK' if not low else f"voice/music: under 10 dB at {', '.join(f'{t:.0f}s' for t,_ in low)}: re-run with MUSIC=0.15 or thin the score there")
 PY
 rm -rf "$T"
 echo "→ out/$NAME.mp4, out/$NAME-master.mp4, out/$NAME-whatsapp.mp4 ($(printf '%.1f' "$DUR") s, $(du -h "out/$NAME-whatsapp.mp4" | cut -f1) WhatsApp)"

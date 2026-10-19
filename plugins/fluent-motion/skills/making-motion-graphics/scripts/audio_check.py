@@ -26,8 +26,9 @@ while t0 + win * .5 <= total:
     flag = ' SILENT' if db < -45 else ' CLIPPING' if p >= .999 else ''
     print(f"{t0:5.1f}s {db:6.1f} dB peak {p:.2f} " + '#' * int(max(0, 45 + db)) + flag)
     t0 += win
-lufs = subprocess.run(['ffmpeg', '-hide_banner', '-i', src, '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+res = subprocess.run(['ffmpeg', '-hide_banner', '-i', src, '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True); lufs = res.stderr
 i = [l for l in lufs.splitlines() if l.strip().startswith('I:')]
+if not i: print('ffmpeg could not measure loudness:', (lufs.strip().splitlines() or ['no output'])[-1])
 print('integrated loudness:', i[-1].split(':', 1)[1].strip() if i else '?', '(posting target is about -14 LUFS; mix.sh normalises to it)')
 body = lv[:-max(1, int(2 / win))]          # the fade-out tail is always quiet; judge the rest
 if len(body) > 2 and max(body) - min(body) < 4:

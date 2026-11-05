@@ -15,7 +15,7 @@ Someone does the same job every week and explains it from scratch to an AI every
 
 An agent ends that. Not a personality, not a clever prompt — **a job, the steps, an example of the finished thing, and permission to get on with it**, written down where the tool picks it up on its own.
 
-**The folder is the agent.** Each tool wraps it in its own thing: Claude Code and Cowork read the folder you point them at; the ChatGPT desktop app builds a project around it. The wrapper changes, the folder does not. In a browser, the phone app, or for anyone who already works in Projects, there is no folder: the same content goes into a Project — see *As a Claude Project*.
+**The folder is the agent.** Each tool wraps it in its own thing: Claude Code and Cowork read the folder you point them at; the ChatGPT desktop app builds a project around it. The wrapper changes, the folder does not. In a browser there is no folder, so the same content goes into a project's instructions — see *In a browser*. To set it up as an agent in a Claude Project, see *As a Claude Project*.
 
 The person you are helping is usually not technical. They do not need to know what a model is or what an MCP server is. It is a few text files. Do not teach the machinery.
 
@@ -79,13 +79,15 @@ Ship without one, put a line in the instructions — *"No example yet. The first
 
 ### The five questions
 
-Only when there is no run and no files. Ask them **one at a time**, in plain words, and wait for each answer; when they are unsure, offer two or three options to pick from. A list of five lands as homework and stalls a beginner.
+Only when there is no run and no files:
 
 1. What is the job, in one sentence — and how often does it come round?
 2. Walk me through the last time you did it. What did you start with, what did you end with?
 3. **Send me the last one you did.** Not "a good one" — people who work by hand have last month's file, not a thing they would call exemplary
 4. What would have made that one wrong?
 5. Where does the material come from, and where does the finished thing go?
+
+Ask them **one at a time**, in plain words, and wait for each answer; when they are unsure, offer two or three options to pick from. A list of five lands as homework and stalls a beginner.
 
 Then play the job back in their words, ask "is that it?", and write.
 
@@ -146,34 +148,51 @@ The one sentence that ends the explaining. Put it in every agent, in the person'
 
 Without a trigger, the agent interviews the person every time and the promise quietly dies. With the wrong one, it does something irreversible on their behalf.
 
+## In a browser
+
+On claude.ai or ChatGPT on the web there is no folder. The same content goes into a project, and **three things must be rewritten, not just flattened**:
+
+| Folder version | Browser version |
+|---|---|
+| "When a file lands in `input/`" | "When I paste the numbers, or say run it" |
+| Writes to `output/2026-W31-report.md` | "Reply with the finished report — I'll save it" |
+| Appends to `output/log.md` | "Keep the running log as a project file I update", or drop it |
+
+Then put the procedure and rules inline in the instructions field, since there is no file tree to point at, and **name the example and template explicitly** so the model reaches for the right one. Produce those two as documents they can save and upload — never write "upload the example" as though it already exists.
+
+**Do not read portability as "avoid every platform feature".** That reasoning ends in a prompt the person re-pastes forever. What travels is the instructions; use the best home the tool offers.
+
+**A tool not in the reference table** — a chat app with no folders and no projects — gets the same treatment: instructions pasted at the top of a new chat, and one saved copy they keep.
+
 ## As a Claude Project
 
-On claude.ai, the desktop app's chat, the phone app, or ChatGPT, there is no folder. The agent is a **Project**: one instructions block plus uploaded files. This is also the right home for anyone who already lives in Projects. The method above does not change; what you hand over does.
+On claude.ai, the desktop app's chat, the phone app, or ChatGPT, there is no folder. The agent is a **Project**: its instructions plus uploaded files. This is also the right home for anyone who already lives in Projects. The method above does not change, and everything in *In a browser* applies; what you hand over is the following.
 
-**Three things must be rewritten, not just flattened:**
+**Write it as an agent, in the four layers.** An agent is a model with instructions, plus tools, and you lead it the way you lead a new hire. Its instructions are written in four layers, named exactly this, because they are the words a Fluent training teaches:
 
-| Folder version | Project version |
-|---|---|
-| "When a file lands in `input/`" | "When I paste or attach the material, or say run it" |
-| Writes to `output/2026-W31-report.md` | "Reply with the finished thing — I'll save it" |
-| Appends to `output/log.md` | "Keep the running log as a project file I update", or drop it |
+| Layer | What it holds | Where it lives in the Project |
+|---|---|---|
+| **Role** | Its job description: its name, who it reports to, what it owns, what it is responsible for (the steps and what it hands back), what it never does, and when it starts | The instructions |
+| **Context** | Everything it needs to know, in one place: the facts of the business, and each file by name | The instructions, plus the Project files |
+| **Tools** | What it can reach beyond the chat, and what it must leave to the person | Connectors, if any; otherwise the instructions say there are none |
+| **Feedback** | Every correction, written down, so the next chat starts with it | The instructions, rewritten after each fix, and the accepted example in the files |
+
+When you play the job back before writing, play it back in these four layers.
 
 **What you hand over, in this order:**
 
 1. **A Project name** — the job, in their words: *Weekly Cost Review*, not *My Assistant*.
-2. **The Project instructions, in one copyable block**, under these headings: Job, Trigger, Steps, Output, Rules, Files. Procedure and rules sit inline, since there is no file tree to point at. Plain words, under a page. The trigger is the same sentence as a folder agent's, rewritten as above, and the gated form for anything that sends, pays or publishes.
+2. **The agent's instructions, in one copyable block**, under four headings: ROLE, CONTEXT, TOOLS, FEEDBACK. Procedure sits inside the role, since there is no file tree to point at; every correction from the specimen sits under feedback. Plain words, under a page. The trigger is the last line of the role, the same sentence as a folder agent's rewritten as in *In a browser*, in the gated form for anything that sends, pays or publishes.
 3. **Each file the instructions name, as a document they can save and upload** — the example they accepted, the template, the price list. Name each one in the instructions (*"Match the file called good-example"*) so the model reaches for the right one. If there is no accepted example yet, the instructions say so and the first answer they accept becomes it.
 4. **The setup steps for the screen in front of them**, then the smoke test, then the first run — `references/project-setup.md` has them, with the check-it prompt and the fix loop.
 
 **You cannot open or edit their Project from a chat.** Never say you saved, updated or created it. Every change goes the same way: you write the full new instructions block, they paste it over the old one. Say this once at hand-over, because it is the step people assume happened.
 
-**Do not read portability as "avoid every platform feature".** That reasoning ends in a prompt the person re-pastes forever. What travels is the instructions; use the best home the tool offers.
-
-**A tool with no folders and no projects** gets the same block pasted at the top of a new chat, and one saved copy they keep.
-
 ## 4. Run it once
 
-Do the job with the agent you just built, on their real input, and show them the result. For a Project, they run it in a new chat inside the Project and you walk them through the check — `references/project-setup.md`, *First run*. It takes one run and it is the only proof the thing works. Everything before it is a folder of assertions.
+Do the job with the agent you just built, on their real input, and show them the result. It takes one run and it is the only proof the thing works. Everything before it is a folder of assertions.
+
+For a Project, they run it in a new chat inside the Project and you walk them through the check — `references/project-setup.md`, *First run*.
 
 It is also where you find out the evidence was wrong. Watch the arithmetic.
 
@@ -227,6 +246,7 @@ Every one of these came from watching agents build these without this skill.
 | Ships a browser agent that writes to `input/` and `output/` | Folders that do not exist. Rewrite the trigger, the destination and the log |
 | Says "I've updated your Project" | It cannot reach the Project. Hand over the full new block to paste |
 | Hands over Project instructions and stops | No name, no files, no setup steps, no first run. The block is one of four parts |
+| Writes the Project block under its own headings | The person was taught role, context, tools, feedback. Other headings make the agent look like a different thing from the one in the lesson |
 | Copies the format and the errors with it | Past work carries past mistakes. Check the arithmetic first |
 | Writes into the person's home directory unasked | Ask where it goes. It is their machine |
 

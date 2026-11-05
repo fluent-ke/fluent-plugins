@@ -84,6 +84,8 @@ There is no folder to attach on claude.ai or in ChatGPT on the web. Both offer a
 
 Walk them through it in their own window rather than handing over a list. This is the step where a non-technical person stops, and it is the only unfamiliar thing in the whole build.
 
+The full setup, with the smoke test, the first run and the fix loop: `project-setup.md`.
+
 ## Skills are a different thing
 
 A skill and an agent folder are not the same, and confusing them costs portability.

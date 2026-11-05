@@ -79,7 +79,7 @@ Ship without one, put a line in the instructions — *"No example yet. The first
 
 ### The five questions
 
-Only when there is no run and no files:
+Only when there is no run and no files. Ask them **one at a time**, in plain words, and wait for each answer; when they are unsure, offer two or three options to pick from. A list of five lands as homework and stalls a beginner.
 
 1. What is the job, in one sentence — and how often does it come round?
 2. Walk me through the last time you did it. What did you start with, what did you end with?

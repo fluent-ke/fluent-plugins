@@ -1,10 +1,10 @@
 ---
 name: building-your-own-agent
-description: Use when someone wants AI to take over a job they repeat — a weekly report, a monthly update, the same analysis or the same write-up every time — or says "make this repeatable", "set it up so it just does this", "I do this every week and I'm tired of explaining it". Also when a job was just finished well and should never have to be explained again, when someone asks for a CLAUDE.md, an AGENTS.md, or project instructions, or when they want an assistant for one specific job rather than a general chat.
+description: Use when someone wants AI to take over a job they repeat — a weekly report, a monthly update, the same analysis or the same write-up every time — or says "make this repeatable", "set it up so it just does this", "I do this every week and I'm tired of explaining it". Also when a job was just finished well and should never have to be explained again, when someone asks for a CLAUDE.md, an AGENTS.md, or project instructions, when they want an assistant for one specific job rather than a general chat, or when they want a Claude Project (or a ChatGPT project) set up to do one job.
 license: MIT
 metadata:
   author: fluent
-  version: "0.1"
+  version: "0.2"
 ---
 
 # Building Your Own Agent
@@ -15,7 +15,7 @@ Someone does the same job every week and explains it from scratch to an AI every
 
 An agent ends that. Not a personality, not a clever prompt — **a job, the steps, an example of the finished thing, and permission to get on with it**, written down where the tool picks it up on its own.
 
-**The folder is the agent.** Each tool wraps it in its own thing: Claude Code and Cowork read the folder you point them at; the ChatGPT desktop app builds a project around it. The wrapper changes, the folder does not. In a browser there is no folder, so the same content goes into a project's instructions — see *In a browser*.
+**The folder is the agent.** Each tool wraps it in its own thing: Claude Code and Cowork read the folder you point them at; the ChatGPT desktop app builds a project around it. The wrapper changes, the folder does not. In a browser, the phone app, or for anyone who already works in Projects, there is no folder: the same content goes into a Project — see *As a Claude Project*.
 
 The person you are helping is usually not technical. They do not need to know what a model is or what an MCP server is. It is a few text files. Do not teach the machinery.
 
@@ -38,6 +38,7 @@ The failure this skill exists to prevent is writing an agent out of your imagina
 | **They just did the job with you, in this conversation** | Build from the conversation. It is already in your context — you do not need a transcript |
 | **They are about to do it** | Offer to keep a running note in `notes/run-log.md` as you go, then build from that. Worth it for a long job, overkill for a short one |
 | **Past work on their machine or in their drive** | Read several. What repeats is the template; what changes is the input |
+| **A Project they already use for this job** | Ask them to paste its current instructions and the last answer from it they kept. Their edits to past answers are the corrections |
 | **None of it** | Then, and only then, the five questions |
 
 ### From a job you just did
@@ -145,25 +146,34 @@ The one sentence that ends the explaining. Put it in every agent, in the person'
 
 Without a trigger, the agent interviews the person every time and the promise quietly dies. With the wrong one, it does something irreversible on their behalf.
 
-## In a browser
+## As a Claude Project
 
-On claude.ai or ChatGPT on the web there is no folder. The same content goes into a project, and **three things must be rewritten, not just flattened**:
+On claude.ai, the desktop app's chat, the phone app, or ChatGPT, there is no folder. The agent is a **Project**: one instructions block plus uploaded files. This is also the right home for anyone who already lives in Projects. The method above does not change; what you hand over does.
 
-| Folder version | Browser version |
+**Three things must be rewritten, not just flattened:**
+
+| Folder version | Project version |
 |---|---|
-| "When a file lands in `input/`" | "When I paste the numbers, or say run it" |
-| Writes to `output/2026-W31-report.md` | "Reply with the finished report — I'll save it" |
+| "When a file lands in `input/`" | "When I paste or attach the material, or say run it" |
+| Writes to `output/2026-W31-report.md` | "Reply with the finished thing — I'll save it" |
 | Appends to `output/log.md` | "Keep the running log as a project file I update", or drop it |
 
-Then put the procedure and rules inline in the instructions field, since there is no file tree to point at, and **name the example and template explicitly** so the model reaches for the right one. Produce those two as documents they can save and upload — never write "upload the example" as though it already exists.
+**What you hand over, in this order:**
+
+1. **A Project name** — the job, in their words: *Weekly Cost Review*, not *My Assistant*.
+2. **The Project instructions, in one copyable block**, under these headings: Job, Trigger, Steps, Output, Rules, Files. Procedure and rules sit inline, since there is no file tree to point at. Plain words, under a page. The trigger is the same sentence as a folder agent's, rewritten as above, and the gated form for anything that sends, pays or publishes.
+3. **Each file the instructions name, as a document they can save and upload** — the example they accepted, the template, the price list. Name each one in the instructions (*"Match the file called good-example"*) so the model reaches for the right one. If there is no accepted example yet, the instructions say so and the first answer they accept becomes it.
+4. **The setup steps for the screen in front of them**, then the smoke test, then the first run — `references/project-setup.md` has them, with the check-it prompt and the fix loop.
+
+**You cannot open or edit their Project from a chat.** Never say you saved, updated or created it. Every change goes the same way: you write the full new instructions block, they paste it over the old one. Say this once at hand-over, because it is the step people assume happened.
 
 **Do not read portability as "avoid every platform feature".** That reasoning ends in a prompt the person re-pastes forever. What travels is the instructions; use the best home the tool offers.
 
-**A tool not in the reference table** — a chat app with no folders and no projects — gets the same treatment: instructions pasted at the top of a new chat, and one saved copy they keep.
+**A tool with no folders and no projects** gets the same block pasted at the top of a new chat, and one saved copy they keep.
 
 ## 4. Run it once
 
-Do the job with the agent you just built, on their real input, and show them the result. It takes one run and it is the only proof the thing works. Everything before it is a folder of assertions.
+Do the job with the agent you just built, on their real input, and show them the result. For a Project, they run it in a new chat inside the Project and you walk them through the check — `references/project-setup.md`, *First run*. It takes one run and it is the only proof the thing works. Everything before it is a folder of assertions.
 
 It is also where you find out the evidence was wrong. Watch the arithmetic.
 
@@ -215,6 +225,8 @@ Every one of these came from watching agents build these without this skill.
 | Records the instance-versus-rule split in the file instead of saying it | Documentation is not confirmation. A wrong split ships silently |
 | Refuses a tool's own feature "for portability" | Lowest common denominator. The instructions travel; the mechanism need not |
 | Ships a browser agent that writes to `input/` and `output/` | Folders that do not exist. Rewrite the trigger, the destination and the log |
+| Says "I've updated your Project" | It cannot reach the Project. Hand over the full new block to paste |
+| Hands over Project instructions and stops | No name, no files, no setup steps, no first run. The block is one of four parts |
 | Copies the format and the errors with it | Past work carries past mistakes. Check the arithmetic first |
 | Writes into the person's home directory unasked | Ask where it goes. It is their machine |
 

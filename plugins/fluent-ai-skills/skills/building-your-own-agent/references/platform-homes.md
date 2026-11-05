@@ -77,12 +77,7 @@ There is no folder to attach on claude.ai or in ChatGPT on the web. Both offer a
 - Keep the block tight. On claude.ai, instructions and uploads draw on the same project capacity, shown as a percentage on the project page
 - Rewrite the trigger, the output destination and the run log for a place with no filesystem — the main skill has the three replacements
 
-**Where the instructions go.** Menu names drift, so check what is on their screen rather than reciting this:
-
-- **claude.ai** — Projects in the sidebar, create one, name it after the job, then the project's Instructions field. Files are added to the same project
-- **ChatGPT** — Projects, new project, Add instructions, then upload the files to the project
-
-Walk them through it in their own window rather than handing over a list. This is the step where a non-technical person stops, and it is the only unfamiliar thing in the whole build.
+**Where the instructions go**, step by step on each surface, with the smoke test and first run: `project-setup.md`. Walk them through it in their own window rather than handing over a list. This is the step where a non-technical person stops, and it is the only unfamiliar thing in the whole build.
 
 ## Skills are a different thing
 

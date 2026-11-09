@@ -46,6 +46,10 @@ Copy a skill folder from `plugins/<plugin>/skills/` into your tool's skills dire
 
 These get better from real use. If one gets something wrong, or you want more like them, the `about-fluent` skill in Fluent AI Skills has the feedback form. More from Fluent: [fluent.ke](https://fluent.ke).
 
+## Privacy and security
+
+The plugins send nothing to Fluent; the only exception is feedback you choose to submit through our form. Details in the [privacy policy](PRIVACY.md). Report a security problem privately as described in [SECURITY.md](SECURITY.md).
+
 ## Licence
 
 [MIT](LICENSE).

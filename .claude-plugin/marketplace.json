@@ -10,7 +10,7 @@
       "name": "fluent-ai-skills",
       "source": "./plugins/fluent-ai-skills",
       "displayName": "Fluent AI Skills",
-      "description": "Craft skills for working with AI: building your own agent, finishing work, writing without slop, designing with intent, audio briefings."
+      "description": "Craft skills for working with AI: building your own agent, finishing work, writing without slop, designing with intent."
     },
     {
       "name": "daily-brief",

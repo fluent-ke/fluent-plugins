@@ -1,8 +1,8 @@
 {
   "name": "fluent-marketing-tools",
   "displayName": "Fluent Marketing Tools",
-  "description": "Field-tested operating procedures for marketing production tools: design slide decks, posters and social creative in Pencil without wrong-file writes or silent data loss, build Meta (Facebook and Instagram) ads through the Ads MCP without the traps that cannot be undone, and make AI video ads with Higgsfield, from a consistent presenter to a captioned, branded edit in every social size. From Fluent.",
-  "version": "0.2.0",
+  "description": "Field-tested operating procedures for marketing production tools: design slide decks, posters and social creative in Pencil without wrong-file writes or silent data loss, build Meta (Facebook and Instagram) ads through the Ads MCP without the traps that cannot be undone, and make AI video ads with Higgsfield, from a 30-second presenter ad to a 90-second narrated story in chapters, finished as captioned, branded edits in every social size. From Fluent.",
+  "version": "0.3.0",
   "author": {
     "name": "Fluent",
     "url": "https://fluent.ke"

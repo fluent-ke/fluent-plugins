@@ -71,7 +71,7 @@ Every clip is fitted to the first chapter's frame, so a closing clip at another 
 | `chapters[].takes` | The chapter file for each take key. Keys match `formats[].take` in `ad.json` |
 | `chapters[].trim` | `[from, to]` seconds of the chapter to keep. Trim a long hold rather than stretch the narration |
 | `chapters[].voice` | Pieces of narration: which voice, `start` and `end` in that file (leave out `end` for the rest of the file), and `at`, seconds into this chapter |
-| `chapters[].blur.TAKE` | `[[from, to, x, y, w, h], ...]` in chapter seconds and pixels of the first chapter's frame, given per take. Softens a screen with fake text while a face beside it stays sharp. For a moving camera, split the shot into short spans with their own boxes |
+| `chapters[].blur.TAKE` | `[[from, to, x, y, w, h], ...]` in chapter seconds and pixels of the first chapter's frame, given per take. Softens a screen with fake text while a face beside it stays sharp. An optional seventh value sets the strength (default 6; about 12 hides small text such as a chat bubble). For a moving camera, split the shot into short spans with their own boxes |
 | `closer` | An optional last clip with its own sound: `takes`, optional `trim`, its caption `line`, and `line_at` (seconds into the clip the caption appears, default 0.15). The caption holds to the end of the clip |
 | `room_db`, `work_dir` | Chapter sound under the narration (default -14 dB) and the output folder (default `build`) |
 

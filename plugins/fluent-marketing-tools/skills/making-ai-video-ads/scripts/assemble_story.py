@@ -91,20 +91,22 @@ def blur_chain(label, regions, frame, a, tag):
     """Feathered gblur over [x, y, w, h] regions between chapter times; returns (filters, out_label)."""
     fw, fh = frame
     chain, last = [], label
-    for j, (fa, fb, x, y, w, h) in enumerate(regions):
+    for j, (fa, fb, x, y, w, h, *rest) in enumerate(regions):
+        sig = rest[0] if rest else 6  # optional 7th value: blur strength
+        F = max(4, min(FEATHER, w // 4, h // 4))  # a small box keeps a solid centre
         edges = ["1"]
         if x > 0:
-            edges.append(f"X/{FEATHER}")
+            edges.append(f"X/{F}")
         if x + w < fw:
-            edges.append(f"(W-X)/{FEATHER}")
+            edges.append(f"(W-X)/{F}")
         if y > 0:
-            edges.append(f"Y/{FEATHER}")
+            edges.append(f"Y/{F}")
         if y + h < fh:
-            edges.append(f"(H-Y)/{FEATHER}")
+            edges.append(f"(H-Y)/{F}")
         alpha = "min(" * (len(edges) - 1) + edges[0] + "".join(f",{e})" for e in edges[1:])
         k, s, b, o = f"bk{tag}{j}", f"bs{tag}{j}", f"bb{tag}{j}", f"bo{tag}{j}"
         chain += [f"[{last}]split[{k}][{s}]",
-                  f"[{s}]crop={w}:{h}:{x}:{y},gblur=sigma=6,format=yuva420p,"
+                  f"[{s}]crop={w}:{h}:{x}:{y},gblur=sigma={sig},format=yuva420p,"
                   f"geq=lum='lum(X,Y)':cb='cb(X,Y)':cr='cr(X,Y)':a='255*{alpha}'[{b}]",
                   f"[{k}][{b}]overlay={x}:{y}:enable='between(t,{fa - a},{fb - a})'[{o}]"]
         last = o

@@ -1,0 +1,43 @@
+{
+  "lines": [
+    "First line, the problem, in the advertiser's own words.",
+    "Second line, what they do about it.",
+    "Third line, how it works.",
+    "Fourth line, what people finish with.",
+    "Fifth line, one real result.",
+    "The payoff line."
+  ],
+  "font": "fonts/YourFont-SemiBold.ttf",
+  "colors": {
+    "ground": "#141312",
+    "text": "#f5f4ee",
+    "line": "#b8b6af"
+  },
+  "end_card": {
+    "logo": "logo-for-dark-ground.png",
+    "headline": "The headline from the website.",
+    "cta": "The call to action",
+    "seconds": 3.5
+  },
+  "takes": {
+    "wide": {
+      "file": "take-16x9.mp4"
+    },
+    "tall": {
+      "file": "take-9x16.mp4",
+      "soften": []
+    }
+  },
+  "formats": [
+    { "name": "brand-ad-x-li-yt-16x9", "take": "wide", "size": [1920, 1080] },
+    { "name": "brand-ad-reels-stories-9x16", "take": "tall", "size": [1080, 1920] },
+    { "name": "brand-ad-ig-fb-feed-4x5", "take": "tall", "size": [1080, 1350], "crop": [480, 600, 0, 100] }
+  ],
+  "music": {
+    "file": "music/track.mp3",
+    "level_db": -13,
+    "start_at": 0,
+    "break_before_last_line": true,
+    "return_at": 28.35
+  }
+}

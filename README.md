@@ -11,6 +11,7 @@ Public plugins from [Fluent](https://fluent.ke): the methods we use every day, g
 | **Fluent Marketing Tools** | Operating procedures for Pencil design files, Meta ads built through the Ads MCP, and AI video ads made with Higgsfield | [`plugins/fluent-marketing-tools`](plugins/fluent-marketing-tools/) |
 | **Fluent 3D** | Set up CAD and slicer apps, model parts live in FreeCAD, and slice them ready to print | [`plugins/fluent-3d`](plugins/fluent-3d/) |
 | **Fluent Motion** | Turn posters, logos, footage or a brief into a motion-graphics film with an original score, rendered for every social format | [`plugins/fluent-motion`](plugins/fluent-motion/) |
+| **Fluent CAD** | Computer-aided design by track: building plans and quantities for AutoCAD, parts in FreeCAD and Fusion, 3D printing, and turntables, walkthroughs and video edits in Blender | [`plugins/fluent-cad`](plugins/fluent-cad/) |
 
 ## Install
 
@@ -23,6 +24,7 @@ In Claude Code, add the marketplace once, then install the plugins you want:
 /plugin install fluent-marketing-tools@fluent
 /plugin install fluent-3d@fluent
 /plugin install fluent-motion@fluent
+/plugin install fluent-cad@fluent
 ```
 
 In the Claude desktop app, claude.ai and Cowork: **Customize → Plugins**, add the marketplace `fluent-ke/fluent-plugins`, then install from the list.

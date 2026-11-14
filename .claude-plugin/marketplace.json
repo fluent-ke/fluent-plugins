@@ -35,6 +35,12 @@
       "source": "./plugins/fluent-motion",
       "displayName": "Fluent Motion",
       "description": "Motion-graphics films built in code, from your posters, logos, footage or a brief, with an original score."
+    },
+    {
+      "name": "fluent-cad",
+      "source": "./plugins/fluent-cad",
+      "displayName": "Fluent CAD",
+      "description": "Computer-aided design skills by track: building plans and quantities, parts and products, 3D printing, and Blender animation and video edits."
     }
   ]
 }

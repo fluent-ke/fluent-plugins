@@ -9,7 +9,7 @@ Public plugins from [Fluent](https://fluent.ke): the methods we use every day, g
 | **Fluent AI Skills** | Build your own agent for a job you repeat, finish big tasks end to end, write without AI slop, and design with intent | [`plugins/fluent-ai-skills`](plugins/fluent-ai-skills/) |
 | **Daily Brief** | A researched brief on your industry, checked against primary sources and waiting before your day starts. It interviews you first | [`plugins/daily-brief`](plugins/daily-brief/) |
 | **Fluent Marketing Tools** | Operating procedures for Pencil design files, Meta ads built through the Ads MCP, and AI video ads made with Higgsfield | [`plugins/fluent-marketing-tools`](plugins/fluent-marketing-tools/) |
-| **Fluent 3D** | Set up CAD and slicer apps, model parts live in FreeCAD, and slice them ready to print | [`plugins/fluent-3d`](plugins/fluent-3d/) |
+| **Fluent CAD** | Computer-aided design for every track: building plans and quantities for AutoCAD, parts in FreeCAD and Fusion, 3D printing, and turntables, walkthroughs and video edits in Blender | [`plugins/fluent-cad`](plugins/fluent-cad/) |
 | **Fluent Motion** | Turn posters, logos, footage or a brief into a motion-graphics film with an original score, rendered for every social format | [`plugins/fluent-motion`](plugins/fluent-motion/) |
 
 ## Install
@@ -21,7 +21,7 @@ In Claude Code, add the marketplace once, then install the plugins you want:
 /plugin install fluent-ai-skills@fluent
 /plugin install daily-brief@fluent
 /plugin install fluent-marketing-tools@fluent
-/plugin install fluent-3d@fluent
+/plugin install fluent-cad@fluent
 /plugin install fluent-motion@fluent
 ```
 

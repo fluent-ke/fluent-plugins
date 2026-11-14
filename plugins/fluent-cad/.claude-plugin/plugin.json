@@ -1,0 +1,13 @@
+{
+  "name": "fluent-cad",
+  "displayName": "Fluent CAD",
+  "description": "Computer-aided design skills for every kind of designer: building plans and quantities for AutoCAD, ArchiCAD and Revit; parts and products in FreeCAD and Fusion; 3D printing with pauses for inserts; turntables, walkthroughs and video edits in Blender. Sets up the apps and connects your agent to them. From Fluent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fluent",
+    "url": "https://fluent.ke"
+  },
+  "homepage": "https://fluent.ke",
+  "repository": "https://github.com/fluent-ke/fluent-plugins",
+  "license": "MIT"
+}

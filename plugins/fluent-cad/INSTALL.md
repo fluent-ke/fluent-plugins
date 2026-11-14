@@ -26,8 +26,6 @@ claude plugin install fluent-cad@fluent
 claude plugin update fluent-cad@fluent
 ```
 
-Fluent CAD replaces Fluent 3D. If `claude plugin list` shows `fluent-3d@fluent`, remove it so its skills don't load twice: `claude plugin uninstall fluent-3d@fluent`.
-
 Every command is safe to re-run: on a machine that already has the plugin, this sequence updates it. One install covers the terminal, the desktop app and the IDE extensions.
 
 Done when `claude plugin list` shows `fluent-cad@fluent` with `Status: ✔ enabled`.
@@ -41,8 +39,6 @@ codex plugin marketplace add https://github.com/fluent-ke/fluent-plugins
 codex plugin marketplace upgrade fluent
 codex plugin add fluent-cad@fluent
 ```
-
-If `codex plugin list` shows `fluent-3d@fluent`, remove it: `codex plugin remove fluent-3d@fluent`.
 
 Every command is safe to re-run: on a machine that already has the plugin, this sequence updates it. One install covers the CLI, the desktop app and the IDE extension.
 

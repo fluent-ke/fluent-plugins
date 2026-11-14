@@ -69,7 +69,6 @@ Unless you name a folder: `Drawings/<project>/` for building work, `3D Printing/
 | Problem | Fix |
 |---|---|
 | The skills don't appear | Start a new session. Check `claude plugin list` or `codex plugin list` shows `fluent-cad` enabled. |
-| The same skill appears twice | Fluent 3D is still installed: `claude plugin uninstall fluent-3d@fluent`. |
 | A connector shows no tools | Open the app first, start its server (Blender: Preferences > Add-ons > BlenderMCP; Fusion: Preferences > General > API), then restart the agent. |
 | "uv not found" for the drawing scripts | Ask the agent to install uv, or see `setting-up-cad-apps`. |
 | A drawing opens tiny or huge in AutoCAD | Units: the drawing is in millimetres. Set your template to millimetres. |

@@ -1,7 +1,5 @@
 # Fluent 3D
 
-> **Replaced by [Fluent CAD](../fluent-cad/).** It holds these three skills and adds building plans, Blender animation and connectors for Fusion, SketchUp, ArchiCAD and Revit. Install `fluent-cad@fluent` and remove `fluent-3d@fluent`. This folder stays for existing installs and will be removed later.
-
 Skills that take you from "I have a 3D printer" to a checked print on the plate. Your agent sets up the software, models the part live in FreeCAD while you watch, checks the geometry, and builds a slicer project with pauses for inserts or colour swaps. You approve the design on screen and start the print yourself.
 
 ![Render of a three-colour NFC keychain designed with these skills](images/nfc-keychain-render.png)

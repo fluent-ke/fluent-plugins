@@ -1,6 +1,6 @@
 {
   "name": "fluent",
-  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools, CAD and 3D design and motion graphics, on the open Agent Skills standard.",
+  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools, 3D design and motion graphics, on the open Agent Skills standard.",
   "owner": {
     "name": "Fluent",
     "url": "https://fluent.ke"
@@ -25,22 +25,22 @@
       "description": "Operating procedures for Pencil design files, Meta ads built through the Ads MCP, and AI video ads made with Higgsfield."
     },
     {
-      "name": "fluent-cad",
-      "source": "./plugins/fluent-cad",
-      "displayName": "Fluent CAD",
-      "description": "Computer-aided design skills by track: building plans and quantities, parts and products, 3D printing, and Blender animation and video edits."
-    },
-    {
       "name": "fluent-3d",
       "source": "./plugins/fluent-3d",
       "displayName": "Fluent 3D",
-      "description": "Replaced by Fluent CAD, which holds the same skills and more. Install fluent-cad and remove this one."
+      "description": "3D design and printing skills — set up 3D apps, model parts live in CAD, and slice them ready to print."
     },
     {
       "name": "fluent-motion",
       "source": "./plugins/fluent-motion",
       "displayName": "Fluent Motion",
       "description": "Motion-graphics films built in code, from your posters, logos, footage or a brief, with an original score."
+    },
+    {
+      "name": "fluent-cad",
+      "source": "./plugins/fluent-cad",
+      "displayName": "Fluent CAD",
+      "description": "Computer-aided design skills by track: building plans and quantities, parts and products, 3D printing, and Blender animation and video edits."
     }
   ]
 }

@@ -47,8 +47,6 @@ Open Claude Code or Codex and paste:
 
 The agent installs the plugin and checks it worked. To run the commands yourself, see [INSTALL.md](INSTALL.md). Then start a new session and say what you make. [GUIDE.md](GUIDE.md) has a first project for each track.
 
-Fluent CAD replaces Fluent 3D: it holds the same three 3D-printing skills and adds the rest. If you have Fluent 3D, the install steps remove it.
-
 ## What's inside
 
 ```

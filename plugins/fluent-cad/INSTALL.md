@@ -30,7 +30,7 @@ Every command is safe to re-run: on a machine that already has the plugin, this 
 
 Done when `claude plugin list` shows `fluent-cad@fluent` with `Status: ✔ enabled`.
 
-Without a terminal, in the desktop app: **+** next to the prompt box, **Plugins**, **Add marketplace**, enter `fluent-ke/fluent-plugins`, then install **Fluent CAD**.
+Without a terminal, in Claude Desktop's **Code** tab: **+** next to the prompt box, **Plugins**, **Add marketplace**, enter `fluent-ke/fluent-plugins`, then install **Fluent CAD**. (In Claude Desktop's chat and on claude.ai the same is under **Customize > Plugins**.)
 
 ## Codex
 

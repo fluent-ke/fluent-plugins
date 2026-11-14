@@ -32,6 +32,7 @@ The agent builds it live in FreeCAD, shows screenshots, and keeps every dimensio
 | Change a design | "Make the bracket 20% deeper and the walls 4 mm." |
 | A part from a sketch | "Here's a photo of my sketch with sizes. Model it." |
 | STEP for a workshop | "Export STEP and STL." |
+| A mechanism | "Design a finger that a small stepper pulls closed and a spring opens again." |
 
 ## Track 3: 3D printing
 
@@ -44,6 +45,8 @@ The agent models it, checks the geometry, builds the slicer project, shows the s
 | Tap-to-open object | "A keychain with an NFC tag inside that opens my website." |
 | Magnets | "Pockets for two 10 x 3 mm magnets, pause so I can drop them in." |
 | Check a file | "Check this STL before I print it." |
+| Edit an STL | "Fill the hanging hole on this charm and make the back 2 mm thicker." |
+| A clay mould | "Make a one-part press mould from this charm for clay." |
 | Failed first layer | "The first layer isn't sticking. Here's a photo." |
 
 ## Track 4: 3D animation and visualisation
@@ -69,7 +72,7 @@ Unless you name a folder: `Drawings/<project>/` for building work, `3D Printing/
 | Problem | Fix |
 |---|---|
 | The skills don't appear | Start a new session. Check `claude plugin list` or `codex plugin list` shows `fluent-cad` enabled. |
-| A connector shows no tools | Open the app first, start its server (Blender: Preferences > Add-ons > BlenderMCP; Fusion: Preferences > General > API), then restart the agent. |
+| A connector shows no tools | Open the app first, start its server (Blender: Edit > Preferences > Add-ons > BlenderMCP; Fusion: Preferences > General > API), then restart the agent. |
 | "uv not found" for the drawing scripts | Ask the agent to install uv, or see `setting-up-cad-apps`. |
 | A drawing opens tiny or huge in AutoCAD | Units: the drawing is in millimetres. Set your template to millimetres. |
 | Anything else | Open an issue at [fluent-ke/fluent-plugins](https://github.com/fluent-ke/fluent-plugins/issues) with what you asked, what happened, and the output of `check_setup.py`. |

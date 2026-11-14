@@ -26,7 +26,7 @@ One print that pauses, not two glued halves: model a sealed pocket, pause before
 1. Buy genuine NTAG213 (144 bytes, plenty for a URL) or NTAG215.
 2. Program the URL before printing (a URI record in an app such as NFC Tools) and test it on an iPhone and an Android phone.
 3. At the pause: peel the backing, press the tag flat adhesive-side down, check it sits below the rim, resume.
-4. Tap-test the finished part. Lock the tag only once the URL is final.
+4. Tap-test the finished part. Lock the tag only once the URL is final: locking is permanent, and a locked tag can never be rewritten.
 
 ## Sources
 

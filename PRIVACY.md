@@ -1,6 +1,6 @@
 # Privacy policy
 
-This policy covers the plugins and skills in this repository: Fluent AI Skills, Daily Brief, Fluent Marketing Tools, Fluent 3D and Fluent Motion. They are published by Fluent ([fluent.ke](https://fluent.ke)), a team based in Nairobi, Kenya.
+This policy covers the plugins and skills in this repository: Fluent AI Skills, Daily Brief, Fluent Marketing Tools, Fluent 3D, Fluent Motion and Fluent CAD. They are published by Fluent ([fluent.ke](https://fluent.ke)), a team based in Nairobi, Kenya.
 
 Last updated: 9 November 2026.
 
@@ -28,6 +28,8 @@ Some skills, at your request, use services that you choose and control. Fluent r
 - **Fluent Marketing Tools** works through the Pencil and Meta Ads connections you install in your AI tool, under your own accounts.
 - **Fluent 3D** installs and drives apps on your computer, including the open-source FreeCAD MCP add-on, which listens only on your own computer.
 - **Fluent Motion** installs Playwright from npm into your project folder and its Chromium browser from Playwright's download servers, downloads a font from GitHub, and renders video on your computer. Any voice or music service you choose to use is under your own account, and receives the script or prompt you give it.
+
+- **Fluent CAD** installs and drives design apps on your computer when you agree. Its drawing scripts download the open-source libraries ezdxf, matplotlib and openpyxl from PyPI through `uv`. The FreeCAD, Blender, Fusion, ArchiCAD and Revit connections listen only on your own computer. The SketchUp connector runs in Trimble's cloud under your Trimble ID and receives the model descriptions you give it.
 
 Each of those services has its own privacy policy, and that policy applies to what you send it.
 

@@ -2,6 +2,8 @@
 
 Official connectors first, then community bridges. Steps change often: when a menu named here is missing, open the vendor page linked in each section and follow it instead. Checked November 2026.
 
+Claude Desktop's connector list is under **Customize > Connectors** (older versions: **Settings > Connectors**). To quit Claude Desktop fully: **File > Exit** on Windows, **Claude > Quit Claude** on a Mac; closing the window is not enough. Before any restart, tell them to say "carry on setting up CAD apps" afterwards.
+
 After connecting, test with a read-only request first ("list the objects in the open file"), then a small new object in a new file.
 
 ## Blender (official, by Blender)
@@ -29,7 +31,7 @@ Different project, same name: `ahujasid/blender-mcp` is a community server set u
 Needs a Fusion subscription and Claude Desktop, Fusion running first.
 
 1. Fusion: **Preferences > General > API**, tick **Fusion MCP Server (runs locally on this device)**. Endpoint `http://127.0.0.1:27182/mcp`.
-2. Claude Desktop: **Settings > Connectors > Add > Browse connectors**, search "Fusion", install **Autodesk Fusion**. Not the separate "Fusion Data MCP Server", which is a cloud server.
+2. Claude Desktop: **Customize > Connectors** (older: **Settings > Connectors**), **Add**, **Browse connectors**, search "Fusion", install **Autodesk Fusion**. Not the separate "Fusion Data MCP Server", which is a cloud server.
 3. Test: "create a 10 mm cube".
 
 Claude Code, Codex and other clients take the same URL over Streamable HTTP: `claude mcp add --transport http fusion http://127.0.0.1:27182/mcp`.
@@ -55,12 +57,12 @@ Help: https://help.sketchup.com/en/sketchup-claude-connector
 Needs ArchiCAD 30 on a subscription that includes the Public MCP Connection (such as Collaborate or Max), and a desktop agent.
 
 1. ArchiCAD: **Options > Desktop AI Tool Connection**. Copy the command and argument it shows.
-2. Claude Desktop: **Settings > Developer > Edit Config**, and add under `mcpServers`:
+2. Claude Desktop: **Settings > Developer > Edit Config** (on a Mac, the Settings are under the **Claude** menu), and add under `mcpServers`:
    ```json
    "Archicad Public MCP Server": { "command": "<command from ArchiCAD>", "args": ["<argument from ArchiCAD>"] }
    ```
    Claude Code: `claude mcp add archicad -- "<command>" "<argument>"`.
-3. Quit Claude Desktop fully (File > Exit) and reopen. Test: "tell me the running Archicad instances".
+3. Quit Claude Desktop fully (Windows **File > Exit**, Mac **Claude > Quit Claude**) and reopen. Test: "tell me the running Archicad instances".
 
 Help: https://help.graphisoft.com/AC/30/INT/Topics/001_GettingHelp/AI_Assistant/public_mcp_connection.html
 

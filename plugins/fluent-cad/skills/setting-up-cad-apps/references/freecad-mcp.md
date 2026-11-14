@@ -10,9 +10,7 @@ Check with `check_setup.py`; install what is missing (see the install table in t
 
 ## 2. Install the add-on
 
-```bash
-git clone https://github.com/neka-nat/freecad-mcp.git
-```
+Download the add-on without git: https://github.com/neka-nat/freecad-mcp/archive/5dbfe2c80b53c3102bff0723951676e16edf2d84.zip (the tested commit), and unzip it. With git: `git clone https://github.com/neka-nat/freecad-mcp.git`.
 
 Find FreeCAD's user folder rather than guessing it; it differs by OS, version and install type:
 
@@ -24,20 +22,20 @@ Find FreeCAD's user folder rather than guessing it; it differs by OS, version an
 
 Or, inside FreeCAD, open View > Panels > Python console and run `App.getUserAppDataDir()`.
 
-Copy `freecad-mcp/addon/FreeCADMCP` into `<that folder>/Mod/`, so the result is `Mod/FreeCADMCP`. Restart FreeCAD.
+Copy the `addon/FreeCADMCP` folder from it into `<that folder>/Mod/`, so the result is `Mod/FreeCADMCP`. Restart FreeCAD.
 
 ## 3. Register the MCP server with the agent
 
 | Agent | Command |
 |---|---|
-| Claude Code | `claude mcp add freecad -s user -- uvx freecad-mcp` |
-| Codex | `codex mcp add freecad -- uvx freecad-mcp` |
-| Anything else | add `{"mcpServers": {"freecad": {"command": "uvx", "args": ["freecad-mcp"]}}}` to its MCP config |
+| Claude Code | `claude mcp add freecad -s user -- uvx freecad-mcp@0.1.23` |
+| Codex | `codex mcp add freecad -- uvx freecad-mcp@0.1.23` |
+| Anything else | add `{"mcpServers": {"freecad": {"command": "uvx", "args": ["freecad-mcp@0.1.23"]}}}` to its MCP config |
 
-Pin the tested release with `freecad-mcp@0.1.23`. Restart the agent so the `freecad` tools load.
+That is the tested release. Restart the agent so the `freecad` tools load; before the restart, tell them to say "carry on setting up CAD apps" afterwards.
 
 ## 4. Start the bridge and check it
 
-In FreeCAD, pick the **MCP Addon** workbench and click **Start RPC Server**. To have it start with FreeCAD from now on, tick **Auto-Start Server** in the FreeCAD MCP menu; to start it only for one session, launch FreeCAD with the `designing-3d-models` skill's `scripts/start_freecad_bridge.py` (commands in its `references/freecad-live.md`).
+In FreeCAD, pick the **MCP Addon** workbench and click **Start RPC Server**, or launch FreeCAD with the `designing-3d-models` skill's `scripts/start_freecad_bridge.py` (commands in its `references/freecad-live.md`). Start it for the session you are working in, and leave **Auto-Start Server** off: the bridge has no password and runs any Python sent to it, so it should not be listening whenever FreeCAD happens to be open. Stop it, or quit FreeCAD, when the work is done.
 
 Done when `scripts/check_setup.py` reports the bridge as running.

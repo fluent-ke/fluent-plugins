@@ -8,14 +8,26 @@ python3 $K/scripts/make_bambu_project.py out_single-spool.3mf body.stl:#1F1E1D t
         --single-spool --pause 2.6 --pause 3.6 --pause 4.4
 ```
 
-Defaults: `--printer "Bambu Lab A1 0.4 nozzle" --process "0.20mm Standard @BBL A1" --filament "Bambu PLA Matte @BBL A1"`. Other names are the preset file names (without `.json`) under the profile folder's `machine/`, `process/` and `filament/`. The script finds Bambu Studio and its profiles on macOS, Windows and Linux; pass `--bambu PATH` or `--profiles DIR` when it can't.
+Defaults: `--printer "Bambu Lab A1 0.4 nozzle" --process "0.20mm Standard" --filament "Bambu PLA Basic" --plate "Textured PEI Plate"`. The printer is the preset file name (without `.json`) under the profile folder's `machine/`, for example `"Bambu Lab P1S 0.4 nozzle"`. Process and filament can be short names, without the `@` part: the script picks the preset that lists that printer as compatible, which matters because the names do not follow the printer (a P1S uses `0.20mm Standard @BBL X1C`). The last line prints what it chose. Cool Plate refuses PETG, so the plate defaults to Textured PEI. The script finds Bambu Studio and its profiles on macOS, Windows and Linux; pass `--bambu PATH` or `--profiles DIR` when it can't.
 
 What the script handles, and why:
 
 - **One object:** `--load-assemble-list` with `assemble_index: [1]` on every part merges them; `0` leaves separate objects. `pos_*` is added to the STL's own coordinates, so 0 keeps the exported stack.
 - **Real printer settings:** the CLI resolves neither a preset's `inherits` chain nor its `include` template files, where printers such as the A1 keep their start, end, filament-change and layer-change G-code. Unresolved, the project silently gets a 200x200 bed, a generic start G-code and an empty pause G-code, so pauses do nothing. The script merges both. Its last line must print the real bed (A1: `256x256`) and pause G-code (A1: `M400 U1`).
 - **Pauses:** written to `Metadata/custom_gcode_per_layer.xml` as `<layer top_z="2.6" type="1" .../>`. Types: 0 colour change, 1 pause, 2 tool change, 3 template, 4 custom.
-- It never slices, uploads or contacts a printer.
+- **Flush volumes:** the export keeps the printer's 4x4 purge table whatever the slot count, and the slicer then refuses the project ("Flush volumes matrix do not match to the correct size"). The script sizes it to the slots.
+- It never uploads or contacts a printer.
+
+### Slice from the command line
+
+```bash
+/Applications/BambuStudio.app/Contents/MacOS/BambuStudio --slice 0 --outputdir "$PWD/sliced" project.3mf   # macOS
+# Windows: & "C:\Program Files\Bambu Studio\bambu-studio.exe" --slice 0 --outputdir "$PWD\sliced" project.3mf
+grep -n "PAUSE_PRINTING" sliced/plate_1.gcode                       # one line per pause
+grep -m3 -E "^; (total filament weight|model printing time|filament_type =)" sliced/plate_1.gcode
+```
+
+Exit code 0 and a `plate_1.gcode` mean the project slices. Each pause sits just after `; Z_HEIGHT: <pause height>`. Tested on macOS with the A1, P1S, single-spool and PETG projects.
 
 Audit any Bambu 3MF: `unzip -p file.3mf Metadata/project_settings.config` (printer, `printable_area`, G-code, `filament_colour`) and `Metadata/model_settings.config` (objects, parts, filament slots).
 

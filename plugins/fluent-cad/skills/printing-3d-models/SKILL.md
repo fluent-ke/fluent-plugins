@@ -4,7 +4,7 @@ description: Use when preparing or running a 3D print - slicing in Bambu Studio,
 license: MIT
 metadata:
   author: fluent
-  version: "0.2"
+  version: "0.3"
 ---
 
 # Printing 3D models
@@ -46,6 +46,8 @@ In the slicer, select the exact printer, nozzle size, plate type and the filamen
 
 For strength along the load, a flat first layer and the fewest supports, not the shortest time. Parts exported to stack keep their positions.
 
+Load-bearing parts (brackets, hooks, clips): lay them so the layers run along the load, never stacked across it, so an L-bracket prints on its side. Use the slicer's Strength process (Bambu: `--process "0.20mm Strength"`), which adds walls and infill: the bracket from testing went from 45 g to 80 g and from 1 to 2 hours, which is the price of the strength.
+
 Small or fine parts (thin charms, small holes): a fine layer height (0.1 to 0.15 mm), a 0.4 mm nozzle or smaller, and at least 2 perimeters. Holes that must take a pin or cord printed 0.1 to 0.3 mm oversize. Supports only where overhangs pass about 45°, and none inside small cavities such as a mould cavity or an insert pocket. These are common practice: tune them per printer.
 
 ## 4. Build the project
@@ -58,7 +60,7 @@ Bambu Studio: `scripts/make_bambu_project.py`. Other slicers: by hand. Both are 
 
 ## 5. Slice and review
 
-Check supports, walls, seams, small features, pause markers, print time and grams. Done when a screenshot of the sliced preview shows each planned pause at its layer.
+Bambu Studio slices from the command line too, which proves the project before the person opens it: `BambuStudio --slice 0 --outputdir <dir> project.3mf` writes `<dir>/plate_1.gcode`; the pause is the `PAUSE_PRINTING` line after `; Z_HEIGHT: <pause height>` (commands in [slicers.md](references/slicers.md)). Then check supports, walls, seams, small features, pause markers, print time and grams. Done when a screenshot of the sliced preview shows each planned pause at its layer.
 
 ## 6. Hand it over: the print-day checklist
 

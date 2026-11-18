@@ -13,17 +13,20 @@ Start the bridge from FreeCAD (**MCP Addon** workbench, **Start RPC Server**), o
 | Linux | `freecad "$K/scripts/start_freecad_bridge.py"` |
 
 ```bash
-python3 $K/scripts/fc.py ping                          # "bridge up"
+python3 $K/scripts/fc.py ping                          # "bridge up": runs a one-line script, so the window answers
 python3 $K/scripts/fc.py exec build.py NAME=value      # runs the script on FreeCAD's GUI thread
-python3 $K/scripts/fc.py shot Top top.png              # Isometric, Top, Front, Right, Dimetric ...
+python3 $K/scripts/fc.py shot Hero hero.png            # Hero, Isometric, Top, Front, Right, Dimetric
+python3 $K/scripts/fc.py shot Hero xray.png --xray     # the shown parts 70% see-through, then restored
 ```
+
+- **When FreeCAD stops answering** ("GUI dispatch gave up", or `fc.py` says the window has stopped answering): it happens most often on the first script after a cold launch. Force-quit FreeCAD (macOS: Option-Command-Esc; Windows: Task Manager), launch it again the same way, and re-run the build script, which rebuilds from scratch. Tell the person first: it closes the window they are watching.
+- **End of session:** save, then quit FreeCAD from its own menu (macOS: FreeCAD > Quit; Windows: File > Exit) so the bridge stops listening. Closing documents through the bridge can freeze it.
 
 - When the `freecad` MCP tools (`execute_code`, `get_view`, `get_objects`) are loaded, they use the same bridge; `fc.py` is the fallback.
 - The bridge keeps one Python namespace across runs. Pass arguments as `NAME=value` and read them with `globals().pop("NAME")` so stale values can't leak into the next run.
 - The first launch shows a Welcome panel on the Start tab. It is not modal; click Done.
 - The dark default background hides black parts. Per view: `Gui.getDocument(DOC).ActiveView.getViewer().setBackgroundColor(0.9, 0.9, 0.88)`.
-- Hero camera: `view.setCameraOrientation(App.Rotation(App.Vector(0, 0, 1), -15).multiply(App.Rotation(App.Vector(1, 0, 0), 40)))`, then `view.fitAll()`.
-- X-ray: set `ViewObject.Transparency = 70` on the shown parts, screenshot, then set it back to 0.
+- `fc.py shot Hero` and `--xray` set the hero camera and the transparency for you.
 - Colour (1.0+): `m = App.Material(); m.DiffuseColor = rgb; obj.ViewObject.ShapeAppearance = [m]`.
 
 ## Build pattern
@@ -31,7 +34,7 @@ python3 $K/scripts/fc.py shot Top top.png              # Isometric, Top, Front, 
 Worked example: [example_nfc_keychain.py](../scripts/example_nfc_keychain.py), a three-colour keychain with a sealed NFC pocket.
 
 - The script creates the document from scratch, closing an open one of the same name, so re-running is safe.
-- A `Spreadsheet::Sheet` named `Params` holds every dimension as an alias. Primitives take expressions: `obj.setExpression("Radius", "Params.lobe_r")`, `obj.setExpression("Placement.Base.x", "Params.grid / 2")`. The user edits a cell and presses Ctrl+R (Cmd+R on macOS).
+- A `Spreadsheet::Sheet` named `Params` holds every dimension as an alias. Primitives take expressions: `obj.setExpression("Radius", "Params.lobe_r")`, `obj.setExpression("Placement.Base.x", "Params.grid / 2")`. The user edits a cell and presses Ctrl+R (Cmd+R on macOS). Aliases that are unit symbols fail with "Invalid alias": not `t`, `m`, `g`, `s`, `h`, `N`, `mm`; use `plate_t`, `arm_len`.
 - Combine with `Part::MultiFuse` and `Part::Cut` (`Refine = True`). Hide the intermediates.
 - One final object per print colour. Colour by height: each colour gets its own Z band resting on the band below. A light colour over a dark one needs at least 0.8 mm.
 - Put every band boundary and pocket floor and roof on a multiple of the layer height (usually 0.2 mm).

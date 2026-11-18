@@ -5,7 +5,9 @@ rectangle. Draws the DXF (mm, R2010), a PNG, and the quantities workbook from th
 
   uv run --with ezdxf --with matplotlib --with openpyxl example_house_plan.py [REV]
 
-Writes the DXF, PNG and workbook into the current folder.
+Writes the DXF, PNG and workbook into the current folder, prints the quantities and room areas to
+compare with measure_dxf.py, and the extrude_walls.py command (with each window layer's sill and head)
+for the 3D model.
 """
 import datetime
 import math
@@ -25,7 +27,8 @@ T_EXT, T_INT = 200, 150
 BLOCKS_PER_M2, WASTE = 12.5, 0.05
 MORTAR_EXT, MORTAR_INT = 0.020, 0.015  # m3 of mortar per m2 of wall face, 200 and 150 mm block
 RATES_FROM = "assumed: confirm with the QS"  # or "brief" when the person gave the rates
-SILL, HEAD = 900, 2100  # windows at another sill go on A-WIND-HIGH; extrude_walls.py reads its sill from there
+SILL, HEAD = 900, 2100  # windows at another sill go on A-WIND-HIGH
+HIGH_SILL = 1500        # toilet and store windows: extrude_walls.py reads A-WIND-HIGH at 1500 to 2100 by default
 
 # Walls: name -> (type, centreline start, end, thickness). Drawn as the centreline segment widened by
 # t/2 each side, no extension along its length. External: south/north run the full 12 m (they take the
@@ -333,7 +336,7 @@ def workbook():
         print(f"{k}: CL {cl[k]:.3f} m, plan area {plan:.5f} m2, gross face {cl[k]*H/1000:.4f}, net face {net:.4f}, "
               f"blocks {math.ceil(round(net * BLOCKS_PER_M2 * (1 + WASTE), 6))}")
     for name, (x0, y0, x1, y1) in ROOMS.items():
-        print(f"room {name}: {(x1-x0)/1000:.3f} x {(y1-y0)/1000:.3f} = {(x1-x0)*(y1-y0)/1e6:.4f} m2")
+        print(f"room {name}: {(x1-x0)/1000:.3f} x {(y1-y0)/1000:.3f} = {round((x1-x0)*(y1-y0)/1e6, 6)} m2")
 
 
 if __name__ == "__main__":
@@ -341,3 +344,8 @@ if __name__ == "__main__":
     png(doc)
     workbook()
     print("wrote", STEM + ".dxf", STEM + ".png", STEM + "-quantities.xlsx")
+    high = sorted({(o[6], o[6] + o[5]) for o in OPENINGS if o[1] == "window" and o[6] != SILL})
+    windows = f"A-WIND:{SILL}:{HEAD}" + "".join(f",A-WIND-HIGH:{s}:{h}" for s, h in high)
+    if len(high) > 1:
+        print("high windows at more than one sill share A-WIND-HIGH: give each sill its own layer")
+    print(f"3D: uv run extrude_walls.py {STEM}.dxf model.obj --windows {windows}")

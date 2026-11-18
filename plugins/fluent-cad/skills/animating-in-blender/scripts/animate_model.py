@@ -5,7 +5,9 @@
 
 MODEL: .stl .obj .ply .fbx .glb .gltf .usd/.usdz, or one .blend (opened as it is). STL with no
 material takes --colour. Models from CAD are usually in millimetres: pass --scale 0.001 so the scene
-is in metres. Path points are metres in the scene, walked at --eye height (default 1.6 m).
+is in metres. Path points are metres in the scene, walked at --eye height (default 1.6 m) above the
+floor: z = 0 when the model spans it (extrude_walls.py's slab runs from -0.15 to 0), else the model's
+lowest point. Both modes stand the model on a ground plane at its lowest point.
 
 Options: --seconds 8 --fps 30 --size 1920x1080 --engine eevee|cycles --samples 64 --scale 1
          --colour #B9B4A8 --eye 1.6 --lens (35 orbit, 20 path) --still 1,120,240 (render only these frames, to check)
@@ -128,11 +130,10 @@ if a.mode == "orbit":
         aim(camera, centre)
         camera.keyframe_insert("location", frame=f)
         camera.keyframe_insert("rotation_euler", frame=f)
-    bpy.ops.mesh.primitive_plane_add(size=size * 400, location=(centre.x, centre.y, low.z))
-    bpy.context.object.data.materials.append(material("ground", "#E9E6DE", 0.9))
 else:
     # Walkthrough: constant walking speed along the path, looking 1.5 m ahead so corners turn smoothly.
-    pts = [Vector((float(x), float(y), low.z + a.eye)) for x, y in (p.split(",") for p in a.path.split(";") if p)]
+    floor = 0.0 if low.z <= 0 < high.z else low.z
+    pts = [Vector((float(x), float(y), floor + a.eye)) for x, y in (p.split(",") for p in a.path.split(";") if p)]
     if len(pts) < 2:
         sys.exit("path mode needs --path with at least two points, e.g. --path \"1,-3;1,2;4,2\"")
     seg = [(p, q, (q - p).length) for p, q in zip(pts, pts[1:])]
@@ -155,6 +156,9 @@ else:
         aim(camera, ahead)
         camera.keyframe_insert("location", frame=f)
         camera.keyframe_insert("rotation_euler", frame=f)
+
+bpy.ops.mesh.primitive_plane_add(size=size * 400, location=(centre.x, centre.y, low.z))
+bpy.context.object.data.materials.append(material("ground", "#E9E6DE", 0.9))
 
 # Light: a soft sky plus a sun, sized to the model so small parts and whole buildings both read.
 if not scene.world:

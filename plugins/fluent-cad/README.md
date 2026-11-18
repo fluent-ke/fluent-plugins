@@ -83,7 +83,7 @@ skills/setting-up-cad-apps/
   references/freecad-mcp.md           connect any agent to FreeCAD
 skills/drawing-building-plans/
   scripts/example_house_plan.py       worked example: a two-bedroom house, drawing + workbook from one set of data
-  scripts/measure_dxf.py              measures any DXF by layer: areas, lengths, block counts, texts, a PNG
+  scripts/measure_dxf.py              measures any DXF by layer: areas, lengths, blocks, dimensions, rooms one by one, a PNG
   scripts/extrude_walls.py            raises a plan's walls into a 3D model for viewing
   references/quantities.md            wall areas, openings and block counts, with a worked example
 skills/designing-3d-models/           FreeCAD bridge client, export gate, Blender render, NFC example;
@@ -91,6 +91,7 @@ skills/designing-3d-models/           FreeCAD bridge client, export gate, Blende
 skills/printing-3d-models/            Bambu Studio project builder, slicer notes, Bambu printer safety gate
 skills/animating-in-blender/
   scripts/animate_model.py            turntable or walkthrough, still or full video, saves the .blend
+  scripts/check_path.py               checks a walkthrough path clears the plan's walls, and its timing
   scripts/edit_video.py               clips, stills and music into one video in Blender's Video Sequencer
 ```
 
@@ -104,7 +105,16 @@ skills/animating-in-blender/
 
 ## Tested
 
-On macOS with Blender 5.2.1, FreeCAD 1.1.3 and Bambu Studio 02.08. `measure_dxf.py` reproduced the wall areas of two independently drawn plans exactly (AutoCAD 2010 and R12 DXF). `animate_model.py` and `edit_video.py` rendered a turntable, a walkthrough and a three-shot edit with music. A fresh agent given only the skills and the house brief above produced the drawing, workbook, 3D model, turntable, walkthrough and a 19-second edit in about 10 minutes, and every measured wall and room area agreed with its workbook. The gaps it reported were fixed, except three known limits: doors stay open to full height in the 3D model, `measure_dxf.py` does not read dimension values, and walkthrough wall clearance is checked by the agent rather than a script. The connectors' steps follow the vendors' pages as of November 2026 and have not been run end to end here. Windows and Linux have not been run, nor have the OrcaSlicer, PrusaSlicer and Cura steps, the AutoLISP route, or the claude.ai sandbox route. For a live session, demo on a tested Mac and treat Windows as best effort. If something fails, open an issue with what you asked, what happened and the output of `check_setup.py`.
+Version 0.2.0, on 18 Nov 2026: two end-to-end runs on macOS (Blender 5.2.1, FreeCAD 1.1.3, Bambu Studio 02.08), each by a fresh agent given only the skills and a brief.
+
+- **Engineering to printing:** a wall bracket built live in FreeCAD, and rebuilt when a Params value changed. Its FEA check gave 12.6 MPa and 4.3 mm with `fea_check.py`, and 12.9 MPa and 4.4 mm through the FreeCAD connector's `run_fem_analysis`, against a hand check of 4.2 mm. The NFC keychain sliced from the command line with its pause at 2.6 mm and three filaments. P1S, A1, single-spool and PETG projects all slice.
+- **Site office to film:** a 10 x 6 m site office plan drawn in 5.9 minutes. Every wall, room and opening measured equal to the workbook. Then a turntable, a walkthrough and a 16.5-second edit.
+
+`measure_dxf.py` still reproduces the wall areas of two independently drawn site-office plans exactly (DXF R2010 and R12).
+
+The three limits known in 0.1.0 are fixed: doors get a head in the 3D model, `measure_dxf.py` reads dimension values and flags typed-over ones, and `check_path.py` checks a walkthrough's wall clearance.
+
+Not yet tested: Windows and Linux; the connectors end to end (Blender, Fusion, SketchUp, ArchiCAD, Revit); the AutoLISP route; slicers other than Bambu Studio; the claude.ai sandbox route. For a live session, demo on a tested Mac and treat Windows as best effort. If something fails, open an issue with what you asked, what happened and the output of `check_setup.py`.
 
 ## Credits
 

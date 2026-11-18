@@ -5,16 +5,21 @@
 """Raise a plan's walls into a simple 3D model (OBJ, metres) for a massing view or a walkthrough.
 
   uv run extrude_walls.py PLAN.dxf OUT.obj [--walls A-WALL-EXT,A-WALL-INT] [--height 2700]
-                                           [--windows A-WIND] [--doors A-DOOR] [--sill 900] [--head 2100]
+                                           [--windows A-WIND,A-WIND-HIGH:1500:2100] [--doors A-DOOR]
+                                           [--sill 900] [--head 2100]
 
 Every closed polyline on a wall layer is extruded from 0 to --height (drawing units, millimetres).
-Each closed polyline on the window layer gets a sill block up to --sill and a lintel from --head
-to the wall height, across its outline. Each door swing arc on the door layer (loose, or inside a door
-block) gets a head from --head to the wall height across its opening; the wall thickness is read from
-the jamb at the hinge. A door whose hinge does not touch a wall's end stays open to full height and is
-reported. A floor slab covers
-the walls' extents. Written Y up, as OBJ importers expect, in metres (import at scale 1), with an MTL
-file beside it colouring walls, floor, sills and lintels. Plan X,Y in mm become X,Y in metres.
+--windows is a comma list of LAYER or LAYER:SILL:HEAD; a layer without its own sill and head takes
+--sill and --head, and a layer missing from the drawing is skipped. The default reads ordinary windows
+from A-WIND and high windows (toilets, stores) from A-WIND-HIGH at 1500 to 2100. Each closed polyline
+on a window layer gets a sill block up to its sill and a lintel from its head to the wall height,
+across its outline. Each door swing arc on the door layer (loose, or inside a door block) gets a head
+from --head to the wall height across its opening; the wall thickness is read from the jamb at the
+hinge. A door whose hinge does not touch a wall's end stays open to full height and is reported. A
+floor slab, 150 mm thick with its top at 0, covers the walls' extents.
+Written Y up (the OBJ convention), in metres (import at scale 1), with an MTL file beside it colouring
+walls, floor, sills and lintels. Blender's default OBJ import turns it back to Z up, so plan X,Y in mm
+become Blender X,Y in metres; other apps may need "Y up" chosen on import.
 Window boxes follow the outline's bounding box, so angled walls need their windows checked.
 A concept model for viewing, not a construction model.
 """
@@ -30,7 +35,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("dxf")
 ap.add_argument("obj")
 ap.add_argument("--walls", default="A-WALL-EXT,A-WALL-INT")
-ap.add_argument("--windows", default="A-WIND")
+ap.add_argument("--windows", default="A-WIND,A-WIND-HIGH:1500:2100")
 ap.add_argument("--doors", default="A-DOOR")
 ap.add_argument("--height", type=float, default=2700)
 ap.add_argument("--sill", type=float, default=900)
@@ -80,14 +85,21 @@ for layer in a.walls.split(","):
 if not walls:
     sys.exit(f"No closed polylines on {a.walls}: walls must be closed outlines")
 
-windows = 0
-for outline in closed_outlines(a.windows):
-    x0, x1 = min(p[0] for p in outline), max(p[0] for p in outline)
-    y0, y1 = min(p[1] for p in outline), max(p[1] for p in outline)
-    box = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
-    prism("sill", box, 0, a.sill)
-    prism("lintel", box, a.head, a.height)
-    windows += 1
+windows, window_count = [], 0
+for spec in a.windows.split(","):
+    layer, *heights = spec.split(":")
+    sill, head = (float(v) for v in heights) if heights else (a.sill, a.head)
+    n = 0
+    for outline in closed_outlines(layer):
+        x0, x1 = min(p[0] for p in outline), max(p[0] for p in outline)
+        y0, y1 = min(p[1] for p in outline), max(p[1] for p in outline)
+        box = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+        prism("sill", box, 0, sill)
+        prism("lintel", box, head, a.height)
+        n += 1
+    window_count += n
+    if n:
+        windows.append(f"{n} on {layer} ({sill:g}-{head:g})")
 
 def door_arcs():
     for e in msp.query(f'ARC INSERT[layer=="{a.doors}"]'):
@@ -141,5 +153,5 @@ with open(a.obj, "w") as f:
         f.writelines("f " + " ".join(map(str, face)) + "\n" for face in faces[s:e])
 if open_doors:
     print(f"{open_doors} door arcs on {a.doors} have no wall end at the hinge: those openings stay full height")
-print(f"{walls} wall pieces, {windows} windows, {doors} door heads, floor {(max(xs) - min(xs)) * MM:.2f} x "
+print(f"{walls} wall pieces, {window_count} windows ({', '.join(windows) or 'none'}), {doors} door heads, floor {(max(xs) - min(xs)) * MM:.2f} x "
       f"{(max(ys) - min(ys)) * MM:.2f} m -> {a.obj}")

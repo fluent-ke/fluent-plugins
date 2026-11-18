@@ -62,15 +62,31 @@ Blender (the scripts need 4.2 or later and were tested on 5.2; the live connecto
 
 The same command without `--still`. `--draft` halves the size: use it to check timing, not for clips going into the final edit, which come out soft when the edit scales them up. The script prints `ANIMATION_OK` with the path of `animation.mp4`, and saves `scene.blend` beside it.
 
+Renders take minutes. Measured on a Mac with Eevee, for a 10 × 6 m building:
+
+| Shot | Settings | Time |
+|---|---|---|
+| 8 s turntable | 1920x1080, 64 samples (the default) | 14.5 min |
+| 6.5 s walkthrough | 1920x1080, 64 samples | 6.9 min |
+| 8 s turntable | `--size 1280x720 --samples 16` (live settings) | 2.3 min |
+
+Tell them the wait before starting. In front of an audience, render ahead, or use the live settings.
+
 ## 5. Edit
 
 Only when there is more than one shot:
 
 ```
-blender -b -P $K/scripts/edit_video.py -- film.mp4 plan.png orbit/animation.mp4 walk/animation.mp4 --size 1920x1080 --music track.mp3
+blender -b -P $K/scripts/edit_video.py -- film.mp4 plan-16x9.png orbit/animation.mp4 walk/animation.mp4 --size 1920x1080 --music track.mp3
 ```
 
-Set `--size` to match the clips. Each cut is a crossfade, the film fades in and out, and the music fades out at the end. Stills keep their shape with black bars at the sides, so render a plan at the video's shape (16:9) to fill the frame. The script prints `EDIT_OK` and saves `film.blend`, which opens in Blender's Video Editing workspace.
+Set `--size` to match the clips. Each cut is a crossfade, the film fades in and out, and the music fades out at the end. Stills keep their shape with black bars at the sides, so put a plan on a white 16:9 page first:
+
+```
+ffmpeg -i plan.png -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:white" plan-16x9.png
+```
+
+Use the video's size in place of 1920 and 1080. The script prints `EDIT_OK` and saves `film.blend`, which opens in Blender's Video Editing workspace.
 
 ## 6. Check the video
 
@@ -86,7 +102,8 @@ The MP4 and the `.blend` it came from, saved where they say (suggest `~/Blender/
 
 - Take the path points from the drawing, not by eye: outside the main door, the centre of each door the camera passes through, then the room's middle. Model X,Y in metres are the plan's X,Y in millimetres ÷ 1000.
 - Before the stills, check the path against the plan: `uv run $K/scripts/check_path.py plan.dxf --path "x,y;x,y;..."`. It prints each segment's nearest wall, `PATH_OK` when every segment keeps 0.3 m clear and passes through no wall, and the `--seconds` for walking pace.
-- Walking pace is about 1.2 m/s: `--seconds` ≈ path length ÷ 1.2. The script prints the length and speed.
+- Walking pace is about 1.2 m/s: take `--seconds` from `check_path.py`'s output (path length ÷ 1.2). `animate_model.py` prints the length and speed it used.
+- The camera's eye height (`--eye`, 1.6 m) is measured from the floor top, z = 0 in a model from `extrude_walls.py`. The model stands on a ground plane, so a walk can start outside the main door.
 - End facing into the room, towards a window, never close to a wall. The camera looks 1.5 m ahead and, at the end, carries on along the last segment, so point the last segment at what it should end on.
 - `--lens 20` (the default for walkthroughs) suits interiors at eye height; 35 suits a turntable.
 

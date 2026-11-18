@@ -53,7 +53,7 @@ If they have a sketch or a photo of one, read it first and only ask what it leav
 
 ## 3. Draw
 
-Start from `$K/scripts/example_house_plan.py`, a worked two-bedroom house that follows every rule below: copy it into the project folder and change its data. One Python script holds the building as data (walls by centreline and thickness, openings by wall and position, rooms) and draws from it. Run it with `uv run --with ezdxf --with matplotlib --with openpyxl draw_plan.py`, following the drawing rules below. A revision is the same script re-run with the next letter.
+Start from `$K/scripts/example_house_plan.py`, a worked two-bedroom house drawn to the rules below: copy it into the project folder and change its data. One Python script holds the building as data (walls by centreline and thickness, openings by wall and position, rooms) and draws from it. Run it with `uv run --with ezdxf --with matplotlib --with openpyxl draw_plan.py`, following the drawing rules below. A revision is the same script re-run with the next letter.
 
 ## 4. Quantities
 
@@ -67,7 +67,7 @@ A workbook (`openpyxl`) built from the **same data** as the drawing: a room sche
 - each wall layer's enclosed area against centreline length × thickness, less openings;
 - door and window counts;
 - the dimension values it lists against the brief's sizes; a `TYPED-OVER` line is a dimension whose text was typed over, and must be fixed in the script;
-- each room's area, measured from its outline on `A-AREA`. The room text was written by the same script, so it proves nothing.
+- each room's area against the workbook, one room at a time, from the `Rooms on A-AREA` listing at the end of the report (area in m², width × height, corner); `--rooms LAYER` reads another layer. The room text was written by the same script, so it proves nothing.
 
 Done when every figure agrees. When one does not, fix the script, not the numbers. When LibreOffice is installed, recalculate a copy of the workbook (`soffice --headless --convert-to xlsx --outdir recalc/ quantities.xlsx`) and read its values back.
 
@@ -90,11 +90,11 @@ A brief with about six rooms takes 8 to 20 minutes from start to finish. Tell th
 ## Drawing rules
 
 - Millimetres, full size, `doc.header["$INSUNITS"] = 4`. Save as DXF R2010 (`ezdxf.new("R2010", setup=True)`) so dimensions stay live in AutoCAD.
-- Layers: `A-WALL-EXT`, `A-WALL-INT`, `A-DOOR` (leaf and swing arc), `A-WIND`, `A-DIMS`, `A-TEXT` (room name and area), `A-AREA` (one closed outline per room at its clear internal size, for measuring; set not to plot), `A-TITLE`. Use their office's layer names when they have a standard.
+- Layers: `A-WALL-EXT`, `A-WALL-INT`, `A-DOOR` (leaf and swing arc), `A-WIND`, `A-WIND-HIGH` (high windows, as in a toilet or store), `A-DIMS`, `A-TEXT` (room name and area), `A-AREA` (one closed outline per room at its clear internal size, for measuring; set not to plot), `A-TITLE`. Use their office's layer names when they have a standard.
 - Walls as closed outlines, one closed polyline per wall piece between openings, never single lines: the measured area is then the wall's plan area.
-- Each window as one closed polyline on `A-WIND` spanning the wall thickness across the opening, plus its glazing lines. `extrude_walls.py` builds sills and lintels from these outlines.
+- Each window as one closed polyline on `A-WIND` spanning the wall thickness across the opening, plus its glazing lines. A window at another sill goes on `A-WIND-HIGH`. `extrude_walls.py` builds sills and lintels from these outlines.
 - Text colour 7: black on white paper, white on AutoCAD's dark screen. Yellow and cyan text vanish on paper.
-- Dimensions with `add_linear_dim(...).render()`: overall sizes and each room's clear internal size, along a wall with no door so they clear the swings and room text. At full size the default 2.5-unit text is invisible: set the dimension style for 1:100, `dimtxt` 250, `dimasz` 150, `dimexe` 100, `dimexo` 100, `dimgap` 50, and room text about 250 high.
+- Dimensions with `add_linear_dim(...).render()`: overall sizes and each room's clear internal size, along a wall with no door so they clear the swings and room text. At full size the default 2.5-unit text is invisible: the example's dimension style `MM100` (1:100) sets `dimtxt` 150, `dimasz` 100, `dimexo` 0, `dimexe` 0 and `dimgap` 50, small enough to fit inside small rooms. Room names 200 high and areas 150; a room under 1.6 m wide gets name and area on one line, 120 high.
 - A title block with client, project, drawing title, revision, scale, date and "Drawn by AI. To be checked by the engineer."
 
 ## Revisions
@@ -116,7 +116,12 @@ When they want AutoCAD itself to do something (total every wall and opening, ren
 
 ## In 3D
 
-`uv run $K/scripts/extrude_walls.py plan.dxf model.obj` raises the walls into a simple 3D model (OBJ, in metres; the plan's X,Y in millimetres become X,Y in metres), with window sills and lintels, and a head over each door at `--head` (2100 mm by default) read from the door's swing arc. A door whose hinge does not meet a wall end stays open to full height, and the script says how many. For a turntable or a walkthrough, hand the model to `animating-in-blender`. For a SketchUp massing, the SketchUp connector builds one from the same brief. For a solid, editable model: `designing-3d-models` in FreeCAD.
+`uv run $K/scripts/extrude_walls.py plan.dxf model.obj` raises the walls into a simple 3D model (OBJ, in metres), with window sills and lintels, and a head over each door at `--head` (2100 mm by default) read from the door's swing arc. A door whose hinge does not meet a wall end stays open to full height, and the script says how many.
+
+- Windows: `--windows` lists the window layers, each as `LAYER` (sill and head from `--sill` and `--head`, 900 and 2100) or `LAYER:SILL:HEAD`. The default, `A-WIND,A-WIND-HIGH:1500:2100`, reads high toilet windows from their own layer; a layer the drawing lacks is skipped. The example script prints the command to use for its windows.
+- The OBJ is written Y up, the OBJ convention. Blender's default import turns it back, so the plan's X,Y in millimetres become Blender's X,Y in metres with the floor top at 0. Other apps may need "Y up" chosen on import.
+
+For a turntable or a walkthrough, hand the model to `animating-in-blender`. For a SketchUp massing, the SketchUp connector builds one from the same brief. For a solid, editable model: `designing-3d-models` in FreeCAD.
 
 ## In a browser
 

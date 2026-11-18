@@ -4,7 +4,7 @@ description: Use when animating, rendering or editing video in Blender - a turnt
 license: MIT
 metadata:
   author: fluent
-  version: "0.2"
+  version: "0.3"
 ---
 
 # Animating in Blender
@@ -85,7 +85,7 @@ The MP4 and the `.blend` it came from, saved where they say (suggest `~/Blender/
 ## Walkthroughs
 
 - Take the path points from the drawing, not by eye: outside the main door, the centre of each door the camera passes through, then the room's middle. Model X,Y in metres are the plan's X,Y in millimetres ÷ 1000.
-- Before the stills, check each path segment keeps at least 0.3 m from every wall outline in the plan.
+- Before the stills, check the path against the plan: `uv run $K/scripts/check_path.py plan.dxf --path "x,y;x,y;..."`. It prints each segment's nearest wall, `PATH_OK` when every segment keeps 0.3 m clear and passes through no wall, and the `--seconds` for walking pace.
 - Walking pace is about 1.2 m/s: `--seconds` ≈ path length ÷ 1.2. The script prints the length and speed.
 - End facing into the room, towards a window, never close to a wall. The camera looks 1.5 m ahead and, at the end, carries on along the last segment, so point the last segment at what it should end on.
 - `--lens 20` (the default for walkthroughs) suits interiors at eye height; 35 suits a turntable.

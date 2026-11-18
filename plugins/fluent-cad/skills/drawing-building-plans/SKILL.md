@@ -4,7 +4,7 @@ description: Use when drawing or checking building drawings - a floor plan, site
 license: MIT
 metadata:
   author: fluent
-  version: "0.2"
+  version: "0.3"
 ---
 
 # Drawing building plans
@@ -66,6 +66,7 @@ A workbook (`openpyxl`) built from the **same data** as the drawing: a room sche
 - the wall layers' extents against the outside size (the whole drawing's extents include dimensions and the title block);
 - each wall layer's enclosed area against centreline length × thickness, less openings;
 - door and window counts;
+- the dimension values it lists against the brief's sizes; a `TYPED-OVER` line is a dimension whose text was typed over, and must be fixed in the script;
 - each room's area, measured from its outline on `A-AREA`. The room text was written by the same script, so it proves nothing.
 
 Done when every figure agrees. When one does not, fix the script, not the numbers. When LibreOffice is installed, recalculate a copy of the workbook (`soffice --headless --convert-to xlsx --outdir recalc/ quantities.xlsx`) and read its values back.
@@ -110,11 +111,12 @@ When they want AutoCAD itself to do something (total every wall and opening, ren
 2. `uv run $K/scripts/measure_dxf.py drawing.dxf --text --png drawing.png`: entities, closed areas, open lengths and block counts per layer.
 3. Ask what each layer means before using it. Layer names are a drawer's habit, not a standard.
 4. Doors and windows drawn as blocks are counted by block name. Drawn as loose geometry, count the closed outlines or swing arcs per layer, check against the PNG, and say which you counted.
-5. Each figure goes in the workbook with the layer it came from.
+5. The report lists every dimension's true value. A `TYPED-OVER` line is a dimension showing a number its own geometry does not measure: tell them which, before any quantity relies on it.
+6. Each figure goes in the workbook with the layer it came from.
 
 ## In 3D
 
-`uv run $K/scripts/extrude_walls.py plan.dxf model.obj` raises the walls into a simple 3D model (OBJ, in metres; the plan's X,Y in millimetres become X,Y in metres), with window sills and lintels. Doors stay open to full height. For a turntable or a walkthrough, hand the model to `animating-in-blender`. For a SketchUp massing, the SketchUp connector builds one from the same brief. For a solid, editable model: `designing-3d-models` in FreeCAD.
+`uv run $K/scripts/extrude_walls.py plan.dxf model.obj` raises the walls into a simple 3D model (OBJ, in metres; the plan's X,Y in millimetres become X,Y in metres), with window sills and lintels, and a head over each door at `--head` (2100 mm by default) read from the door's swing arc. A door whose hinge does not meet a wall end stays open to full height, and the script says how many. For a turntable or a walkthrough, hand the model to `animating-in-blender`. For a SketchUp massing, the SketchUp connector builds one from the same brief. For a solid, editable model: `designing-3d-models` in FreeCAD.
 
 ## In a browser
 

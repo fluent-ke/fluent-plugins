@@ -10,7 +10,10 @@
   uv run measure_dxf.py PLAN.dxf --json          the same report as JSON
 
 Per layer it reports: entity counts by type, the area enclosed by closed polylines (in drawing
-units squared), the length of open lines, polylines and arcs, and block inserts counted by name.
+units squared), the length of open lines, polylines and arcs, block inserts counted by name, and
+each dimension's value measured from its own definition points. A dimension whose text was typed
+over (not the measured "<>") is listed beside what it really measures, since that is where a drawing
+and its quantities part ways.
 Arcs inside polylines (bulges) are measured as straight segments; the report says when that
 happened. DWG files must be saved as DXF first (AutoCAD: SAVEAS, DXF).
 """
@@ -31,7 +34,7 @@ def measure(path, want_text):
     doc, auditor = recover.readfile(path)
     msp = doc.modelspace()
     layers = defaultdict(lambda: {"types": Counter(), "closed_area": 0.0, "closed_count": 0,
-                                  "open_length": 0.0, "inserts": Counter(), "texts": [], "bulges": 0})
+                                  "open_length": 0.0, "inserts": Counter(), "texts": [], "bulges": 0, "dims": [], "typed_dims": []})
     for e in msp:
         kind, L = e.dxftype(), layers[e.dxf.layer]
         L["types"][kind] += 1
@@ -51,6 +54,13 @@ def measure(path, want_text):
             L["open_length"] += e.dxf.radius * math.radians(sweep)
         elif kind == "INSERT":
             L["inserts"][e.dxf.name] += 1
+        elif kind == "DIMENSION":
+            value = e.get_measurement()
+            if isinstance(value, (int, float)):
+                L["dims"].append(round(value, 1))
+                typed = e.dxf.get("text", "")
+                if typed not in ("", "<>") and "<>" not in typed:
+                    L["typed_dims"].append({"text": typed, "measures": round(value, 1)})
         elif kind in ("TEXT", "MTEXT") and want_text:
             L["texts"].append(e.plain_text() if kind == "MTEXT" else e.dxf.text)
 
@@ -73,6 +83,8 @@ def measure(path, want_text):
             "closed_area": round(L["closed_area"], 3),
             "open_length": round(L["open_length"], 3),
             "inserts": dict(L["inserts"]),
+            **({"dimensions": L["dims"]} if L["dims"] else {}),
+            **({"typed_over_dimensions": L["typed_dims"]} if L["typed_dims"] else {}),
             "extents": [round(lb.size.x, 3), round(lb.size.y, 3)] if lb.has_data else None,
             **({"bulged_polylines": L["bulges"]} if L["bulges"] else {}),
             **({"texts": L["texts"]} if want_text else {}),
@@ -115,6 +127,10 @@ def main():
             print(f"  open length: {L['open_length']}")
         if L["inserts"]:
             print("  blocks: " + ", ".join(f"{k} x{v}" for k, v in sorted(L["inserts"].items())))
+        if L.get("dimensions"):
+            print(f"  dimensions ({len(L['dimensions'])}): " + ", ".join(f"{v:g}" for v in L["dimensions"]))
+        for d in L.get("typed_over_dimensions", []):
+            print(f"  TYPED-OVER dimension: shows '{d['text']}', measures {d['measures']:g}")
         if L.get("bulged_polylines"):
             print(f"  note: {L['bulged_polylines']} polylines have arcs, measured as straight segments")
         for t in L.get("texts", []):

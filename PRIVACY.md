@@ -1,8 +1,8 @@
 # Privacy policy
 
-This policy covers the plugins and skills in this repository: Fluent AI Skills, Daily Brief, Fluent Marketing Tools, Fluent 3D, Fluent Motion and Fluent CAD. They are published by Fluent ([fluent.ke](https://fluent.ke)), a team based in Nairobi, Kenya.
+This policy covers the plugins and skills in this repository: Fluent AI Skills, Daily Brief, Fluent Marketing Tools, Fluent 3D, Fluent Motion, Fluent CAD and Fluent Phone. They are published by Fluent ([fluent.ke](https://fluent.ke)), a team based in Nairobi, Kenya.
 
-Last updated: 9 November 2026.
+Last updated: 18 November 2026.
 
 ## The short version
 
@@ -30,6 +30,7 @@ Some skills, at your request, use services that you choose and control. Fluent r
 - **Fluent Motion** installs Playwright from npm into your project folder and its Chromium browser from Playwright's download servers, downloads a font from GitHub, and renders video on your computer. Any voice or music service you choose to use is under your own account, and receives the script or prompt you give it.
 
 - **Fluent CAD** installs and drives design apps on your computer when you agree. Its drawing scripts download the open-source libraries ezdxf, matplotlib and openpyxl from PyPI through `uv`. The FreeCAD, Blender, Fusion, ArchiCAD and Revit connections listen only on your own computer. The SketchUp connector runs in Trimble's cloud under your Trimble ID and receives the model descriptions you give it.
+- **Fluent Phone** drives your own phone from your own computer: an iPhone through Apple's iPhone Mirroring and the open-source mirroir server, or an Android phone through adb and the open-source mobile-mcp server, both installed from npm or Homebrew and run on your computer. What the agent reads on your phone's screen goes to the AI tool you use, under that tool's own policy, and nowhere else. Notes the agent saves about apps stay on your computer.
 
 Each of those services has its own privacy policy, and that policy applies to what you send it.
 

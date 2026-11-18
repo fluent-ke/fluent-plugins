@@ -1,6 +1,6 @@
 {
   "name": "fluent",
-  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools, 3D design and motion graphics, on the open Agent Skills standard.",
+  "description": "Fluent's public plugins for working with AI: craft skills, daily briefs, marketing tools, 3D design, motion graphics and phone control, on the open Agent Skills standard.",
   "owner": {
     "name": "Fluent",
     "url": "https://fluent.ke"
@@ -41,6 +41,12 @@
       "source": "./plugins/fluent-cad",
       "displayName": "Fluent CAD",
       "description": "Computer-aided design skills by track: building plans and quantities, parts and products, 3D printing, and Blender animation and video edits."
+    },
+    {
+      "name": "fluent-phone",
+      "source": "./plugins/fluent-phone",
+      "displayName": "Fluent Phone",
+      "description": "Your agent works your own phone: DMs, reels, voice-memo transcripts and apps, on iPhone from a Mac or Android from any computer."
     }
   ]
 }

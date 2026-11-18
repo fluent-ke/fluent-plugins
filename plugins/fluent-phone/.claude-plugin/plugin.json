@@ -1,0 +1,26 @@
+{
+  "name": "fluent-phone",
+  "displayName": "Fluent Phone",
+  "description": "Let your agent work your own phone: read and reply to DMs, watch reels people send you, read voice-memo transcripts and act in apps, on an iPhone from a Mac or an Android from Windows, macOS or Linux, with money apps kept closed and a yes before anything goes out. From Fluent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fluent Kenya",
+    "url": "https://fluent.ke",
+    "email": "learn@fluent.ke"
+  },
+  "homepage": "https://fluent.ke",
+  "repository": "https://github.com/fluent-ke/fluent-plugins",
+  "license": "MIT",
+  "documentationUrl": "https://github.com/fluent-ke/fluent-plugins/tree/main/plugins/fluent-phone",
+  "supportUrl": "https://github.com/fluent-ke/fluent-plugins/issues",
+  "privacyPolicyUrl": "https://github.com/fluent-ke/fluent-plugins/blob/main/PRIVACY.md",
+  "keywords": [
+    "phone",
+    "iphone",
+    "android",
+    "mirroir",
+    "mobile-mcp",
+    "instagram",
+    "voice-memos"
+  ]
+}

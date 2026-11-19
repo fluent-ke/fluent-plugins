@@ -3,12 +3,17 @@
 
   make_bambu_project.py OUT.3mf PART.stl:#RRGGBB [PART.stl:#RRGGBB ...] --pause Z [--pause Z ...]
                         [--single-spool] [--printer NAME] [--process NAME] [--filament NAME]
-                        [--bambu PATH] [--profiles DIR]
+                        [--plate NAME] [--bambu PATH] [--profiles DIR]
 
 - All parts merge into ONE object and keep the positions they were exported with.
 - Each part gets its own filament slot and colour (AMS). --single-spool puts every part on
   filament 1 for printers without an AMS: add a --pause at each colour's first layer and swap by hand.
 - --pause Z stops the printer BEFORE the layer whose top is Z (Bambu Studio labels layers by top height).
+- --process and --filament take a full preset name ("Bambu PETG Basic @BBL X1C") or a short one without
+  "@" ("0.20mm Strength", "Bambu PETG Basic"), resolved to the preset that lists --printer as compatible.
+  Preset names do not follow the printer's name: a P1S uses the X1C presets.
+- --plate sets the build plate ("Textured PEI Plate" by default; "Cool Plate", "Engineering Plate",
+  "High Temp Plate"). Cool Plate refuses PETG.
 - Finds Bambu Studio and its BBL system profiles on macOS, Windows and Linux; --bambu and --profiles override.
 - Only writes the 3MF. It never slices, uploads or talks to a printer.
 """
@@ -58,8 +63,9 @@ ap.add_argument("parts", nargs="+", help="path.stl:#RRGGBB, bottom part first")
 ap.add_argument("--pause", type=float, action="append", default=[])
 ap.add_argument("--single-spool", action="store_true")
 ap.add_argument("--printer", default="Bambu Lab A1 0.4 nozzle")
-ap.add_argument("--process", default="0.20mm Standard @BBL A1")
-ap.add_argument("--filament", default="Bambu PLA Matte @BBL A1")
+ap.add_argument("--process", default="0.20mm Standard")
+ap.add_argument("--filament", default="Bambu PLA Basic")
+ap.add_argument("--plate", default="Textured PEI Plate")
 ap.add_argument("--bambu", help="Bambu Studio executable")
 ap.add_argument("--profiles", help="folder holding the BBL machine/, process/ and filament/ presets")
 args = ap.parse_args()
@@ -93,6 +99,21 @@ def load_preset(kind, name):
         return json.load(f)
 
 
+def resolve(kind, name):
+    """A short name (no "@") becomes the preset of that name made for --printer."""
+    if "@" in name:
+        return name
+    found = []
+    for path in glob.glob(os.path.join(glob.escape(PROFILES), kind, "**", glob.escape(name) + " @*.json"), recursive=True):
+        with open(path) as f:
+            preset = json.load(f)
+        if args.printer in preset.get("compatible_printers", []):
+            found.append(preset["name"])
+    if not found:
+        sys.exit(f"No {kind} preset {name!r} lists {args.printer!r} as compatible; give the full name from {PROFILES}/{kind}/")
+    return min(found, key=len)  # the plain one, not a "0.2 nozzle" variant
+
+
 def flattened(kind, name):
     """System presets only hold overrides on top of an `inherits` chain, and the CLI does not
     resolve it: passing the preset file directly yields a 200x200 bed, a stub start G-code and an
@@ -115,8 +136,8 @@ def flattened(kind, name):
     return path
 
 
-filament = flattened("filament", args.filament)
-cmd = [BAMBU, "--load-settings", f"{flattened('machine', args.printer)};{flattened('process', args.process)}",
+filament = flattened("filament", resolve("filament", args.filament))
+cmd = [BAMBU, "--load-settings", f"{flattened('machine', args.printer)};{flattened('process', resolve('process', args.process))}",
        "--load-filaments", ";".join([filament] * slots),
        "--load-assemble-list", os.path.join(work, "assemble.json"),
        "--outputdir", work, "--export-3mf", "project.3mf"]  # --outputdir must be absolute
@@ -130,6 +151,12 @@ with zipfile.ZipFile(project) as z:
 
 settings = json.loads(entries["Metadata/project_settings.config"])
 settings["filament_colour"] = [colour for _, colour in parts][:slots]
+settings["curr_bed_type"] = args.plate
+# The export keeps the printer's 4x4 flush matrix whatever the slot count, and the slicer then refuses
+# the project ("Flush volumes matrix do not match to the correct size"). Size it to the slots.
+flush = next((v for v in settings.get("flush_volumes_matrix", []) if v != "0"), "280")
+settings["flush_volumes_matrix"] = ["0" if i == j else flush for i in range(slots) for j in range(slots)]
+settings["filament_map"] = ["1"] * slots
 entries["Metadata/project_settings.config"] = json.dumps(settings, indent=4).encode()
 
 pause_gcode = settings.get("machine_pause_gcode")
@@ -150,4 +177,6 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     for name, data in entries.items():
         z.writestr(name, data)
 print(f"wrote {out}: {len(parts)} parts in one object, {slots} filament slot(s), pauses at {sorted(args.pause)} mm; "
-      f"printer {settings['printer_settings_id']}, bed {settings['printable_area'][2]}, pause G-code {pause_gcode!r}")
+      f"printer {settings['printer_settings_id']}, process {settings.get('print_settings_id')}, "
+      f"filament {settings.get('filament_settings_id', ['?'])[0]}, plate {args.plate}, "
+      f"bed {settings['printable_area'][2]}, pause G-code {pause_gcode!r}")

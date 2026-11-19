@@ -4,7 +4,7 @@ Every quantity is a formula over input cells, with its working visible. The rate
 
 ## Inputs (one cell each)
 
-Wall height; external and internal wall thickness; each door and window width and height; blocks per m²; waste allowance.
+Wall height; external and internal wall thickness; each door and window width and height; blocks per m²; waste allowance; mortar per m² for each wall thickness.
 
 ## Quantities
 
@@ -15,6 +15,7 @@ Wall height; external and internal wall thickness; each door and window width an
 | Gross wall face area | centreline length × wall height | — |
 | Net wall face area | gross face area − sum of (opening width × opening height) | — |
 | Blocks | ROUNDUP(net face area × blocks per m² × (1 + waste), 0) | — |
+| Mortar | net face area × mortar per m² | — |
 | Room area | internal length × internal width | the room outline on `A-AREA` |
 
 Worked example, from a tested site-office drawing: internal walls 22.90 m of centreline × 0.15 m = 3.435 m², less five doors totalling 3.9 m × 0.15 m = 0.585 m², gives 2.850 m², and the drawing measured 2,850,000 mm². External net face area 76.41 m² × 12.5 blocks per m² × 1.05 = 1,002.9, rounded up to 1,003 blocks.
@@ -22,6 +23,10 @@ Worked example, from a tested site-office drawing: internal walls 22.90 m of cen
 ## Blocks per m²
 
 Use the user's figure. Otherwise compute it from the block face and joint and show the working: a 400 × 200 mm face with no joint gives 1 ÷ (0.40 × 0.20) = 12.5 per m²; with 10 mm joints, 1 ÷ (0.41 × 0.21) = 11.6 per m².
+
+## Mortar per m²
+
+Use the user's figure. Otherwise a typical figure is 0.020 m³ per m² of wall face for 200 mm block and 0.015 m³ for 150 mm block, in an input cell labelled "assumed, confirm with the QS". It varies with the joint and the block's cores, so it is never stated as fact.
 
 ## In the workbook
 

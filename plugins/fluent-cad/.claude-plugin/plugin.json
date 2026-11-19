@@ -2,7 +2,7 @@
   "name": "fluent-cad",
   "displayName": "Fluent CAD",
   "description": "Computer-aided design skills for every kind of designer: building plans and quantities for AutoCAD, ArchiCAD and Revit; parts and products in FreeCAD and Fusion; 3D printing with pauses for inserts; turntables, walkthroughs and video edits in Blender. Sets up the apps and connects your agent to them. From Fluent.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Fluent Kenya",
     "url": "https://fluent.ke",

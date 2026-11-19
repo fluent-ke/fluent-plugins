@@ -122,6 +122,16 @@ Then make the workspace. Ask where their work should live, and suggest a folder 
 | Printing | "Design a keychain with my initials and get it ready for my printer." |
 | Animation | "Make an 8-second turntable of this model." |
 
+## Before a workshop or demo
+
+The first run of each script makes `uv` fetch its libraries, which took about 2 minutes on wifi. Run this once beforehand on every computer that will be used, so they are cached:
+
+```
+uv run --with ezdxf --with matplotlib --with openpyxl --with shapely python -c "print('ready')"
+```
+
+Done when it prints `ready`.
+
 ## In a browser
 
 On claude.ai, the chat in Claude Desktop or Cowork there is no access to the person's computer. Only the SketchUp connector works there, because it runs in Trimble's cloud. Everything else is advice and scripts they run themselves.

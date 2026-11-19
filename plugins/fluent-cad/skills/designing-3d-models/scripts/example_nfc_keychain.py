@@ -127,6 +127,7 @@ for obj in doc.Objects:
 view = Gui.getDocument(DOC).ActiveView
 view.setCameraOrientation(App.Rotation(App.Vector(0, 0, 1), -15).multiply(App.Rotation(App.Vector(1, 0, 0), 40)))
 view.fitAll()
+view.getViewer().setBackgroundColor(0.9, 0.9, 0.88)  # the dark default hides the black body
 
 shape = body.Shape
 bb = shape.BoundBox.united(cream.Shape.BoundBox).united(coral.Shape.BoundBox)
@@ -135,4 +136,5 @@ print(f"Body valid={shape.isValid()} solids={len(shape.Solids)} shells={len(shap
 print(f"Overall {bb.XLength:.1f} x {bb.YLength:.1f} x {bb.ZLength:.1f} mm")
 print(f"Colour heights: black 0-{sheet.body_h:.1f}, cream {sheet.body_h:.1f}-{sheet.body_h + sheet.cream_h:.1f}, "
       f"coral {sheet.body_h + sheet.cream_h:.1f}-{sheet.body_h + sheet.cream_h + sheet.coral_h:.1f} mm; "
-      f"tag pause at z = {sheet.tag_floor + sheet.tag_depth:.1f} mm")
+      f"pocket roof at z = {sheet.tag_floor + sheet.tag_depth:.1f} mm, so the slicer pause is "
+      f"--pause {sheet.tag_floor + sheet.tag_depth + 0.2:.1f} (roof + one 0.2 mm layer)")

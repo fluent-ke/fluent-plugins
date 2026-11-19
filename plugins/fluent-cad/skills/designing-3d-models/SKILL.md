@@ -4,7 +4,7 @@ description: Use when designing a 3D model, part or product - modelling in FreeC
 license: MIT
 metadata:
   author: fluent
-  version: "0.3"
+  version: "0.4"
 ---
 
 # Designing 3D models
@@ -41,7 +41,7 @@ Ask **one question at a time**, offering options when they are unsure:
 4. For prints: colours, and whether the printer has a multi-colour unit (AMS, MMU).
 5. Anything sealed inside: an NFC tag, magnets, nuts.
 
-Check their models folder for an earlier version first. Read sizes from their photos, spec sheets and measurements, and **say the sizes back before modelling** ("16 mm wide, 18 mm tall, 3 mm thick, 4 mm hole: right?"), so they can correct them. Work in millimetres, and say where a tool's own unit differs (Blender's is metres). Done when each is answered or they say "you choose".
+Check their models folder (`~/3D Printing/models/` unless they keep another) for an earlier version first. Read sizes from their photos, spec sheets and measurements, and **say the sizes back before modelling** ("16 mm wide, 18 mm tall, 3 mm thick, 4 mm hole: right?"), so they can correct them. Work in millimetres, and say where a tool's own unit differs (Blender's is metres). Done when each is answered or they say "you choose".
 
 When a shape is a matter of taste, offer numbered versions (v1, v2); they pick one and you iterate on it.
 
@@ -54,6 +54,7 @@ When a shape is a matter of taste, offer numbered versions (v1, v2); they pick o
 | Logo or SVG | FreeCAD SVG import | outlined paths become extruded faces | [freecad-live.md](references/freecad-live.md) |
 | Organic shape, mesh edits, editing their STL (fill a hole, thicken a back) | Blender, by `bpy` script, not by clicking | keep the `.blend` and the script; export a separate STL | [blender-scripting.md](references/blender-scripting.md) |
 | A one-part press mould (clay and similar) | FreeCAD or Blender | the part subtracted from a block, with draft and no undercuts | [moulds.md](references/moulds.md) |
+| Will it hold? A first stress check of a load-bearing part | FreeCAD FEM | `scripts/fea_check.py` through the bridge, or the `freecad` MCP's `run_fem_analysis` | below, *Stress check* |
 | A mechanism: spring-return lever, gimbal or pivot holder | FreeCAD | patterns, not fixed sizes: re-derive for their motor, spring and load | [mechanism-design.md](references/mechanism-design.md) |
 | They need STEP from a mesh | FreeCAD mesh to solid, or rebuild | a STEP made from a mesh is faceted, not a true solid: say so, and rebuild in CAD when they need to edit features | [blender-scripting.md](references/blender-scripting.md) |
 | NFC tag, magnet or nut | — | a sealed pocket, filled during a print pause | [inserts.md](references/inserts.md) |
@@ -65,7 +66,9 @@ When a shape is a matter of taste, offer numbered versions (v1, v2); they pick o
 
 ## 3. Model it live
 
-Script a parametric document with every dimension in a `Params` sheet, so "make it 10% bigger" is one edit. After each visible change take a screenshot and look at it before describing it: `scripts/fc.py shot` for FreeCAD's 3D view, the system screenshot tool for whole windows (macOS: `screencapture -x out.png`). Show them the top view, a hero angle and an x-ray view. Done when they approve what is on screen.
+Script a parametric document with every dimension in a `Params` sheet, so "make it 10% bigger" is one edit. After each visible change take a screenshot and look at it before describing it: `scripts/fc.py shot Hero|Top|... out.png [--xray]` for FreeCAD's 3D view, the system screenshot tool for whole windows (macOS: `screencapture -x out.png`). Show them the top view, a hero angle and an x-ray view. Done when they approve what is on screen.
+
+**Stress check**, when the part carries a load: `python3 $K/scripts/fc.py exec $K/scripts/fea_check.py DOC=Name PART=Body FIXED=x=min LOAD=x=max FORCE=50 DIR=-y E=2000 NU=0.38 MESH=3` (a 5 kg shelf is about 50 N; the script's header explains each value). Check it by hand once: a cantilever tip moves about F·L³ / 3EI. Then say it in their words: "the worst spot sees about 13 MPa; your filament's datasheet gives its strength, so compare the two. The tip sags 4 mm; a thicker plate would stiffen it." Printed parts are weaker between layers than the solid model assumes, so it is a first check, not a rating: anything that could hurt someone if it fails goes to an engineer.
 
 ## 4. Gate and export
 
@@ -109,6 +112,8 @@ On claude.ai the model cannot reach their apps. It can still write an OpenSCAD o
 | Sizes typed into features | A part that breaks when one number changes. Every size in `Params` |
 
 ## Red flags — stop
+
+- You are about to call a part safe or rated for a load from a stress check alone
 
 - You are about to export a part that failed the gate
 - You are calling a design done that they have not seen in the app

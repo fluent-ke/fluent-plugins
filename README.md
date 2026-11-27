@@ -6,7 +6,7 @@ Public plugins from [Fluent](https://fluent.ke): the methods we use every day, g
 
 | Plugin | What it gives you | Folder |
 |---|---|---|
-| **Fluent AI Skills** | Build your own agent for a job you repeat, finish big tasks end to end, write without AI slop, and design with intent | [`plugins/fluent-ai-skills`](plugins/fluent-ai-skills/) |
+| **Fluent AI Skills** | Set up your files as an AI workspace, build your own agent for a job you repeat, finish big tasks end to end, write without AI slop, and design with intent | [`plugins/fluent-ai-skills`](plugins/fluent-ai-skills/) |
 | **Daily Brief** | A researched brief on your industry, checked against primary sources and waiting before your day starts. It interviews you first | [`plugins/daily-brief`](plugins/daily-brief/) |
 | **Fluent Marketing Tools** | Operating procedures for Pencil design files, Meta ads built through the Ads MCP, and AI video ads made with Higgsfield | [`plugins/fluent-marketing-tools`](plugins/fluent-marketing-tools/) |
 | **Fluent 3D** | Set up CAD and slicer apps, model parts live in FreeCAD, and slice them ready to print | [`plugins/fluent-3d`](plugins/fluent-3d/) |

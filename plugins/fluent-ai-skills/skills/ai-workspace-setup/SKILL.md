@@ -4,7 +4,7 @@ description: Use when someone wants their business files set up so AI can actual
 license: MIT
 metadata:
   author: fluent
-  version: "0.2"
+  version: "0.3"
 ---
 
 # AI Workspace Setup
@@ -47,15 +47,21 @@ Steps 4 to 7 need the person's own computer and accounts. Guide them click by cl
 
 Ask, conversationally and few at a time: what the business does, who else works in it, what their week looks like, which AI they use (Claude, Claude Code, ChatGPT, a browser only), and where their files live today.
 
-Then look at the folder yourself. Get the shape before the detail: how many files, what kinds, the obvious clusters (clients, money, marketing, admin), duplicates, and anything sensitive (ID scans, passwords, bank statements). **If there is a text file of passwords or keys, say so and recommend a password manager; never copy it into the new structure as-is.**
+If they've already told you enough and said "just do it", don't hold them up with questions: work from what they gave you, and write your assumptions into the setup task's Decisions so they can correct them later.
+
+Then look at the folder yourself. Get the shape before the detail: how many files, what kinds, the obvious clusters (clients, money, marketing, admin), exact duplicates, personal files mixed in with business ones, and anything sensitive (ID scans, bank statements, passwords). Note any date in their notes that has already passed (a lease ending, a plan for "mid next year") as an Open Question in the setup task; stale facts in instruction files mislead every later chat.
+
+**Passwords, PINs or keys in a plain file:** leave that file where it is, outside the workspace and anything that syncs. Don't copy its contents anywhere. Tell them plainly: move these into a password manager, change the ones that were sitting in plain text, then delete the file themselves.
 
 **The setup itself is the first tracked task.** Create the area `2. Areas/AI Setup/` straight away and open `2. Areas/AI Setup/tasks/ai-workspace-setup/AI Workspace Setup - task.md` using the template in `references/tracking-work-skill.md`, which also shows this exact task filled in. Record each step in it as you go. The person sees tracking work on something real from the first minute, and if the chat dies halfway, the next one picks up from the file. The AI Setup area stays as the home for everything about how they work with AI from then on: new skills, instruction changes, tools they try.
 
-If they work in more than one world that should not mix (two businesses, a business and a household, a client they work inside), note it now. That is step 8.
+If they work in more than one world that should not mix (two businesses, a business and a household, a client they work inside), note it now. That is step 8, and it shapes step 2.
 
 ## 2. Propose the PARA map, then reorganise
 
-Show the proposed structure before moving anything: the projects and areas you found, named in their words, and where each existing folder goes. A short table of *current folder → new home* is enough. Get a yes, then move.
+Show the proposed structure before moving anything: the projects and areas you found, named in their words, and where each existing folder goes. A short table of *current folder → new home* is enough. Get a yes, then move. If they already said "just do it", move, and put the table in the setup task so they can review it after.
+
+If one messy folder holds two worlds (business and personal, say), split it now into **sibling workspaces** under one parent folder, each with its own PARA. The parent holds only the workspaces, no files and no instructions. See step 8.
 
 The layout every workspace uses:
 
@@ -65,9 +71,8 @@ The layout every workspace uses:
 ├── 1. Projects/<Project Name>/
 │   ├── <Project Name>.md    ← home note: what it is, status, key links
 │   ├── CLAUDE.md            ← what an AI needs to know to work here
-│   ├── tasks/<task-name>/<Task Name> - task.md
-│   │        └── completed/
-│   └── resources/           ← meetings/, docs/, anything the project uses
+│   ├── tasks/<task-name>/<Task Name> - task.md   (when the first task starts)
+│   └── resources/           ← (when there's something to put in it)
 ├── 2. Areas/
 │   ├── AI Setup/            ← same shape; holds the setup task
 │   └── <Area Name>/         ← same shape as a project
@@ -78,10 +83,12 @@ The layout every workspace uses:
 Rules for the move:
 
 - **Move, never delete.** Keep a move log in the setup task's folder (old path → new path) so any move can be undone.
+- A file that belongs to two worlds goes where it's mostly used; note the call in the setup task.
+- Folders left empty by the move can be removed.
 - When unsure where something goes, put it in `_to-sort/` at the root and list it for the person. Don't guess at their business.
 - Old, finished or dead material goes to `4. Archive/` with its folder intact.
 - Keep file names readable and unique; rename `Document (3) final FINAL.docx` only when the person agrees.
-- Start small: three to six areas plus AI Setup, and only the projects that are live. A structure they recognise beats a complete one.
+- Start small: three to six areas plus AI Setup, and only the projects that are live. A structure they recognise beats a complete one. At setup, each project and area gets just its home note and instruction file; `tasks/` and `resources/` appear when there's something to put in them.
 
 ## 3. Write the instruction files
 
@@ -104,11 +111,11 @@ Rules for the move:
 
 The tracking skill is installed **in the AI, not in the workspace folder**, so it works in every chat, every Cowork task and every workspace they have, without being copied around.
 
-Write the skill from the template in `references/tracking-work-skill.md`, tailored only where they already use different status words. Then install it:
+Write the skill from the template in `references/tracking-work-skill.md`, tailored only where they already use different status words. Save anything they need to install or paste themselves (the skill zip, a custom-instructions text) in the setup task's folder and point them to it. Then install it:
 
 - **Claude (app, Cowork):** package the `tracking-work` folder as a zip (the folder itself, with `SKILL.md` inside, not the file on its own) and have them upload it in Claude's settings where skills are managed. Then turn it on.
 - **Claude Code:** put it in their personal skills folder, `~/.claude/skills/tracking-work/SKILL.md`, so it loads in every project.
-- **ChatGPT or a tool without skills:** add the tracking rules and template to the root instruction file and to their custom instructions instead. Same method, different home.
+- **ChatGPT or a tool without skills:** put the tracking rules and template in the root `AGENTS.md`, and the short version from `references/tools-setup.md` in their custom instructions. Same method, different home.
 
 Explain it in one line: *every real piece of work gets one file that says where it stands, so any chat, tomorrow or next month, picks up exactly where the last one stopped.* The setup task they are watching fill up is the example.
 
@@ -120,16 +127,17 @@ The order matters: put the folder where Google Drive syncs it **first**, then op
 
 ## 8. One workspace per world
 
-If the person has separate worlds, give each its own workspace: its own folder, its own PARA, its own instruction files, its own Obsidian vault. The tracking skill is already in their AI, so it works in all of them. Explain why they are separate: an AI working in one workspace sees only that workspace, so a client's details never leak into a personal note, and each session gets only the context that belongs to it.
+If the person has separate worlds, give each its own workspace: its own folder, its own PARA, its own instruction files, its own Obsidian vault. Track the whole setup, all workspaces, in the one AI Setup task in the first workspace. The tracking skill is already in their AI, so it works in all of them. Explain why they are separate: an AI working in one workspace sees only that workspace, so a client's details never leak into a personal note, and each session gets only the context that belongs to it.
 
 - Never nest one workspace inside another; place them side by side (for example `My Drive/Workspaces/<Business>` and `My Drive/Workspaces/Personal`).
 - Obsidian switches between vaults from its vault menu; each opens on its own.
+- The Preferences or custom-instructions line names every workspace, and the fresh-chat test in step 9 runs in each one.
 - Something genuinely shared (a brand kit, a price list) lives in one workspace's `3. Resources/`; the other points to it rather than copying it.
 - Each workspace gets its own AI Setup area only if they'll work on AI there; otherwise the first one's is enough.
 
 ## 9. Close the setup task, and prove it remembers
 
-Before closing, open a **fresh** chat in the workspace and ask: *"What is this workspace, and what's in progress?"* It should describe the business and point to the AI Setup task without help. If the answer is vague, the instructions aren't loading: fix that first.
+Until the person has done their steps, leave the setup task at `Status: Waiting` with their steps first in Next Steps. Before closing, open a **fresh** chat in the workspace and ask: *"What is this workspace, and what's in progress?"* It should describe the business and point to the AI Setup task without help. If the answer is vague, the instructions aren't loading: fix that first.
 
 Then mark the setup task done (its Task Complete block, its folder moved into `tasks/completed/`), and suggest one small real job from their week as the next task, so the second tracked task is theirs.
 
@@ -139,7 +147,7 @@ They have: one PARA folder with their files in it and nothing lost; a root instr
 
 ## Don'ts
 
-- Don't delete anything. Archive it.
+- Don't delete anything yourself. Archive it. (Exact duplicates go to `4. Archive/` too; deleting is the person's call.)
 - Don't build the full system on day one. A few areas, the live projects, one tracked task.
 - Don't lecture on methodology. One sentence per idea, at the moment it's needed.
 - Don't put secrets (passwords, API keys, card numbers) into instruction files or synced notes.

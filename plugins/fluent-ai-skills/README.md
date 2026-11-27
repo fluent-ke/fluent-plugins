@@ -2,8 +2,9 @@
 
 Craft skills for working with AI: the methods we use every day at Fluent, generalised out of our own workflow so they run in yours.
 
-Five skills:
+Six skills:
 
+- **ai-workspace-setup**: turn a messy folder of business files into a workspace AI can work in: organised with PARA, opened in Obsidian, synced with Google Drive, with instructions that keep Claude or ChatGPT inside it and a tracking-work skill so it remembers between chats. One workspace per business or world that shouldn't mix.
 - **building-your-own-agent**: turn a job you repeat into a folder that does it: the instructions, the steps and an example of the finished thing, so you stop explaining it every time. Works as a folder, or as a Claude Project: it writes the Project instructions and the files, then walks you through setting it up and the first run.
 - **doing-big-tasks**: take a big task from brief to finished: understand it first, test assumptions against evidence, produce one plan, execute end to end, and verify with fresh eyes.
 - **reviewing-ai-writing**: take out what makes writing read as machine-made, while keeping the writer sounding like themselves.
@@ -12,6 +13,7 @@ Five skills:
 
 ## Try it
 
+- "My business files are a mess. Set them up so Claude can actually work in them."
 - "Review this draft before I send it. It reads like AI wrote it."
 - "I write the same weekly sales update every Friday. Set it up so I stop explaining it."
 - "Plan and build our new onboarding checklist from these three documents, end to end."
@@ -19,7 +21,7 @@ Five skills:
 
 ## What it runs, sends and fetches
 
-- **No network calls of their own.** All five skills are written instructions with no scripts.
+- **No network calls of their own.** All six skills are written instructions with no scripts.
 - **Feedback is yours to send.** `about-fluent` helps you write feedback and gives you a prefilled
   link to Fluent's feedback form, hosted on Zoho Forms (`forms.zohopublic.com`). Nothing is sent
   until you open the link and submit the form yourself.

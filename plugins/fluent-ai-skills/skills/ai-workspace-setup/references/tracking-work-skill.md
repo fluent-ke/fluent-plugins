@@ -1,9 +1,6 @@
 # The tracking-work skill: template and worked example
 
-Write the template below into the person's workspace at `.claude/skills/tracking-work/SKILL.md`. It works untouched; tailor only two things:
-
-1. **The status words** (`To Do | Doing | Waiting | Done`) if they already use others. Change them in both places they appear.
-2. **The folder names** in the paths, if their PARA folders are named differently.
+This skill is installed **in the person's AI**, not in the workspace folder, so it works in every chat and every workspace (step 4 of the main skill says how for each tool). It works untouched; tailor only the status words (`To Do | Doing | Waiting | Done`) if they already use others, changing them in both places they appear.
 
 Leave the `description:` line as it is. That line is what makes the AI use the skill without being reminded; shortening it is how a tracking skill quietly stops working.
 
@@ -19,7 +16,7 @@ description: Use when starting, continuing, handing off or finishing any real pi
 
 # Tracking Work
 
-Every real piece of work gets **one file**, `<Task Name> - task.md`, in its own folder: `<project or area>/tasks/<task-name>/`. Anything the task produces (drafts, data, notes) goes in that same folder.
+Every real piece of work gets **one file**, `<Task Name> - task.md`, in its own folder inside the workspace you're working in: `<project or area>/tasks/<task-name>/`. Anything the task produces (drafts, data, notes) goes in that same folder. If you're not in a workspace folder, ask which one the work belongs to.
 
 The AI has no memory between chats. This file is the memory. A fresh chat, tomorrow or next month, reads it once and knows what is being done, what happened and what's next.
 
@@ -102,65 +99,68 @@ Project: <project or area>
 
 ---
 
-## Worked example
+## Worked example: the setup itself
 
-A bakery owner, Amina, set up her workspace. Her areas are Sales, Production, Finance and Marketing. Here is a real task two sessions in, at `2. Areas/Sales/tasks/wholesale-price-list/Wholesale Price List - task.md`:
+The first task in every new workspace is its own setup. Here it is halfway through, for a bakery owner, Amina, at `2. Areas/AI Setup/tasks/ai-workspace-setup/AI Workspace Setup - task.md`:
 
 ```markdown
 ---
-Status: Waiting
-Project: Sales
+Status: Doing
+Project: AI Setup
 ---
 
-# Wholesale Price List
+# AI Workspace Setup
 
 ## Objective
-A one-page wholesale price list Amina can send to cafés and supermarkets.
+Amina's business files organised so Claude can work in them and remember between chats.
 
 ## Intent
-**For:** three cafés asked for wholesale prices last month and she quoted each one differently from memory. One list means consistent prices and a faster yes.
+**For:** her files are spread over a Downloads folder, two Drive accounts and WhatsApp, and she re-explains the bakery in every chat.
 **Done looks like:**
-- Every product at a wholesale price with at least 35% margin at current flour and butter costs
-- Minimum order and delivery terms stated
-- A PDF on her letterhead, ready to send
-**Out of scope:** retail prices, the online shop, a supermarket listing deal.
+- Every file in PARA, nothing deleted, every move logged
+- Instruction files at the root and in each project and area
+- Tracking skill installed in Claude; Drive syncing; Obsidian open on the folder
+- A fresh chat can say what the business is and what's in progress
+**Out of scope:** her personal files (a separate workspace later), the online shop rebuild.
 
 ## Decisions
-- Price per dozen, not per piece: the cafés all order by the dozen.
-- Free delivery above 5,000 KES only: below that, delivery cost wipes out the margin (worked out from last month's fuel receipts in `resources/`).
+- Claude only, so `CLAUDE.md` files and no `AGENTS.md`: she doesn't use other AI tools.
+- Areas: Sales, Production, Finance, Marketing, AI Setup. Projects: Wholesale Price List, Second Oven. She named them.
+- Supplier invoices go to `3. Resources/Suppliers/`, not Finance: she looks prices up there more than she manages them.
 
 ## Working / Open
-- Working: costs per item calculated in `costing.xlsx` in this folder; draft list written.
-- Open: sourdough margin is only 22%. Amina wants to check the new flour supplier's price before deciding.
+- Working: 412 files moved, log in `move-log.md` in this folder; 23 left in `_to-sort/`. Root and area `CLAUDE.md` files written.
+- Open: Google Drive is on Stream; needs switching to Mirror before Obsidian.
 
 ## Open Questions
-- Raise the sourdough price, or drop it from the wholesale list?
+- Do the 2023 wedding-cake orders go to Archive or to a Weddings area?
 
 ## Next Steps
-- [ ] Amina: get the new supplier's flour quote (she's calling Thursday)
-- [ ] Recalculate sourdough with the new flour price
-- [ ] Put the list on her letterhead and export the PDF
+- [ ] Amina: switch Google Drive to Mirror files
+- [ ] Open the folder in Obsidian
+- [ ] Upload the tracking-work skill in Claude's settings
+- [ ] Fresh-chat test, then close this task
 
 ---
 
 # Session Log
 
 ## Session 2: 2026-03-12 10:15
-**Goal:** turn the costings into a draft list.
-**Did:** applied a 35% margin to every item; wrote the draft (`draft-price-list.md`); set delivery terms from the fuel receipts. Sourdough came out at 22%.
-**State:** draft done except sourdough; waiting on Amina's flour quote.
-**Resume:** when the flour quote is in, recalculate sourdough in `costing.xlsx`, then build the PDF.
+**Goal:** reorganise into PARA and write the instruction files.
+**Did:** got her yes on the map; moved 412 files (`move-log.md`); wrote root `CLAUDE.md` and one per area and project. Found a passwords note and left it out; she's moving it to a password manager.
+**State:** structure done; tools not set up yet.
+**Resume:** switch Drive to Mirror, then Obsidian.
 
 ## Session 1: 2026-03-10 16:40
-**Goal:** work out what each product actually costs.
-**Did:** pulled ingredient prices from the last three supplier invoices in `3. Resources/Suppliers/`; built `costing.xlsx`. Butter had gone up 18% since her last pricing.
-**State:** costs known for all 11 products.
-**Resume:** apply margins and draft the list.
+**Goal:** understand the business and map the mess.
+**Did:** interviewed Amina (bakery, 4 staff, sells retail and to three cafés); surveyed 435 files across Downloads and Drive; drafted the PARA map.
+**State:** map ready to show her.
+**Resume:** show the map, get a yes, start moving.
 ```
 
 What this shows the person:
 
-- A fresh chat, opened next week with "let's finish the price list", reads this file and starts on the sourdough recalculation. Nobody re-explains anything.
-- The **Decisions** carry their reasons, so nobody later "fixes" free delivery back to every order.
-- **Waiting** plus the first Next Step makes it plain the task is on Amina, not the AI.
-- Everything the task produced (`costing.xlsx`, `draft-price-list.md`) sits in its folder.
+- If the chat dies, the next one reads this file and carries on from "switch Drive to Mirror". Nobody re-explains anything.
+- The **Decisions** carry their reasons, so nobody later moves supplier invoices back into Finance.
+- The first Next Step names Amina, so it's plain what's waiting on her and what's on the AI.
+- What the task produced (`move-log.md`) sits in its folder.

@@ -4,7 +4,7 @@ description: Use when someone wants their business files set up so AI can actual
 license: MIT
 metadata:
   author: fluent
-  version: "0.3"
+  version: "0.4"
 ---
 
 # AI Workspace Setup
@@ -38,10 +38,11 @@ The person does not need to code. Do the work for them; explain each piece in on
 5. Sync the folder with Google Drive
 6. Install Obsidian and open the vault
 7. Point their AI at the folder
-8. Repeat for each separate workspace
-9. Close the setup task, and prove it remembers
+8. Make it portable: instructions, memory and Drive
+9. Repeat for each separate workspace
+10. Close the setup task, and prove it remembers
 
-Steps 4 to 7 need the person's own computer and accounts. Guide them click by click and confirm each one worked before moving on. Everything else you do yourself.
+Steps 4 to 8 need the person's own computer and accounts. Guide them click by click and confirm each one worked before moving on. Everything else you do yourself.
 
 ## 1. Understand the person, and open the setup as their first task
 
@@ -55,13 +56,13 @@ Then look at the folder yourself. Get the shape before the detail: how many file
 
 **The setup itself is the first tracked task.** Create the area `2. Areas/AI Setup/` straight away and open `2. Areas/AI Setup/tasks/ai-workspace-setup/AI Workspace Setup - task.md` using the template in `references/tracking-work-skill.md`, which also shows this exact task filled in. Record each step in it as you go. The person sees tracking work on something real from the first minute, and if the chat dies halfway, the next one picks up from the file. The AI Setup area stays as the home for everything about how they work with AI from then on: new skills, instruction changes, tools they try.
 
-If they work in more than one world that should not mix (two businesses, a business and a household, a client they work inside), note it now. That is step 8, and it shapes step 2.
+If they work in more than one world that should not mix (two businesses, a business and a household, a client they work inside), note it now. That is step 9, and it shapes step 2.
 
 ## 2. Propose the PARA map, then reorganise
 
 Show the proposed structure before moving anything: the projects and areas you found, named in their words, and where each existing folder goes. A short table of *current folder → new home* is enough. Get a yes, then move. If they already said "just do it", move, and put the table in the setup task so they can review it after.
 
-If one messy folder holds two worlds (business and personal, say), split it now into **sibling workspaces** under one parent folder, each with its own PARA. The parent holds only the workspaces, no files and no instructions. See step 8.
+If one messy folder holds two worlds (business and personal, say), split it now into **sibling workspaces** under one parent folder, each with its own PARA. The parent holds only the workspaces, no files and no instructions. See step 9.
 
 The layout every workspace uses:
 
@@ -103,7 +104,7 @@ Rules for the move:
   Read AGENTS.md in this folder and follow it before anything else.
   ```
 
-**The root file:** what the business is, who is involved, how the person likes to work and be spoken to, the PARA layout, and the working rules (track any real task with the tracking-work skill, keep files in the right project or area, ask before deleting anything or sending anything outside). Keep it under a page; it loads into every session, so every line should change what the AI does.
+**The root file:** every workspace has one at its top. It explains the workspace: what the business (or this part of their life) is, who is involved, how the person likes to work and be spoken to, the PARA layout, and the working rules (track any real task with the tracking-work skill, keep files in the right project or area, ask before deleting anything or sending anything outside). Keep it under a page; it loads into every session, so every line should change what the AI does.
 
 **Every project and area gets its own file too**, next to its home note. AI tools read the instruction file in the folder they're working in and in every folder above it, so a project's file adds local context on top of the root's. Keep each one short: what this project or area is, who's involved, the decisions and facts an AI needs to work here, where things live. A few lines at setup is fine; it grows as work happens. Don't repeat the root file in it.
 
@@ -125,17 +126,33 @@ Click-by-click guidance for syncing with Google Drive for desktop, installing Ob
 
 The order matters: put the folder where Google Drive syncs it **first**, then open it in Obsidian, then attach it to the AI. Moving a vault after Obsidian and the AI know its path means redoing both.
 
-## 8. One workspace per world
+## 8. Make it portable: instructions, memory and Drive
+
+The folder on a computer is where the AI is most powerful: it reads and writes the files itself. But the person will also talk to their AI on a phone, in a browser, or in a chat that isn't attached to the folder. Those chats should still know the setup and still reach the files. Three things make that work:
+
+1. **A workspace brief.** Write `workspace-brief.md` in the setup task's folder, short enough to paste into a settings field:
+   - who they are and what each workspace is, in a line each
+   - where each workspace lives in Google Drive (`My Drive/Workspaces/<Name>`)
+   - the PARA layout, and that the root `CLAUDE.md` or `AGENTS.md` is read first
+   - how to work **with** the folder: read the root file, track real work in a `task.md`
+   - how to work **without** it: search Google Drive for the workspace, read its root file, find a task by searching for its `- task.md` file; if the chat can't save to Drive, give the updated task file or document as text to save, or say it's best finished on the computer
+   - which workspace never to mix with which
+2. **Custom instructions and memory.** Have them paste the brief into Claude's Preferences or ChatGPT's custom instructions; this replaces the shorter line in `references/tools-setup.md`. Then have them save it to the AI's memory too, where it has one (ask the AI to remember the workspace setup, then check it appears in memory settings). Settings fields have length limits: if the brief doesn't fit, keep the "how to work" lines in the field and put the rest in memory.
+3. **Google Drive connected to the AI.** Have them connect Google Drive in Claude's or ChatGPT's connectors, signed in to the same Google account that syncs the workspace. Then a chat anywhere can search and read the workspace files. Whether it can also create or edit files depends on the connector; test it with a small note and tell them what it can do.
+
+Check it: on their phone or in a browser chat with no folder, ask *"What's in progress in my <Name> workspace?"* It should find the workspace in Drive and read the open tasks. Update the brief whenever a workspace is added or moved.
+
+## 9. One workspace per world
 
 If the person has separate worlds, give each its own workspace: its own folder, its own PARA, its own instruction files, its own Obsidian vault. Track the whole setup, all workspaces, in the one AI Setup task in the first workspace. The tracking skill is already in their AI, so it works in all of them. Explain why they are separate: an AI working in one workspace sees only that workspace, so a client's details never leak into a personal note, and each session gets only the context that belongs to it.
 
 - Never nest one workspace inside another; place them side by side (for example `My Drive/Workspaces/<Business>` and `My Drive/Workspaces/Personal`).
 - Obsidian switches between vaults from its vault menu; each opens on its own.
-- The Preferences or custom-instructions line names every workspace, and the fresh-chat test in step 9 runs in each one.
+- The workspace brief names every workspace, and the fresh-chat test in step 10 runs in each one.
 - Something genuinely shared (a brand kit, a price list) lives in one workspace's `3. Resources/`; the other points to it rather than copying it.
 - Each workspace gets its own AI Setup area only if they'll work on AI there; otherwise the first one's is enough.
 
-## 9. Close the setup task, and prove it remembers
+## 10. Close the setup task, and prove it remembers
 
 Until the person has done their steps, leave the setup task at `Status: Waiting` with their steps first in Next Steps. Before closing, open a **fresh** chat in the workspace and ask: *"What is this workspace, and what's in progress?"* It should describe the business and point to the AI Setup task without help. If the answer is vague, the instructions aren't loading: fix that first.
 
@@ -143,7 +160,7 @@ Then mark the setup task done (its Task Complete block, its folder moved into `t
 
 ## When it's done
 
-They have: one PARA folder with their files in it and nothing lost; a root instruction file and one in every project and area; an AI Setup area with the completed setup task; the tracking-work skill installed in their AI; Obsidian open on the folder; Google Drive syncing it; their AI set to work inside it; and a separate workspace for each world that should not mix.
+They have: one PARA folder with their files in it and nothing lost; a root instruction file and one in every project and area; an AI Setup area with the completed setup task; the tracking-work skill installed in their AI; Obsidian open on the folder; Google Drive syncing it; their AI set to work inside it; the workspace brief in their custom instructions and memory, with Drive connected so chats away from the computer still reach the files; and a separate workspace for each world that should not mix.
 
 ## Don'ts
 

@@ -49,13 +49,17 @@ Cowork lives inside the Claude desktop app. Point a Cowork task at the workspace
 
 Open it in the workspace folder (`cd` into the folder, then `claude`, or pick the folder in the desktop app's Code tab). It reads `CLAUDE.md` there and in the project or area folder it's working in.
 
-### Claude Preferences
+### Claude Preferences and memory
 
-In Claude's settings, under the profile's personal preferences, add a short line so every chat knows the workspace exists:
+Paste the workspace brief (step 8 of the main skill) into Claude's settings, under the profile's personal preferences. If they haven't got a brief yet, this line is the minimum:
 
-> My work lives in one folder, "<Workspace Name>", organised with PARA (1. Projects, 2. Areas, 3. Resources, 4. Archive). When a chat can reach that folder, read CLAUDE.md first, keep files in the right project or area, and track real work with the tracking-work skill.
+> My work lives in one folder, "<Workspace Name>", organised with PARA (1. Projects, 2. Areas, 3. Resources, 4. Archive), synced to Google Drive at My Drive/Workspaces/<Workspace Name>. Read its root CLAUDE.md first, keep files in the right project or area, and track real work with the tracking-work skill. Without the folder, find it through Google Drive.
 
-Preferences apply to every chat, so keep anything business-specific out of them; that belongs in `CLAUDE.md`.
+Where Claude's memory is on, ask it in a chat to remember the workspace setup, then check the memory settings show it. Keep business detail in the root `CLAUDE.md`; the brief says where things are and how to work, not everything about the business.
+
+### Google Drive connector (Claude or ChatGPT)
+
+Connect Google Drive in the AI's connectors or apps settings, signed in to the same Google account that syncs the workspace. Then a chat on the phone or in a browser can search the workspace and read its files. Test it: ask for the root `CLAUDE.md` of the workspace by name. Ask it to create a small test note too, and tell them plainly whether it can write or only read; if only read, finished work is saved on the computer.
 
 ### The tracking-work skill in Claude
 
@@ -73,7 +77,8 @@ A Project can't see the folder, so it gets a copy:
 ### ChatGPT
 
 - **ChatGPT desktop with a folder attached:** attach the workspace folder; it reads `AGENTS.md` from it at the start. Confirm on their version by asking "what does AGENTS.md in this folder say?".
-- **Custom instructions** (settings, personalisation): add the same short line as the Claude Preferences above, with `AGENTS.md` in place of `CLAUDE.md`.
+- **Custom instructions and memory** (settings, personalisation): paste the workspace brief, or at least the short line under Claude Preferences above with `AGENTS.md` in place of `CLAUDE.md`. With memory on, ask it to remember the workspace setup and check it saved.
+- **Google Drive:** connect it as described above so chats away from the computer can reach the files.
 - **A ChatGPT project:** like a Claude Project. Paste `AGENTS.md` and the tracking rules into the project's instructions and upload the key files.
 - **Tracking:** where ChatGPT can't load skills, the tracking rules and template go into the root `AGENTS.md`, and this goes into custom instructions:
   > For any real piece of work, keep one file `<Task Name> - task.md` in the project or area's `tasks/<task-name>/` folder: live state at the top (Objective, Intent, Decisions, Next Steps), a dated session log at the bottom, newest first. Read it before starting, update it as we go, and write a Resume line when we stop. The full rules are in AGENTS.md.

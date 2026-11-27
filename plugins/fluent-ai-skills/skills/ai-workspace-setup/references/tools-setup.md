@@ -41,40 +41,41 @@ Notes:
 
 The aim is the same everywhere: the AI reads the workspace's instructions at the start, and works and saves inside the folder. Pick the route that matches what they use. Where they have a choice, a desktop app or Claude Code with the folder attached beats a browser project, because the AI can read and write the files itself.
 
+### Claude app with Cowork
+
+Cowork lives inside the Claude desktop app. Point a Cowork task at the workspace folder; it reads the `CLAUDE.md` in that folder and the folders above it. If the app offers a folder-instructions field, leave it short ("Follow CLAUDE.md in this folder"); the file is what travels with the folder.
+
 ### Claude Code
 
-Open it in the workspace folder (`cd` into the folder, then `claude`, or open the folder in the desktop app's Code tab). It reads `CLAUDE.md`, which pulls in `AGENTS.md`, and finds the tracking skill in `.claude/skills/` by itself. Nothing else to set.
+Open it in the workspace folder (`cd` into the folder, then `claude`, or pick the folder in the desktop app's Code tab). It reads `CLAUDE.md` there and in the project or area folder it's working in.
 
-### Cowork (Claude desktop)
-
-Point Cowork at the workspace folder when starting a task. It reads the `CLAUDE.md` inside. If Cowork offers a folder-instructions field, leave it short ("Follow CLAUDE.md and AGENTS.md in this folder"); the file is what travels with the folder.
-
-### Claude app: Preferences
+### Claude Preferences
 
 In Claude's settings, under the profile's personal preferences, add a short line so every chat knows the workspace exists:
 
-> My work lives in one folder, "<Workspace Name>", organised with PARA (1. Projects, 2. Areas, 3. Resources, 4. Archive). When a chat can reach that folder, read AGENTS.md first, keep files in the right project or area, and track real work in a task.md using the tracking-work skill.
+> My work lives in one folder, "<Workspace Name>", organised with PARA (1. Projects, 2. Areas, 3. Resources, 4. Archive). When a chat can reach that folder, read CLAUDE.md first, keep files in the right project or area, and track real work with the tracking-work skill.
 
-Preferences apply to every chat, so keep anything business-specific out of them; that belongs in `AGENTS.md`.
+Preferences apply to every chat, so keep anything business-specific out of them; that belongs in `CLAUDE.md`.
 
-### Claude Projects (browser or app, no folder access)
+### The tracking-work skill in Claude
+
+Zip the `tracking-work` folder (the folder itself, with `SKILL.md` inside; a zip of the bare file is rejected) and upload it where Claude's settings manage skills, then switch it on. From then on it works in every chat and every Cowork task. Check by starting a chat in the workspace and saying "let's start a task": it should create a `task.md`.
+
+### Claude Projects (browser, no folder access)
 
 A Project can't see the folder, so it gets a copy:
 
 1. Create a Project named after the workspace.
-2. Paste the contents of `AGENTS.md` into the Project's instructions, followed by the tracking-work rules and template.
+2. Paste the root `CLAUDE.md` into the Project's instructions.
 3. Upload the project and area home notes and any key resources to the Project's files.
 4. Tell the person the trade-off plainly: the Project only knows what was uploaded, and replies they want to keep must be saved into the folder by hand. Update the uploads when the files change.
-
-### Skills in the Claude app
-
-If their plan supports skills, they can add the tracking-work skill in Claude's settings, under capabilities or skills: zip the `tracking-work` folder (the folder itself, with `SKILL.md` inside) and upload it.
 
 ### ChatGPT
 
 - **ChatGPT desktop with a folder attached:** attach the workspace folder; it reads `AGENTS.md` from it at the start. Confirm on their version by asking "what does AGENTS.md in this folder say?".
-- **Custom instructions** (settings, personalisation): add the same short line as the Claude Preferences above.
+- **Custom instructions** (settings, personalisation): add the same short line as the Claude Preferences above, with `AGENTS.md` in place of `CLAUDE.md`.
 - **A ChatGPT project:** like a Claude Project. Paste `AGENTS.md` and the tracking rules into the project's instructions and upload the key files.
+- **Tracking:** where ChatGPT can't load skills, the tracking rules and template go into the root `AGENTS.md` and a short pointer into custom instructions.
 
 ### Codex, Cursor, Copilot and other agents
 

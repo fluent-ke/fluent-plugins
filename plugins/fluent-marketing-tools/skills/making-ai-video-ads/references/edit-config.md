@@ -1,6 +1,6 @@
 # ad.json
 
-The one file `build_ad.py` and `caption_timings.py` read. Paths are relative to `ad.json`. Start from `assets/ad.example.json`.
+The one file `build_ad.py` and `caption_timings.py` read. For a story ad, `assemble_story.py` writes `lines` and each take's `file`, `times` and `cut` into it (see `story-ads.md`). Paths are relative to `ad.json`. Start from `assets/ad.example.json`.
 
 | Field | What it holds |
 |---|---|
@@ -16,7 +16,7 @@ The one file `build_ad.py` and `caption_timings.py` read. Paths are relative to 
 | `takes.KEY.file` | A generated take |
 | `takes.KEY.times` | `[start, end]` per line. Written by `caption_timings.py` |
 | `takes.KEY.cut` | Where the film ends and the end card begins. Suggested by `caption_timings.py`; set it before any extra speech |
-| `takes.KEY.soften` | `[[start, end], ...]` spans to defocus, for garbled screens or pages |
+| `takes.KEY.soften` | `[[start, end], ...]` spans to defocus, for garbled screens or pages. Blurs the whole frame; for a region beside a face, use `blur` in `story.json` |
 | `formats[].name` | Output file name, e.g. `brand-ad-ig-fb-4x5` |
 | `formats[].take` | Which take it is cut from |
 | `formats[].size` | `[width, height]` |

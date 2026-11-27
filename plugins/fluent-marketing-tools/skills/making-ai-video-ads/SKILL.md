@@ -1,10 +1,10 @@
 ---
 name: making-ai-video-ads
-description: Use when someone wants a video ad, promo or explainer made with AI video generation (Higgsfield, Seedance, Kling, Veo), especially one with a talking presenter or avatar; when they want to get the most out of a Higgsfield trial or credits; or when generated takes need finishing into captioned, branded ads for every social placement.
+description: Use when someone wants a video ad, promo or explainer made with AI video generation (Higgsfield, Seedance, Kling, Veo), especially one with a talking presenter or avatar, or a longer narrated story with several characters; when they want to get the most out of a Higgsfield trial or credits; or when generated takes need finishing into captioned, branded ads for every social placement.
 license: MIT
 metadata:
   author: fluent
-  version: "0.1"
+  version: "0.2"
 ---
 
 # Making AI Video Ads
@@ -14,6 +14,8 @@ metadata:
 A 30-second ad with a consistent presenter who says real lines, finished in every size a feed needs, in a day and mostly for free.
 
 **The take is footage, not the ad.** The video model makes the picture and the voice. The words, the presenter's look, the review, the edit and the music are yours, and they decide whether it reads as an ad or as an AI demo. Budget the model's time for one or two takes and spend your own on everything around them.
+
+**Longer than 30 seconds, several characters, or a narrator over the picture?** Same steps, made in silent chapters with one narration track. Read `references/story-ads.md` before step 1.
 
 Works from any agent with a terminal. Higgsfield is the worked route; the method holds for any model that takes reference images and dialogue.
 
@@ -85,7 +87,7 @@ Check every take for each of these:
 | Same face, hair and clothes in every shot | Re-roll |
 | Only the presenter speaks | Re-roll |
 | Speech or sounds after the last line | Cut before it in the edit |
-| Garbled text on a screen or page | Defocus that shot in the edit (`soften`) |
+| Garbled text on a screen or page | Defocus that shot in the edit (`soften`; a region `blur` when a face shares the shot, see `references/story-ads.md`) |
 | Soft picture (trial resolution) | Upscale and sharpen in the edit |
 | Lighting off the brief | Note it; re-roll only if it breaks the brand |
 
@@ -130,7 +132,7 @@ The build always writes both versions: `no-music/` and `with-music/`. Keep both.
 | Avatar generated straight into video | No locked face, so it drifts between shots. Sheet first |
 | Whole character sheet used as the reference | Overlapping figures become extra limbs. Crop it |
 | Video job run without a quote | A surprise bill. Quote, then run |
-| Second job submitted while the first is queued on a trial | It silently does not start. One at a time |
+| Second job submitted while the first is still running on a trial | Refused with `rate_limit_reached` (429). One at a time |
 | Re-rolling for a garbled screen or an extra "Mm" | Paying an hour for an edit fix |
 | Vertical made by cropping the wide take | The presenter falls off the edges. Generate it |
 | One version handed over | No way to compare, nothing to fall back on |

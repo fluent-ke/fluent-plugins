@@ -14,7 +14,7 @@ Why: the workspace lives on their computer, where the AI and Obsidian can open i
 2. In its settings, set **My Drive** to **Mirror files**, not **Stream files**. Mirror keeps a real copy of every file on the computer. With Stream, files are only fetched when opened, and AI tools and Obsidian can find a folder half-empty. If disk space is too tight for Mirror, keep Stream and mark the workspace folder **available offline**.
 3. Move the workspace folder into My Drive, for example `My Drive/Workspaces/<Business Name>`. Where it ends up:
    - **Mac:** `~/Library/CloudStorage/GoogleDrive-<their email>/My Drive/` (also shown in Finder's sidebar under Google Drive)
-   - **Windows:** usually `G:\My Drive\` with Stream, or a folder they chose with Mirror
+   - **Windows:** with Stream, a drive letter (usually `G:`) that holds `My Drive`; with Mirror, the folder chosen during setup (it shows the location in Drive's settings). Open File Explorer and look for Google Drive in the left sidebar
 4. Check: open drive.google.com in a browser and confirm the folder and a few files are there.
 
 Notes:
@@ -75,7 +75,9 @@ A Project can't see the folder, so it gets a copy:
 - **ChatGPT desktop with a folder attached:** attach the workspace folder; it reads `AGENTS.md` from it at the start. Confirm on their version by asking "what does AGENTS.md in this folder say?".
 - **Custom instructions** (settings, personalisation): add the same short line as the Claude Preferences above, with `AGENTS.md` in place of `CLAUDE.md`.
 - **A ChatGPT project:** like a Claude Project. Paste `AGENTS.md` and the tracking rules into the project's instructions and upload the key files.
-- **Tracking:** where ChatGPT can't load skills, the tracking rules and template go into the root `AGENTS.md` and a short pointer into custom instructions.
+- **Tracking:** where ChatGPT can't load skills, the tracking rules and template go into the root `AGENTS.md`, and this goes into custom instructions:
+  > For any real piece of work, keep one file `<Task Name> - task.md` in the project or area's `tasks/<task-name>/` folder: live state at the top (Objective, Intent, Decisions, Next Steps), a dated session log at the bottom, newest first. Read it before starting, update it as we go, and write a Resume line when we stop. The full rules are in AGENTS.md.
+- **Limits to say out loud:** a ChatGPT project, like a Claude Project, can't save into the folder, so anything worth keeping is saved by hand. Whether the desktop app can write back to an attached folder depends on the version; test it by asking it to create a small note.
 
 ### Codex, Cursor, Copilot and other agents
 
